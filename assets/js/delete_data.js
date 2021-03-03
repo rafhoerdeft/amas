@@ -1,7 +1,9 @@
 function hapusData(data) {
 	var id = $(data).data().id;
 	var link = $(data).data().link;
-	// console.log(id);
+	var csrf_name = $(data).data().csrfname;
+	var csrf_code = $(data).data().csrfcode;
+	console.log(csrf_name);
 	swal({
 		title: "Hapus Data",
 		text: "Apakah data ingin dihapus?",
@@ -28,7 +30,8 @@ function hapusData(data) {
 			$.post(
 				link,
 				{
-					id_pemohon: id,
+					id: id,
+					[csrf_name]: csrf_code,
 				},
 				function (data) {
 					if (data == "Success") {

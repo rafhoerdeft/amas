@@ -40,6 +40,7 @@ class Adm_Controller extends MY_Controller
 		$this->username 	= $this->session->userdata('username');
 		$this->nama_user 	= $this->session->userdata('nama_user');
 		$this->role 		= $this->session->userdata('role');
+		$this->nama_role	= $this->session->userdata('nama_role');
 		$this->id_logs 		= $this->session->userdata('id_logs');
 		$this->theme_color 	= $this->session->userdata('theme_color');
 
@@ -48,7 +49,7 @@ class Adm_Controller extends MY_Controller
 		$this->load->helper('service');
 		$this->load->helper('uang');
 		$this->load->helper('text');
-		$this->load->helper('limiter_name');
+		$this->load->helper('limitername');
 
 		$this->label	 = strtoupper(substr($this->nama_user, 0, 1));
 		$this->full_name = limit_name($this->nama_user);

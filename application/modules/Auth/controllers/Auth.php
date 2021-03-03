@@ -39,14 +39,16 @@ class Auth extends Auth_Controller
 
 			$data_role = $this->MasterData->getWhereData('*', 'tbl_role', "id_role = $id_role")->row();
 
-			$role = $data_role->modul;
-			$color = $data_role->color;
+			$role 		= $data_role->modul;
+			$color 		= $data_role->color;
+			$nama_role 	= $data_role->nama_role;
 
 			$sess_data['id_user'] 		= $hasil->row()->id_user;
 			$sess_data['nama_user'] 	= $hasil->row()->nama_user;
 			$sess_data['username'] 		= $hasil->row()->username;
 			$sess_data['role'] 			= $role;
 			$sess_data['theme_color'] 	= $color;
+			$sess_data['nama_role'] 	= $nama_role;
 			$sess_data['logs'] 			= 'Sim_asset_' . $role;
 
 			$ipaddress = $this->input->ip_address();

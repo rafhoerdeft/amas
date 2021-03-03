@@ -47,7 +47,21 @@
 
         .dataTables_length {
             float: left;
-            margin-right: 20px;
+            margin-right: 10px;
+        }
+
+        .dt-buttons  {
+            float: left;
+            width: 175px !important;
+        }
+
+        .dataTables_filter label {
+            margin-bottom: 10px;
+            margin-top: 0px !important;
+        }
+
+        .dataTables_filter input {
+            height: 40px;
         }
 
     </style>
@@ -67,8 +81,8 @@
                                 class="ft-menu font-large-1"></i></a></li>
                     <li class="nav-item">
                         <a class="navbar-brand" href="javascript:void(0)">
-                            <img style="max-width: 140px;" alt="modern admin logo" src="<?= base_url() ?>assets/img/logo/logo_amas.png">
-                            <!-- <h3 class="brand-text">AMAS</h3> -->
+                            <img style="max-width: 136px;" alt="modern admin logo" src="<?= base_url() ?>assets/img/logo/logo_amas.png">
+                            <h3 class="d-lg-inline-block d-none brand-text mb-0">(<?= $this->nama_role ?>)</h3>
                         </a>
                     </li>
                     <li class="nav-item d-md-none">

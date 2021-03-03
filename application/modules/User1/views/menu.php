@@ -3,19 +3,24 @@
         <div class="navbar-container main-menu-content" data-menu="menu-container">
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
-                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin') ?>"><i class="la la-home"></i>
+                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User1') ?>"><i class="la la-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataPajak') ?>"><i class="la la-puzzle-piece"></i>
-                        <span>Pajak</span>
+                <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User1/dataRekanan') ?>"><i class="la la-puzzle-piece"></i>
+                        <span>Rekanan</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataIjin') ?>"><i class="la la-paste"></i>
-                        <span>Perizinan</span>
+                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User1/dataKontrak') ?>"><i class="la la-paste"></i>
+                        <span>Kontrak</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User1/dataPengadaan') ?>"><i class="la la-paste"></i>
+                        <span>Pengadaan</span>
                     </a>
                 </li>
                 <!-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#"

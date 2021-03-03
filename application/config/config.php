@@ -327,7 +327,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'S4tp0lkabmgl';
+$config['encryption_key'] = 'Am45D1sK0minf0kabmgl';
 
 /*
 |--------------------------------------------------------------------------
@@ -381,7 +381,7 @@ $config['encryption_key'] = 'S4tp0lkabmgl';
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'sess_satpol_kab_mgl';
+$config['sess_cookie_name'] = 'sess_amas_kab_mgl';
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
@@ -452,17 +452,17 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
 $config['csrf_protection'] = TRUE;
-$config['csrf_token_name'] = 'csrf_satpol_kab_mgl';
-$config['csrf_cookie_name'] = 'csrf_cookie_satpol_kab_mgl';
+$config['csrf_token_name'] = 'csrf_amas_kab_mgl';
+$config['csrf_cookie_name'] = 'csrf_cookie_amas_kab_mgl';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array(
                                     'Auth/cek_login',
                                     // 'Admin/dataIjin',
                                     // 'Admin/dataPajak',
-                                    'Admin/getDataPajak/.*?/.*?/.*?/.*?',
+                                    // 'Admin/getDataPajak/.*?/.*?/.*?/.*?',
                                     'Admin/getDataDesa',
-                                    'Admin/getDataIjin/.*?/.*?/.*?/.*?'
+                                    // 'Admin/getDataIjin/.*?/.*?/.*?/.*?'
                                 );
 
 /*
