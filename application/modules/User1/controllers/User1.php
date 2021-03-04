@@ -27,7 +27,7 @@ class User1 extends Adm_Controller
             assets_url . "app-assets/js/scripts/customizer.js",
             assets_url . "app-assets/vendors/js/ui/jquery.sticky.js",
             assets_url . "app-assets/js/scripts/footer.min.js",
-        );
+        ); 
 
     } 
 
