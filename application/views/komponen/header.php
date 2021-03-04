@@ -64,6 +64,10 @@
             height: 40px;
         }
 
+        #dataTable th, td {
+            padding-inline: 16px !important;
+        }
+
     </style>
 </head>
 

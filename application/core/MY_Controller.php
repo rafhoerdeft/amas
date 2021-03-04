@@ -39,6 +39,7 @@ class Adm_Controller extends MY_Controller
 		
 		$this->username 	= $this->session->userdata('username');
 		$this->nama_user 	= $this->session->userdata('nama_user');
+		$this->id_user 		= $this->session->userdata('id_user');
 		$this->role 		= $this->session->userdata('role');
 		$this->nama_role	= $this->session->userdata('nama_role');
 		$this->id_logs 		= $this->session->userdata('id_logs');

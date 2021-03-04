@@ -9,7 +9,7 @@
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1/dataRekanan') ?>"><i class="la la-puzzle-piece"></i>
+                    <a class="nav-link" href="<?= base_url('User1/dataRekanan') ?>"><i class="la la-group"></i>
                         <span>Rekanan</span>
                     </a>
                 </li>
@@ -19,7 +19,7 @@
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1/dataPengadaan') ?>"><i class="la la-paste"></i>
+                    <a class="nav-link" href="<?= base_url('User1/dataPengadaan') ?>"><i class="ft-box"></i>
                         <span>Pengadaan</span>
                     </a>
                 </li>

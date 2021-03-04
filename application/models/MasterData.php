@@ -100,6 +100,16 @@ class MasterData extends CI_Model {
 						->WHERE($where)
 						->GET();
 	}
+
+	public function selectJoinOrder($select,$table,$join,$on,$method,$where,$by,$order){
+		return $this->db->SELECT($select)
+						->join($join, $on, $method)
+						->FROM($table)
+						->WHERE($where)
+						->order_by($by, $order)
+						->GET();
+	}
+
 	public function selectJoinNot($select,$field,$table,$where){
 		return $this->db->SELECT($select)
 						->FROM($table)
