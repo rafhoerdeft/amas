@@ -339,6 +339,7 @@ class User1 extends Adm_Controller
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
         $this->foot[] = base_url('assets/js/data_table.js');
+        $this->foot[] = base_url('assets/js/cetak_excel.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
         $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9]);";
@@ -359,16 +360,19 @@ class User1 extends Adm_Controller
         // ================================================================
         $select = array(
             'kt.*',
-            'pd.id_pengadaan',
-            'pd.jenis_rekening jenis_rek',
-            'pd.tgl_pengadaan',
+            'pd.*',
             "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
             "(SELECT rk.alamat_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) alamat_rekanan",
             "(SELECT rk.kota_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) kota_rekanan",
             "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
             "(SELECT COUNT(pr.id_pengadaan) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan) jml_rincian",
-            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) * pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan) harga_pengadaan",
-            // "(SELECT GROUP_CONCAT(pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan) jml_barang",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) * pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) harga_pengadaan",
+
+            "(SELECT GROUP_CONCAT((SELECT br.nama_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) nm_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.merk_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) merk_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.satuan_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) sat_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) hrg_brg",
+            "(SELECT GROUP_CONCAT(pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan  GROUP BY pr.id_pengadaan) jml_brg",
             // "(SELECT SUM((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) * pr.jml_barang) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) tot_harga",
         );
         $dataPengadaan = $this->MasterData->selectJoinOrder($select, 'tbl_pengadaan pd', 'tbl_kontrak kt', "pd.id_kontrak = kt.id_kontrak", "LEFT", "pd.id_pengadaan > 0", "pd.id_pengadaan", "DESC")->result();
@@ -463,15 +467,19 @@ class User1 extends Adm_Controller
         }
     }
 
-    public function rincianDataPengadaan($id = 0) {
+    // ======================================================================
 
-        $id_kontrak = decode($id);
+    // RINCIAN PENGADAAN ============================================================
+
+    public function rincianPengadaan($id = 0) {
+
+        $id_pengadaan = decode($id);
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
         $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
         $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
         // ================================================================
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
@@ -481,20 +489,21 @@ class User1 extends Adm_Controller
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9]);";
-        $script[] = "$('.date-picker').datepicker({
-                        autoclose: true,
-                        todayHighlight: true,
-                        format: 'dd/mm/yyyy',
-                        toggleActive: true,
-                        orientation: 'bottom left'
-                    });";
+        // $script[] = "showDataTable('Rincian Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7]);";
+        $script[] = "$('#dataTable').DataTable();";
+        // $script[] = "$('.date-picker').datepicker({
+        //                 autoclose: true,
+        //                 todayHighlight: true,
+        //                 format: 'dd/mm/yyyy',
+        //                 toggleActive: true,
+        //                 orientation: 'bottom left'
+        //             });";
         $script[] = '$(".select2").select2();';
         // ================================================================
         $header['css']      = $this->head;
@@ -506,15 +515,13 @@ class User1 extends Adm_Controller
 
         $select = array(
             'kt.*',
-            'pd.id_pengadaan',
-            'pd.jenis_rekening jenis_rek',
-            'pd.tgl_pengadaan',
+            'pd.*',
             "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
         );
-        // $dataKontrak = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak > 0", "kt.id_kontrak", "DESC")->result();
-        $dataPengadaan = $this->MasterData->selectJoinOrder($select, 'tbl_kontrak kt', 'tbl_pengadaan pd', "kt.id_kontrak = pd.id_kontrak", "LEFT", "kt.id_kontrak = $id_kontrak", "kt.id_kontrak", "DESC")->row();
+        
+        $dataPengadaan = $this->MasterData->selectJoin($select, 'tbl_kontrak kt', 'tbl_pengadaan pd', "kt.id_kontrak = pd.id_kontrak", "LEFT", "pd.id_pengadaan = $id_pengadaan",)->row();
 
-        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan_rincian pr', 'tbl_barang br', "br.id_barang = pr.id_barang", "LEFT", "pr.id_pengadaan = (SELECT pd.id_pengadaan FROM tbl_pengadaan pd WHERE pd.id_kontrak = $id_kontrak)", "pr.id_pengadaan_rincian", "DESC")->result();
+        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan_rincian pr', 'tbl_barang br', "br.id_barang = pr.id_barang", "LEFT", "pr.id_pengadaan = $id_pengadaan", "pr.id_pengadaan_rincian", "DESC")->result();
 
         $content = array(
             'dataRincian'   => $dataRincian,
@@ -532,189 +539,119 @@ class User1 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    // ======================================================================
+    public function simpanRincianPengadaan() {
+        $post = html_escape($this->input->POST());
 
-    public function dataIjin() {
-        $this->load->helper('searchbar');
+        if ($post) {
 
-        $status         = $_POST['status'];
-        $jenis_ijin     = $_POST['jenis_ijin'];
-        $tahun          = $_POST['tahun'];
-        $bulan          = $_POST['bulan'];
+            $this->db->trans_begin();
 
-        $statusIjin = get_status_ijin();
-        $dataStatusIjin = array();
-        if($statusIjin['respon']) {
-            $dataStatusIjin = $statusIjin['data'];
-        }
-
-        $jenisIjin = get_jenis_ijin();
-        $dataJenisIjin = array();
-        if($jenisIjin['respon']) {
-            $dataJenisIjin = $jenisIjin['data'];
-        }
-
-        $tahunIjin = get_tahun_ijin();
-        $dataTahunIjin = array();
-        if($tahunIjin['respon']) {
-            $dataTahunIjin = $tahunIjin['data'];
-        }
-
-        $bulanIjin = get_bulan_ijin();
-        $dataBulanIjin = array();
-        if($bulanIjin['respon']) {
-            $dataBulanIjin = $bulanIjin['data'];
-        }
-
-        // var_dump($dataJenisPajak);exit();
-
-        if (isset($status) OR ($status != null AND $status != '' AND !empty($status))) {
-            $selectStatus = $status;
-        } else {
-            $selectStatus = $dataStatusIjin[0]['id'];
-        }
-
-        if (isset($jenis_ijin) OR ($jenis_ijin != null AND $jenis_ijin != '' AND !empty($jenis_ijin))) {
-            $selectJenis = $jenis_ijin;
-        } else {
-            $selectJenis = 0;
-        }
-
-        if ($tahun != null AND $tahun != '' AND !empty($tahun)) {
-            $selectTahun = $tahun;
-        } else {
-            $selectTahun = $dataTahunIjin[0]['tahun'];
-        }
-
-        if ($bulan != null AND $bulan != '' AND !empty($bulan)) {
-            $selectBulan = $bulan;
-        } else {
-            $selectBulan = 0;
-        }
-
-        // $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
-        // $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
-        // ================================================================
-        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
-        // $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/get_data_ijin.js');
-        $this->foot[] = base_url('assets/js/delete_data.js');
-        // ================================================================
-        $script[] = "showDataTable('" . base_url('User1/getDataIjin/' . $selectStatus . '/' . $selectJenis . '/' . $selectTahun . '/' . $selectBulan) . "', '" . $selectJenis . "');";
-        $script[] = "$('.date-range').datepicker({
-                        autoclose: true,
-                        todayHighlight: true,
-                        format: 'dd/mm/yyyy',
-                        toggleActive: true,
-                        orientation: 'bottom left'
-                    });";
-        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
-        // ================================================================
-        $header['css']      = $this->head;
-        $footer['js']       = $this->foot;
-        $footer['script']   = $script;
-        $menu['active']     = '3';
-
-        $cont = array(
-            'selectStatus'    => $selectStatus,
-            'selectJenis'     => $selectJenis,
-            'selectTahun'     => $selectTahun,
-            'selectBulan'     => $selectBulan,
-            'dataJenisIjin'   => $dataJenisIjin, 
-            'dataStatusIjin'  => $dataStatusIjin,
-            'dataTahunIjin'   => $dataTahunIjin,
-            'dataBulanIjin'   => $dataBulanIjin,
-        );
-
-        $data = array(
-            'header'    => $header,
-            'menu'      => $menu,
-            'konten'    => 'pages/data_ijin',
-            'footer'    => $footer,
-            'cont'      => $cont,
-        );
-
-        $this->load->view("view_master_admin", $data);
-    }
-
-    public function getDataIjin($status = '', $jenis = '', $tahun = '', $bulan = '')
-    {
-        if (html_escape($this->input->POST())) {
-
-            $post = array(
-                "tahun"             => $tahun,
-                "bulan"             => $bulan,
-                "status"            => $status,
-                "izin"              => $jenis,
-                "search"            => $_POST["search"]["value"],
-                "limit_start"       => $_POST['start'],
-                "limit_length"      => $_POST['length'],
-                "order_index"       => $_POST['order']['0']['column'],
-                "order_short"       => $_POST['order']['0']['dir'],
-                "count"             => false,
+            $data = array(
+                'nama_barang'     => $post['nama_barang'],   
+                'merk_barang'     => $post['merk_barang'],   
+                'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
+                'tgl_masuk'       => $post['tgl_pengadaan'],   
             );
 
-            $getDataIjin = get_ijin($post);
+            $this->MasterData->inputData($data,'tbl_barang');
 
-            $data = array();
-            if ($getDataIjin['respon']) {
-                $fetch_data = $getDataIjin['data'];
+            $id_barang = $this->db->insert_id();
 
-                $i = $_POST['start'];
-                foreach ($fetch_data as $row) {
-                    $i++;
-                    $columns = array(
-                        $i,
-                        ($row['tgl_daftar']!=null)?date('d-m-Y', strtotime($row['tgl_daftar'])):'',
-                        $row['nama_pemohon'],
-                        $row['nama_perusahaan'],
-                        $row['alamat'],
-                        $row['telpon'],
-                        $row['nama_jenis_izin'],
-                        $row['no_surat'],
-                        $row['pejabat'],
-                    );
+            $data = array(
+                'id_pengadaan'  => decode($post['id_pengadaan']),   
+                'id_barang'     => $id_barang,   
+                'jml_barang'    => $post['jml_barang'],   
+            );
 
-                    if ($jenis == '11') {
-                        $columns[] = $row['jenis_reklame'];
-                        $columns[] = $row['naskah_reklame'];
-                        $columns[] = $row['ukuran_reklame'];
-                        $columns[] = $row['jml_reklame'];
-                        $columns[] = $row['tinggi_reklame'];
-                        $columns[] = $row['lokasi_reklame'];
+            $input = $this->MasterData->inputData($data,'tbl_pengadaan_rincian');
+
+            if ($this->db->trans_status() === FALSE)
+            {
+                    $this->db->trans_rollback();
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+            }
+            else
+            {
+                    $this->db->trans_commit();
+                    if ($input) {
+                        alert_success('Data berhasil disimpan.');
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                    } else {
+                        alert_failed('Data gagal disimpan.');
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
                     }
-
-                    $data[] = $columns;
-                }
             }
-
-            $post['count'] = true;
-            $getCount = get_ijin($post);
-
-            if ($getCount['respon']) {
-                $totData = $getCount['data'];
-            } else {
-                $totData = 0;
-            }
-            
-            $output = array(
-                // "draw"			=>     intval($_POST["draw"]),  
-                "draw"              =>     $_POST["draw"],
-                "recordsTotal"      =>     $totData,
-                "recordsFiltered"   =>     $totData,
-                "data"              =>     $data
-            );
-            echo json_encode($output);
         }
     }
 
-    // ============================================
+    public function updateRincianPengadaan() {
+        $post = html_escape($this->input->POST());
+
+        if ($post) {
+
+            $this->db->trans_begin();
+
+            $id = decode($post['id']);
+            $id_barang = $this->db->query("SELECT id_barang FROM tbl_pengadaan_rincian WHERE id_pengadaan_rincian = $id")->row()->id_barang;
+
+            $data = array(
+                'nama_barang'     => $post['nama_barang'],   
+                'merk_barang'     => $post['merk_barang'],   
+                'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
+                'tgl_masuk'       => $post['tgl_pengadaan'],   
+            );
+
+            $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
+
+            $data = array(
+                'id_pengadaan'  => decode($post['id_pengadaan']),   
+                'id_barang'     => $id_barang,   
+                'jml_barang'    => $post['jml_barang'],   
+            );
+
+            $input = $this->MasterData->editData("id_pengadaan_rincian = $id", $data, 'tbl_pengadaan_rincian');
+
+            if ($this->db->trans_status() === FALSE)
+            {
+                    $this->db->trans_rollback();
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+            }
+            else
+            {
+                    $this->db->trans_commit();
+                    if ($input) {
+                        alert_success('Data berhasil disimpan.');
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                    } else {
+                        alert_failed('Data gagal disimpan.');
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                    }
+            }
+        }
+    }
+
+    public function deleteRincianPengadaan($value = '') {
+        if ($this->input->POST()) {
+            $id = decode($this->input->POST('id'));
+            $where = "id_barang = $id";
+            $delete = $this->MasterData->deleteData($where, 'tbl_barang');
+            if ($delete) {
+                alert_success('Data berhasil dihapus.');
+                echo 'Success';
+            } else {
+                alert_failed('Data gagal dihapus.');
+                echo 'Gagal';
+            }
+        } else {
+            redirect(base_url('User1'));
+        }
+    }
+
+    // ======================================================================
 
     public function getDataDesa()
     {

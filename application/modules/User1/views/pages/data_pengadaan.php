@@ -64,7 +64,7 @@
                                                 <th>Nama Penyedia</th>
                                                 <th>PPKom</th>
                                                 <th>Tgl Pengadaan</th>
-                                                <th>Nilai (Rp)</th>
+                                                <th>Nilai Kontrak (Rp)</th>
                                                 <th>Rincian</th>
                                                 <th>Selisih (Rp)</th>
                                                 <th>Jns. Rekening</th>
@@ -76,7 +76,7 @@
                                             <tr>
                                                 <td align="center"><?= $no++ ?></td>
                                                 <td nowrap align="center">
-                                                    <a href="<?= base_url('User1/rincianDataPengadaan/'.encode($val->id_pengadaan)) ?>"
+                                                    <a href="<?= base_url('User1/rincianPengadaan/'.encode($val->id_pengadaan)) ?>"
                                                         type="button" class="btn btn-sm btn-primary"
                                                         title="Tambah Rincian"><i
                                                             class="la la-plus font-small-3"></i></a>
@@ -92,7 +92,7 @@
                                                     <button type="button" 
                                                         data-id="<?= encode($val->id_pengadaan) ?>"
                                                         data-kontrak="<?= $val->id_kontrak ?>"
-                                                        data-rekening="<?= $val->jenis_rek ?>"
+                                                        data-rekening="<?= $val->jenis_rekening ?>"
                                                         data-tgl="<?= date('d/m/Y', strtotime($val->tgl_pengadaan)) ?>"
                                                         onclick="editModal(this)" class="btn btn-sm btn-info"
                                                         title="Update Data"><i
@@ -104,11 +104,21 @@
                                                 <td align="center"><?= date('d/m/Y', strtotime($val->tgl_pengadaan)) ?></td>
                                                 <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
                                                 <td align="center">
-                                                    <?= $val->jml_rincian==0?'Kosong':'<button class="btn btn-sm btn-info">Detail</button>' ?>
+                                                    <?= $val->jml_rincian==0?'Kosong':
+                                                        '<button class="btn btn-sm btn-info" 
+                                                            data-nama="'. $val->nm_brg .'"
+                                                            data-merk="'. $val->merk_brg .'"
+                                                            data-satuan="'. $val->sat_brg .'"
+                                                            data-harga="'. $val->hrg_brg .'"
+                                                            data-jml="'. $val->jml_brg .'"
+                                                            onclick="rincianModal(this)"
+                                                            title="Detail Rincian Barang">Detail</button>' ?>
                                                 </td>
-                                                <td align="right">0</td>
+                                                <td align="right">
+                                                    <?= ($val->harga_pengadaan==null ||  $val->harga_pengadaan=='')?'0':nominal($val->nilai_kontrak - array_sum(explode(';', $val->harga_pengadaan)))  ?>
+                                                </td>
                                                 <td align="center">
-                                                    <?= ($val->jenis_rek==null || $val->jenis_rek=='')?'-':$val->jenis_rek ?>
+                                                    <?= ($val->jenis_rekening==null || $val->jenis_rekening=='')?'-':$val->jenis_rekening ?>
                                                 </td>
                                             </tr>
                                             <?php } ?>
@@ -197,12 +207,49 @@
     </div>
 </div>
 
+<div class="modal animated bounceInUp text-left" id="modal_rincian" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel10" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="modal_header" class="modal-header bg-success">
+                <h4 class="modal-title white" id="modal_title">Rincian Barang</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body table-responsive">
+                <table id="tbl_rincian" class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Merk</th>
+                            <th>Satuan</th>
+                            <th>Harga (Rp)</th>
+                            <th>Jumlah</th>
+                            <th>Total (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btn_reset" class="btn btn-success waves-effect" onclick="tableToExcel('tbl_rincian', 'RincianBarangPengadaan', 'RincianBarangPengadaan.xls')">EXPORT (.XLS)</button>
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function clear_data() {
     $('#modal_form #id').val('');
     $('#modal_form #kontrak').val('').change();
     $('#modal_form #rekening').val('').change();
-    $('#modal_form #tgl_pengadaan').val("<?= date('d/m/Y') ?>");
+    $('#modal_form #tgl_pengadaan').datepicker("setDate", "<?= date('d/m/Y') ?>");
+    $('#modal_form #tgl_pengadaan').datepicker("refresh");
 }
 
 function addModal() {
@@ -237,7 +284,8 @@ function editModal(data) {
     $('#modal_form #input_kontrak').hide();
 
     $('#modal_form #rekening').val(rekening).change();
-    $('#modal_form #tgl_pengadaan').val(tgl);
+    $('#modal_form #tgl_pengadaan').datepicker("setDate", tgl);
+    $('#modal_form #tgl_pengadaan').datepicker("refresh");
 
     $('#modal_form').modal({
         backdrop: 'static',
@@ -246,7 +294,35 @@ function editModal(data) {
 }
 
 function rincianModal(data) {
-    $('#modal_form').modal({
+    var nama    = $(data).data().nama.split(';');
+    var merk    = $(data).data().merk.split(';');
+    var satuan  = $(data).data().satuan.split(';');
+    var harga   = $(data).data().harga.split(';');
+    var jml     = $(data).data().jml.split(';');
+
+    var row = '';
+    var tot = 0;
+    for (let i = 0; i < nama.length; i++) {
+        row +=  "<tr>"+
+                    "<td>"+nama[i]+"</td>"+
+                    "<td>"+merk[i]+"</td>"+
+                    "<td>"+satuan[i]+"</td>"+
+                    "<td align='right'>"+formatRupiah(harga[i].toString(), 'Rp. ')+"</td>"+
+                    "<td align='center'>"+jml[i]+"</td>"+
+                    "<td align='right'>"+formatRupiah((jml[i]*harga[i]).toString(), 'Rp. ')+"</td>"+
+                "</tr>";
+        tot += jml[i]*harga[i];
+    }
+
+    var tfoot = "<tr>"+
+                    "<th colspan='5'>Total Harga (Rp)</th>"+
+                    "<th style='text-align: right; padding-inline: 16px;'>"+formatRupiah(tot.toString(), 'Rp. ')+"</th>"+
+                "</tr>";
+
+    $('#modal_rincian #tbl_rincian tbody').html(row);
+    $('#modal_rincian #tbl_rincian tfoot').html(tfoot);
+
+    $('#modal_rincian').modal({
         backdrop: 'static',
         keyboard: false
     });

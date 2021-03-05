@@ -65,7 +65,7 @@
 			<div class="row">
 				<div class="col-md-6 d-flex justify-content-center align-items-center px-5">
 					<!-- <div class="justify-content-center"> -->
-						<img src="<?= base_url('assets/img/logo/logo_amas_full.png') ?>" style="width: 90%;" alt="LOGO">
+						<img src="<?= base_url('assets/img/logo/logo_amas_full_2.png') ?>" style="width: 90%;" alt="LOGO">
 					<!-- </div> -->
 				</div>
 

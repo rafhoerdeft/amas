@@ -85,7 +85,7 @@
                                 class="ft-menu font-large-1"></i></a></li>
                     <li class="nav-item">
                         <a class="navbar-brand" href="javascript:void(0)">
-                            <img style="max-width: 136px;" alt="modern admin logo" src="<?= base_url() ?>assets/img/logo/logo_amas.png">
+                            <img style="max-width: 136px;" alt="modern admin logo" src="<?= base_url() ?>assets/img/logo/logo_amas_2.png">
                             <h3 class="d-lg-inline-block d-none brand-text mb-0">(<?= $this->nama_role ?>)</h3>
                         </a>
                     </li>
