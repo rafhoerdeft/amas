@@ -38,12 +38,28 @@ class User1 extends Adm_Controller
         $footer['js'] = $this->foot;
         $menu['active'] = '1';
 
+        // JUMLAH LAPORAN MASUK
+		$select = "SUM((SELECT SUM(pr.jml_barang) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan)) jml_pengadaan";
+        $table = 'tbl_pengadaan pd';
+        $where = "MONTH(tgl_pengadaan) = MONTH(now()) AND YEAR(tgl_pengadaan) = YEAR(now())";
+		$this_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
+		$where = "pd.tgl_pengadaan > DATE_SUB(now(), INTERVAL 6 MONTH)";
+        $last_6_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
+        $where = "YEAR(tgl_pengadaan) = YEAR(now())";
+        $this_year = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
+
+        $content = array(
+            'this_month'    => $this_month,
+            'last_6_month'  => $last_6_month,
+            'this_year'     => $this_year,
+        );
+
         $data = array(
             'header' => $header,
             'menu'   => $menu,
-            'konten' => 'dash',
+            'konten' => 'pages/dashboard',
             'footer' => $footer,
-            // 'cont'   => $cont,
+            'cont'   => $content,
         );
 
         $this->load->view("view_master_admin", $data);

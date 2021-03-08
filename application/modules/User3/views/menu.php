@@ -8,16 +8,16 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataPajak') ?>"><i class="la la-puzzle-piece"></i>
+                <!-- <li class="nav-item <?//= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
+                    <a class="nav-link" href="<?//= base_url('Admin/dataPajak') ?>"><i class="la la-puzzle-piece"></i>
                         <span>Pajak</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataIjin') ?>"><i class="la la-paste"></i>
+                <li class="nav-item <?//= ($active == '3' ? 'active' : '') ?>" data-menu="dropdown">
+                    <a class="nav-link" href="<?//= base_url('Admin/dataIjin') ?>"><i class="la la-paste"></i>
                         <span>Perizinan</span>
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#"
                         data-toggle="dropdown"><i class="la la-television"></i><span>Templates</span></a>
                     <ul class="dropdown-menu">

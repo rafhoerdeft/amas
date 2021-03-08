@@ -27,7 +27,7 @@
                             <div class="card-content collapse show  bg-hexagons">
                                 <div class="card-body pt-0">
                                    <div class="h2 text-center font-weight-bold">
-                                        Aplikasi cek data pajak & perizinan
+                                        Aplikasi Kelola Aset Diskominfo
                                         <br>
                                         Kabupaten Magelang
                                    </div>

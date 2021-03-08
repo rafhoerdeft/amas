@@ -30,6 +30,13 @@ class User2 extends Adm_Controller
             assets_url . "app-assets/js/scripts/footer.min.js",
         );
 
+        $dataKib = $this->MasterData->getData('tbl_jenis_kib')->result();
+
+        $menu = array(
+            'dataKib' => $dataKib,
+        );
+        $this->load->view('menu', $menu, TRUE);
+
     } 
 
     public function index()
@@ -52,58 +59,16 @@ class User2 extends Adm_Controller
 
     // ======================================================================
 
-    public function dataPajak() {
-        $this->load->helper('searchbar');
+     // REKANAN ==============================================================
 
-        $status         = $_POST['status'];
-        $jenis_pajak    = $_POST['jenis_pajak'];
-        $tgl_awal       = $_POST['tgl_awal'];
-        $tgl_akhir      = $_POST['tgl_akhir'];
+     public function dataRekanan() {
 
-        $statusPajak = get_status_pajak();
-        $dataStatusPajak = array();
-        if($statusPajak['respon']) {
-            $dataStatusPajak = $statusPajak['data'];
-        }
-
-        $jenisPajak = get_jenis_pajak();
-        $dataJenisPajak = array();
-        if($jenisPajak['respon']) {
-            $dataJenisPajak = $jenisPajak['data'];
-        }
-
-        // var_dump($dataJenisPajak);exit();
-
-        if (isset($status) OR ($status != null AND $status != '' AND !empty($status))) {
-            $selectStatus = $status;
-        } else {
-            $selectStatus = $dataStatusPajak[0]['id'];
-        }
-
-        if (isset($jenis_pajak) OR ($jenis_pajak != null AND $jenis_pajak != '' AND !empty($jenis_pajak))) {
-            $selectJenis = $jenis_pajak;
-        } else {
-            $selectJenis = 0;
-        }
-
-        if ($tgl_awal != null AND $tgl_awal != '' AND !empty($tgl_awal)) {
-            $selectTglAwal = $tgl_awal;
-        } else {
-            $selectTglAwal = date('d/m/Y');
-        }
-
-        if ($tgl_akhir != null AND $tgl_akhir != '' AND !empty($tgl_akhir)) {
-            $selectTglAkhir = $tgl_akhir;
-        } else {
-            $selectTglAkhir = date('d/m/Y');
-        }
-
-        // $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        // $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
         $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
-        // $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
         // ================================================================
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
@@ -112,302 +77,108 @@ class User2 extends Adm_Controller
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
-        // $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/get_data_pajak.js');
+        // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('" . base_url('Admin/getDataPajak/' . $selectStatus . '/' . $selectJenis . '/' . date('d-m-Y', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('d-m-Y', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "', '" . $selectJenis . "');";
-        $script[] = "$('.date-range').datepicker({
-                        autoclose: true,
-                        todayHighlight: true,
-                        format: 'dd/mm/yyyy',
-                        toggleActive: true,
-                        orientation: 'bottom left'
-                    });";
-        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
+        $script[] = "showDataTable('Data Rekanan Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "$('.date-range').datepicker({
+        //                 autoclose: true,
+        //                 todayHighlight: true,
+        //                 format: 'dd/mm/yyyy',
+        //                 toggleActive: true,
+        //                 orientation: 'bottom left'
+        //             });";
+        // $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
         $footer['script']   = $script;
         $menu['active']     = '2';
 
-        $cont = array(
-            'selectStatus'    => $selectStatus,
-            'selectJenis'     => $selectJenis,
-            'selectTglAwal'   => $selectTglAwal,
-            'selectTglAkhir'  => $selectTglAkhir,
-            'dataJenisPajak'  => $dataJenisPajak,
-            'dataStatusPajak' => $dataStatusPajak,
+        // ================================================================
+        
+        $dataRekanan = $this->MasterData->getWhereDataOrder('*', 'tbl_rekanan', "id_rekanan > 0", "id_rekanan", "DESC")->result();
+
+        $content = array(
+            'dataRekanan'   => $dataRekanan,
         );
 
         $data = array(
             'header'    => $header,
             'menu'      => $menu,
-            'konten'    => 'pages/data_pajak',
+            'konten'    => 'pages/data_rekanan',
             'footer'    => $footer,
-            'cont'      => $cont,
+            'cont'      => $content,
         );
 
         $this->load->view("view_master_admin", $data);
     }
 
-    public function getDataPajak($status = '', $jenis = '', $tgl_awal = '', $tgl_akhir = '')
-    {
-        if ($this->input->POST()) {
+    public function simpanDataRekanan() {
+        $post = html_escape($this->input->POST());
 
-            $post = array(
-                "tgl_awal"          => date('d-m-Y', strtotime(str_replace('/', '-', $tgl_awal))),
-                "tgl_akhir"         => date('d-m-Y', strtotime(str_replace('/', '-', $tgl_akhir))),
-                "status"            => $status,
-                "id_jenis_pajak"    => $jenis,
-                "search"            => $_POST["search"]["value"],
-                "limit_start"       => $_POST['start'],
-                "limit_length"      => $_POST['length'],
-                "order_index"       => $_POST['order']['0']['column'],
-                "order_short"       => $_POST['order']['0']['dir'],
-                "count"             => false,
+        if ($post) {
+
+            $data = array(
+                'nama_rekanan'   => $post['nama_rekanan'],  
+                'alamat_rekanan' => $post['alamat_rekanan'],  
+                'kota_rekanan'   => $post['kota_rekanan'],  
             );
 
-            $getDataPajak = get_pajak($post);
+            $input = $this->MasterData->inputData($data,'tbl_rekanan');
 
-            $data = array();
-            if ($getDataPajak['respon']) {
-                $fetch_data = $getDataPajak['data'];
-
-                $i = $_POST['start'];
-                foreach ($fetch_data as $row) {
-                    $i++;
-                    $columns = array(
-                        $i,
-                        ($row['sspdno']!=null?$row['sspdno']:'-'),
-                        ($row['sspdtgl']!=null)?date('d-m-Y', strtotime($row['sspdtgl'])):'-',
-                        $row['nobayar'],
-                        $row['npwpd'],
-                        $row['customernm'],
-                        $row['pajaknm'],
-                        $row['masa'],
-                        ($row['jatuhtempotgl']!=null)?date('d-m-Y', strtotime($row['jatuhtempotgl'])):'',
-                        // $row['dasar'],
-                        uang($row['pajak_terhutang']),
-                    );
-
-                    if ($jenis == '4') {
-                        $columns[] = $row['r_alamat'];
-                        $columns[] = $row['lokasi_pasang'];
-                        $columns[] = $row['r_judul'];
-                        $columns[] = $row['r_panjang'];
-                        $columns[] = $row['r_lebar'];
-                        $columns[] = $row['r_tinggi'];
-                        $columns[] = $row['r_luas'];
-                        $columns[] = $row['r_muka'];
-                        $columns[] = $row['r_banyak'];
-                    }
-
-                    $data[] = $columns;
-                }
-            }
-
-            $post['count'] = true;
-            $getCount = get_pajak($post);
-
-            if ($getCount['respon']) {
-                $totData = $getCount['data'];
+            if ($input) {
+                alert_success('Data berhasil disimpan.');
+                redirect(base_url() . 'User1/dataRekanan');
             } else {
-                $totData = 0;
+                alert_failed('Data gagal disimpan.');
+                redirect(base_url() . 'User1/dataRekanan');
             }
-            
-            $output = array(
-                // "draw"			=>     intval($_POST["draw"]),  
-                "draw"              =>     $_POST["draw"],
-                "recordsTotal"      =>     $totData,
-                "recordsFiltered"   =>     $totData,
-                "data"              =>     $data
-            );
-            echo json_encode($output);
         }
     }
 
-    // ======================================================================
+    public function updateDataRekanan() {
+        $post = html_escape($this->input->POST());
 
-    public function dataIjin() {
-        $this->load->helper('searchbar');
+        if ($post) {
 
-        $status         = $_POST['status'];
-        $jenis_ijin     = $_POST['jenis_ijin'];
-        $tahun          = $_POST['tahun'];
-        $bulan          = $_POST['bulan'];
+            $id = decode($post['id']);
 
-        $statusIjin = get_status_ijin();
-        $dataStatusIjin = array();
-        if($statusIjin['respon']) {
-            $dataStatusIjin = $statusIjin['data'];
+            $data = array(
+                'nama_rekanan'   => $post['nama_rekanan'],  
+                'alamat_rekanan' => $post['alamat_rekanan'],  
+                'kota_rekanan'   => $post['kota_rekanan'],  
+            );
+
+            $input = $this->MasterData->editData("id_rekanan = $id", $data, 'tbl_rekanan');
+
+            if ($input) {
+                alert_success('Data berhasil disimpan.');
+                redirect(base_url() . 'User1/dataRekanan');
+            } else {
+                alert_failed('Data gagal disimpan.');
+                redirect(base_url() . 'User1/dataRekanan');
+            }
         }
-
-        $jenisIjin = get_jenis_ijin();
-        $dataJenisIjin = array();
-        if($jenisIjin['respon']) {
-            $dataJenisIjin = $jenisIjin['data'];
-        }
-
-        $tahunIjin = get_tahun_ijin();
-        $dataTahunIjin = array();
-        if($tahunIjin['respon']) {
-            $dataTahunIjin = $tahunIjin['data'];
-        }
-
-        $bulanIjin = get_bulan_ijin();
-        $dataBulanIjin = array();
-        if($bulanIjin['respon']) {
-            $dataBulanIjin = $bulanIjin['data'];
-        }
-
-        // var_dump($dataJenisPajak);exit();
-
-        if (isset($status) OR ($status != null AND $status != '' AND !empty($status))) {
-            $selectStatus = $status;
-        } else {
-            $selectStatus = $dataStatusIjin[0]['id'];
-        }
-
-        if (isset($jenis_ijin) OR ($jenis_ijin != null AND $jenis_ijin != '' AND !empty($jenis_ijin))) {
-            $selectJenis = $jenis_ijin;
-        } else {
-            $selectJenis = 0;
-        }
-
-        if ($tahun != null AND $tahun != '' AND !empty($tahun)) {
-            $selectTahun = $tahun;
-        } else {
-            $selectTahun = $dataTahunIjin[0]['tahun'];
-        }
-
-        if ($bulan != null AND $bulan != '' AND !empty($bulan)) {
-            $selectBulan = $bulan;
-        } else {
-            $selectBulan = 0;
-        }
-
-        // $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
-        // $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
-        // ================================================================
-        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
-        // $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/get_data_ijin.js');
-        $this->foot[] = base_url('assets/js/delete_data.js');
-        // ================================================================
-        $script[] = "showDataTable('" . base_url('Admin/getDataIjin/' . $selectStatus . '/' . $selectJenis . '/' . $selectTahun . '/' . $selectBulan) . "', '" . $selectJenis . "');";
-        $script[] = "$('.date-range').datepicker({
-                        autoclose: true,
-                        todayHighlight: true,
-                        format: 'dd/mm/yyyy',
-                        toggleActive: true,
-                        orientation: 'bottom left'
-                    });";
-        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
-        // ================================================================
-        $header['css']      = $this->head;
-        $footer['js']       = $this->foot;
-        $footer['script']   = $script;
-        $menu['active']     = '3';
-
-        $cont = array(
-            'selectStatus'    => $selectStatus,
-            'selectJenis'     => $selectJenis,
-            'selectTahun'     => $selectTahun,
-            'selectBulan'     => $selectBulan,
-            'dataJenisIjin'   => $dataJenisIjin, 
-            'dataStatusIjin'  => $dataStatusIjin,
-            'dataTahunIjin'   => $dataTahunIjin,
-            'dataBulanIjin'   => $dataBulanIjin,
-        );
-
-        $data = array(
-            'header'    => $header,
-            'menu'      => $menu,
-            'konten'    => 'pages/data_ijin',
-            'footer'    => $footer,
-            'cont'      => $cont,
-        );
-
-        $this->load->view("view_master_admin", $data);
     }
 
-    public function getDataIjin($status = '', $jenis = '', $tahun = '', $bulan = '')
-    {
+    public function deleteDataRekanan($value = '') {
         if ($this->input->POST()) {
-
-            $post = array(
-                "tahun"             => $tahun,
-                "bulan"             => $bulan,
-                "status"            => $status,
-                "izin"              => $jenis,
-                "search"            => $_POST["search"]["value"],
-                "limit_start"       => $_POST['start'],
-                "limit_length"      => $_POST['length'],
-                "order_index"       => $_POST['order']['0']['column'],
-                "order_short"       => $_POST['order']['0']['dir'],
-                "count"             => false,
-            );
-
-            $getDataIjin = get_ijin($post);
-
-            $data = array();
-            if ($getDataIjin['respon']) {
-                $fetch_data = $getDataIjin['data'];
-
-                $i = $_POST['start'];
-                foreach ($fetch_data as $row) {
-                    $i++;
-                    $columns = array(
-                        $i,
-                        ($row['tgl_daftar']!=null)?date('d-m-Y', strtotime($row['tgl_daftar'])):'',
-                        $row['nama_pemohon'],
-                        $row['nama_perusahaan'],
-                        $row['alamat'],
-                        $row['telpon'],
-                        $row['nama_jenis_izin'],
-                        $row['no_surat'],
-                        $row['pejabat'],
-                    );
-
-                    if ($jenis == '11') {
-                        $columns[] = $row['jenis_reklame'];
-                        $columns[] = $row['naskah_reklame'];
-                        $columns[] = $row['ukuran_reklame'];
-                        $columns[] = $row['jml_reklame'];
-                        $columns[] = $row['tinggi_reklame'];
-                        $columns[] = $row['lokasi_reklame'];
-                    }
-
-                    $data[] = $columns;
-                }
-            }
-
-            $post['count'] = true;
-            $getCount = get_ijin($post);
-
-            if ($getCount['respon']) {
-                $totData = $getCount['data'];
+            $id = decode($this->input->POST('id'));
+            $where = "id_rekanan = $id";
+            $delete = $this->MasterData->deleteData($where, 'tbl_rekanan');
+            if ($delete) {
+                alert_success('Data berhasil dihapus.');
+                echo 'Success';
             } else {
-                $totData = 0;
+                alert_failed('Data gagal dihapus.');
+                echo 'Gagal';
             }
-            
-            $output = array(
-                // "draw"			=>     intval($_POST["draw"]),  
-                "draw"              =>     $_POST["draw"],
-                "recordsTotal"      =>     $totData,
-                "recordsFiltered"   =>     $totData,
-                "data"              =>     $data
-            );
-            echo json_encode($output);
+        } else {
+            redirect(base_url('User1'));
         }
     }
 
