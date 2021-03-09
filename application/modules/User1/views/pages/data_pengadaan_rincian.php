@@ -4,7 +4,7 @@
 
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
                 <h3 class="content-header-title mb-0 d-inline-block">Rincian Pengadaan -
-                    (<?= $dataPengadaan->no_kontrak ?>)</h3>
+                    (<?= $dataKontrak->no_kontrak ?>)</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -57,7 +57,7 @@
                                     }
                                     </style>
 
-                                    <table id="dataTable" class="table table-hover table-bordered table-striped"
+                                    <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table"
                                         style="font-size: 8pt">
                                         <thead>
                                             <tr style="text-align: center;">
@@ -86,7 +86,7 @@
                                                             class="la la-trash-o font-small-3"></i></button>
 
                                                     <button type="button"
-                                                        data-id="<?= encode($val->id_pengadaan_rincian) ?>"
+                                                        data-id="<?= encode($val->id_pengadaan) ?>"
                                                         data-nama="<?= $val->nama_barang ?>"
                                                         data-merk="<?= $val->merk_barang ?>"
                                                         data-satuan="<?= $val->satuan_barang ?>"
@@ -131,8 +131,9 @@
             <form name="form_input" id="form_input" method="post" action="">
 
                 <input type="hidden" name="id" id="id">
-                <input type="hidden" name="id_pengadaan" id="id_pengadaan" value="<?= encode($dataPengadaan->id_pengadaan) ?>">
-                <input type="hidden" name="tgl_pengadaan" id="tgl_pengadaan" value="<?= $dataPengadaan->tgl_pengadaan ?>">
+                <input type="hidden" name="id_kontrak" id="id_kontrak" value="<?= encode($dataKontrak->id_kontrak) ?>">
+                <input type="hidden" name="tgl_kontrak" id="tgl_kontrak" value="<?= $dataKontrak->tgl_kontrak ?>">
+
 
                 <?= token_csrf() ?>
 

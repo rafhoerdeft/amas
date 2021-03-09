@@ -59,9 +59,11 @@ class User2 extends Adm_Controller
 
     // ======================================================================
 
-     // REKANAN ==============================================================
+     // DATA ASET ==============================================================
 
-     public function dataRekanan() {
+     public function dataAset($id = '') {
+
+        $id_jenis_kib = decode($id);
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         // $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
@@ -83,7 +85,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Rekanan Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
         // $script[] = "$('.date-range').datepicker({
         //                 autoclose: true,
         //                 todayHighlight: true,
@@ -100,16 +102,19 @@ class User2 extends Adm_Controller
 
         // ================================================================
         
-        $dataRekanan = $this->MasterData->getWhereDataOrder('*', 'tbl_rekanan', "id_rekanan > 0", "id_rekanan", "DESC")->result();
+        $dataJenisKib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib")->row();
+        
+        $dataAset = $this->MasterData->selectJoinOrder('*', 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
 
         $content = array(
-            'dataRekanan'   => $dataRekanan,
+            'dataJenisKib'   => $dataJenisKib,
+            'dataAset'   => $dataAset,
         );
 
         $data = array(
             'header'    => $header,
             'menu'      => $menu,
-            'konten'    => 'pages/data_rekanan',
+            'konten'    => 'pages/data_aset',
             'footer'    => $footer,
             'cont'      => $content,
         );
@@ -117,7 +122,7 @@ class User2 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    public function simpanDataRekanan() {
+    public function simpanDataAset() {
         $post = html_escape($this->input->POST());
 
         if ($post) {
@@ -140,7 +145,7 @@ class User2 extends Adm_Controller
         }
     }
 
-    public function updateDataRekanan() {
+    public function updateDataAset() {
         $post = html_escape($this->input->POST());
 
         if ($post) {
@@ -165,7 +170,7 @@ class User2 extends Adm_Controller
         }
     }
 
-    public function deleteDataRekanan($value = '') {
+    public function deleteDataAset($value = '') {
         if ($this->input->POST()) {
             $id = decode($this->input->POST('id'));
             $where = "id_rekanan = $id";

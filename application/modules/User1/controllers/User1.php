@@ -39,13 +39,13 @@ class User1 extends Adm_Controller
         $menu['active'] = '1';
 
         // JUMLAH LAPORAN MASUK
-		$select = "SUM((SELECT SUM(pr.jml_barang) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan)) jml_pengadaan";
-        $table = 'tbl_pengadaan pd';
-        $where = "MONTH(tgl_pengadaan) = MONTH(now()) AND YEAR(tgl_pengadaan) = YEAR(now())";
+		$select = "IFNULL(SUM((SELECT SUM(pd.jml_barang) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak)), 0) jml_pengadaan";
+        $table = 'tbl_kontrak kt';
+        $where = "MONTH(tgl_kontrak) = MONTH(now()) AND YEAR(tgl_kontrak) = YEAR(now())";
 		$this_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
-		$where = "pd.tgl_pengadaan > DATE_SUB(now(), INTERVAL 6 MONTH)";
+		$where = "tgl_kontrak > DATE_SUB(now(), INTERVAL 6 MONTH)";
         $last_6_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
-        $where = "YEAR(tgl_pengadaan) = YEAR(now())";
+        $where = "YEAR(tgl_kontrak) = YEAR(now())";
         $this_year = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
 
         $content = array(
@@ -197,8 +197,8 @@ class User1 extends Adm_Controller
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
         $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
         $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
         // ================================================================
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
@@ -208,20 +208,20 @@ class User1 extends Adm_Controller
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
-        // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
         $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
         $script[] = "showDataTable('Data Kontrak Rekanan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        // $script[] = "$('.date-range').datepicker({
-        //                 autoclose: true,
-        //                 todayHighlight: true,
-        //                 format: 'dd/mm/yyyy',
-        //                 toggleActive: true,
-        //                 orientation: 'bottom left'
-        //             });";
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
         $script[] = '$(".select2").select2();';
         // ================================================================
         $header['css']      = $this->head;
@@ -271,7 +271,8 @@ class User1 extends Adm_Controller
                 'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
                 'id_rekanan'     => $post['rekanan'],  
                 'id_user'        => $this->id_user,  
-                // 'jenis_rekening' => $post['rekening'],
+                'jenis_rekening' => $post['rekening'],
+                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
             );
 
             $input = $this->MasterData->inputData($data,'tbl_kontrak');
@@ -299,7 +300,8 @@ class User1 extends Adm_Controller
                 'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
                 'id_rekanan'     => $post['rekanan'],  
                 'id_user'        => $this->id_user,  
-                // 'jenis_rekening' => $post['rekening'],
+                'jenis_rekening' => $post['rekening'],
+                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
             );
 
             $input = $this->MasterData->editData("id_kontrak = $id", $data, 'tbl_kontrak');
@@ -376,35 +378,32 @@ class User1 extends Adm_Controller
         // ================================================================
         $select = array(
             'kt.*',
-            'pd.*',
             "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
             "(SELECT rk.alamat_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) alamat_rekanan",
             "(SELECT rk.kota_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) kota_rekanan",
             "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
-            "(SELECT COUNT(pr.id_pengadaan) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan) jml_rincian",
-            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) * pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) harga_pengadaan",
+            "(SELECT COUNT(pd.id_kontrak) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak) jml_rincian",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) * pd.jml_barang SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) harga_pengadaan",
 
-            "(SELECT GROUP_CONCAT((SELECT br.nama_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) nm_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.merk_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) merk_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.satuan_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) sat_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) hrg_brg",
-            "(SELECT GROUP_CONCAT(pr.jml_barang SEPARATOR ';') FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan  GROUP BY pr.id_pengadaan) jml_brg",
-            // "(SELECT SUM((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pr.id_barang) * pr.jml_barang) FROM tbl_pengadaan_rincian pr WHERE pr.id_pengadaan = pd.id_pengadaan GROUP BY pr.id_pengadaan) tot_harga",
+            "(SELECT GROUP_CONCAT((SELECT br.nama_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) nm_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.merk_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) merk_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.satuan_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) sat_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) hrg_brg",
+            "(SELECT GROUP_CONCAT(pd.jml_barang SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak  GROUP BY pd.id_kontrak) jml_brg",
+            // "(SELECT SUM((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) * pd.jml_barang) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) tot_harga",
         );
-        $dataPengadaan = $this->MasterData->selectJoinOrder($select, 'tbl_pengadaan pd', 'tbl_kontrak kt', "pd.id_kontrak = kt.id_kontrak", "LEFT", "pd.id_pengadaan > 0", "pd.id_pengadaan", "DESC")->result();
+        $dataPengadaan = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak > 0", "kt.id_kontrak", "DESC")->result();
 
-        $select = array(
-            '*',
-            "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
-            "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
-        );
-        $dataKontrak = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak NOT IN (SELECT pd.id_kontrak FROM tbl_pengadaan pd)", "kt.id_kontrak", "DESC")->result();
-
-        // $dataRekanan = $this->MasterData->getWhereData('*', 'tbl_rekanan', "id_rekanan > 0")->result();
+        // $select = array(
+        //     '*',
+        //     "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
+        //     "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
+        // );
+        // $dataKontrak = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak NOT IN (SELECT pd.id_kontrak FROM tbl_pengadaan pd)", "kt.id_kontrak", "DESC")->result();
 
         $content = array(
             'dataPengadaan'   => $dataPengadaan,
-            'dataKontrak'   => $dataKontrak,
+            // 'dataKontrak'   => $dataKontrak,
         );
 
         $data = array(
@@ -489,7 +488,7 @@ class User1 extends Adm_Controller
 
     public function rincianPengadaan($id = 0) {
 
-        $id_pengadaan = decode($id);
+        $id_kontrak = decode($id);
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
@@ -531,17 +530,16 @@ class User1 extends Adm_Controller
 
         $select = array(
             'kt.*',
-            'pd.*',
             "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
         );
         
-        $dataPengadaan = $this->MasterData->selectJoin($select, 'tbl_kontrak kt', 'tbl_pengadaan pd', "kt.id_kontrak = pd.id_kontrak", "LEFT", "pd.id_pengadaan = $id_pengadaan",)->row();
+        $dataKontrak = $this->MasterData->getWhereData($select, 'tbl_kontrak kt', "kt.id_kontrak = $id_kontrak")->row();
 
-        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan_rincian pr', 'tbl_barang br', "br.id_barang = pr.id_barang", "LEFT", "pr.id_pengadaan = $id_pengadaan", "pr.id_pengadaan_rincian", "DESC")->result();
+        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
 
         $content = array(
             'dataRincian'   => $dataRincian,
-            'dataPengadaan'   => $dataPengadaan,
+            'dataKontrak'   => $dataKontrak,
         );
 
         $data = array(
@@ -567,7 +565,7 @@ class User1 extends Adm_Controller
                 'merk_barang'     => $post['merk_barang'],   
                 'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_pengadaan'],   
+                'tgl_masuk'       => $post['tgl_kontrak'],   
             );
 
             $this->MasterData->inputData($data,'tbl_barang');
@@ -575,28 +573,28 @@ class User1 extends Adm_Controller
             $id_barang = $this->db->insert_id();
 
             $data = array(
-                'id_pengadaan'  => decode($post['id_pengadaan']),   
+                'id_kontrak'    => decode($post['id_kontrak']),   
                 'id_barang'     => $id_barang,   
                 'jml_barang'    => $post['jml_barang'],   
             );
 
-            $input = $this->MasterData->inputData($data,'tbl_pengadaan_rincian');
+            $input = $this->MasterData->inputData($data,'tbl_pengadaan');
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }
@@ -617,34 +615,34 @@ class User1 extends Adm_Controller
                 'merk_barang'     => $post['merk_barang'],   
                 'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_pengadaan'],   
+                'tgl_masuk'       => $post['tgl_kontrak'],   
             );
 
             $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
 
             $data = array(
-                'id_pengadaan'  => decode($post['id_pengadaan']),   
+                'id_kontrak'    => decode($post['id_kontrak']),   
                 'id_barang'     => $id_barang,   
                 'jml_barang'    => $post['jml_barang'],   
             );
 
-            $input = $this->MasterData->editData("id_pengadaan_rincian = $id", $data, 'tbl_pengadaan_rincian');
+            $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_pengadaan']);
+                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }

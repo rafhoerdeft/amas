@@ -14,14 +14,14 @@
                 </div>
             </div>
 
-            <div class="content-header-right col-md-4 col-12 mb-2">
+            <!-- <div class="content-header-right col-md-4 col-12 mb-2">
                 <div class="dropdown float-md-right">
                     <button class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="addModal()">
                         <i class="la la-plus font-small-3"></i> Tambah Data
                     </button>
                 </div>
-            </div>
+            </div> -->
 
         </div>
         <div class="content-body">
@@ -54,7 +54,7 @@
                                     }
                                     </style>
 
-                                    <table id="dataTable" class="table table-hover table-bordered table-striped"
+                                    <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table"
                                         style="font-size: small">
                                         <thead>
                                             <tr style="text-align: center;">
@@ -63,7 +63,7 @@
                                                 <th>No. Kontrak</th>
                                                 <th>Nama Penyedia</th>
                                                 <th>PPKom</th>
-                                                <th>Tgl Pengadaan</th>
+                                                <th>Tgl. Kontrak</th>
                                                 <th>Nilai Kontrak (Rp)</th>
                                                 <th>Rincian</th>
                                                 <th>Selisih (Rp)</th>
@@ -76,32 +76,35 @@
                                             <tr>
                                                 <td align="center"><?= $no++ ?></td>
                                                 <td nowrap align="center">
-                                                    <a href="<?= base_url('User1/rincianPengadaan/'.encode($val->id_pengadaan)) ?>"
+                                                    <?php if ($this->id_user == $val->id_user) { ?>
+                                                    <a href="<?= base_url('User1/rincianPengadaan/'.encode($val->id_kontrak)) ?>"
                                                         type="button" class="btn btn-sm btn-primary"
-                                                        title="Tambah Rincian"><i
-                                                            class="la la-plus font-small-3"></i></a>
+                                                        title="Tambah Rincian"><i class="la la-plus font-small-3"></i></a>
+                                                    <?php } else { ?>
+                                                        <button type="button" disabled class="btn btn-sm btn-secondary" title="Tambah Rincian"><i class="la la-plus font-small-3"></i></button>
+                                                    <?php } ?>
 
-                                                    <button type="button" onclick="hapusData(this)"
-                                                        data-id="<?= encode($val->id_pengadaan) ?>"
-                                                        data-link="<?= base_url('User1/deleteDataPengadaan') ?>"
-                                                        data-csrfname="<?= $this->security->get_csrf_token_name(); ?>"
-                                                        data-csrfcode="<?= $this->security->get_csrf_hash(); ?>"
+                                                    <!-- <button type="button" onclick="hapusData(this)"
+                                                        data-id="<?php //echo encode($val->id_kontrak); ?>"
+                                                        data-link="<?php //echo base_url('User1/deleteDataPengadaan'); ?>"
+                                                        data-csrfname="<?php //echo $this->security->get_csrf_token_name(); ?>"
+                                                        data-csrfcode="<?php //echo $this->security->get_csrf_hash(); ?>"
                                                         class="btn btn-sm btn-danger" title="Hapus Data"><i
                                                             class="la la-trash-o font-small-3"></i></button>
 
                                                     <button type="button" 
-                                                        data-id="<?= encode($val->id_pengadaan) ?>"
-                                                        data-kontrak="<?= $val->id_kontrak ?>"
-                                                        data-rekening="<?= $val->jenis_rekening ?>"
-                                                        data-tgl="<?= date('d/m/Y', strtotime($val->tgl_pengadaan)) ?>"
+                                                        data-id="<?php //echo encode($val->id_kontrak); ?>"
+                                                        data-kontrak="<?php //echo $val->id_kontrak; ?>"
+                                                        data-rekening="<?php //echo $val->jenis_rekening; ?>"
+                                                        data-tgl="<?php //echo date('d/m/Y', strtotime($val->tgl_kontrak)); ?>"
                                                         onclick="editModal(this)" class="btn btn-sm btn-info"
                                                         title="Update Data"><i
-                                                            class="la la-edit font-small-3"></i></button>
+                                                            class="la la-edit font-small-3"></i></button> -->
                                                 </td>
                                                 <td><?= $val->no_kontrak ?></td>
                                                 <td><?= $val->nama_rekanan ?></td>
                                                 <td><?= $val->nama_ppkom ?></td>
-                                                <td align="center"><?= date('d/m/Y', strtotime($val->tgl_pengadaan)) ?></td>
+                                                <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
                                                 <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
                                                 <td align="center">
                                                     <?= $val->jml_rincian==0?'Kosong':
@@ -162,11 +165,11 @@
                             <select id="kontrak" name="kontrak" class="form-control select2" required>
                                 <option value="">Pilih Nomor Kontrak</option>
                                 <?php
-                                foreach ($dataKontrak as $val) {
+                                // foreach ($dataKontrak as $val) {
                                 ?>
-                                    <option value="<?= $val->id_kontrak ?>"> <?= $val->no_kontrak ?> - <?= $val->nama_rekanan ?> </option>
+                                    <option value="<?php //echo $val->id_kontrak; ?>"> <?php //echo $val->no_kontrak; ?> - <?php //echo $val->nama_rekanan; ?> </option>
                                 <?php
-                                }
+                                // }
                                 ?>
                             </select>
                         </div>
@@ -190,7 +193,7 @@
                             <span class="required text-danger">*</span>
                         </h5>
                         <div class="controls">
-                            <input type="text" class="form-control date-picker" id="tgl_pengadaan" name="tgl_pengadaan"
+                            <input type="text" class="form-control date-picker" id="tgl_kontrak" name="tgl_kontrak"
                                 placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
                         </div>
                     </div>
@@ -218,8 +221,8 @@
                 </button>
             </div>
 
-            <div class="modal-body table-responsive">
-                <table id="tbl_rincian" class="table table-hover table-bordered table-striped">
+            <div class="modal-body">
+                <table id="tbl_rincian" class="table table-hover table-bordered table-striped table-responsive d-lg-table">
                     <thead>
                         <tr>
                             <th>Nama</th>
@@ -248,8 +251,8 @@ function clear_data() {
     $('#modal_form #id').val('');
     $('#modal_form #kontrak').val('').change();
     $('#modal_form #rekening').val('').change();
-    $('#modal_form #tgl_pengadaan').datepicker("setDate", "<?= date('d/m/Y') ?>");
-    $('#modal_form #tgl_pengadaan').datepicker("refresh");
+    $('#modal_form #tgl_kontrak').datepicker("setDate", "<?= date('d/m/Y') ?>");
+    $('#modal_form #tgl_kontrak').datepicker("refresh");
 }
 
 function addModal() {
@@ -284,8 +287,8 @@ function editModal(data) {
     $('#modal_form #input_kontrak').hide();
 
     $('#modal_form #rekening').val(rekening).change();
-    $('#modal_form #tgl_pengadaan').datepicker("setDate", tgl);
-    $('#modal_form #tgl_pengadaan').datepicker("refresh");
+    $('#modal_form #tgl_kontrak').datepicker("setDate", tgl);
+    $('#modal_form #tgl_kontrak').datepicker("refresh");
 
     $('#modal_form').modal({
         backdrop: 'static',

@@ -53,7 +53,7 @@
                     }
                   </style>
 
-                  <table id="dataTable" class="table table-hover table-bordered table-striped" style="font-size:small">
+                  <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table" style="font-size:small">
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>

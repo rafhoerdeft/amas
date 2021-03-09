@@ -3,12 +3,12 @@
     <div class="content-header row">
       
       <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Data Kontrak</h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Data Aset - <?= $dataJenisKib->nama_kib ?></h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url('User1') ?>">Dashboard</a></li>
-              <li class="breadcrumb-item active">Data Kontrak</li>
+              <li class="breadcrumb-item active">Data Aset</li>
             </ol>
           </div>
         </div>
@@ -53,68 +53,9 @@
                     }
                   </style>
 
-                  <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table" style="font-size: 8pt">
-                    <thead>
-                      <tr style="text-align: center;">
-                        <th>No</th>
-                        <th>Aksi</th>
-                        <th>No. Kontrak</th>
-                        <th>Tgl. Kontrak</th>
-                        <th>Nama Penyedia</th>
-                        <th>Alamat Penyedia</th>
-                        <th>Kota Penyedia</th>
-                        <th>No. SP2D</th>
-                        <th>Nilai (Rp)</th>
-                        <th>PPKom</th>
-                        <th>Jenis Rekening</th>
-                        <!-- <th>Jns. Rekening</th> -->
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <?php $no=1; foreach ($dataKontrak as $val) { ?>
-                        <tr>
-                          <td align="center"><?= $no++ ?></td>
-                          <td nowrap align="center">
-                            <?php if ($this->id_user == $val->id_user) { ?>
-                              <button type="button" onclick="hapusData(this)" 
-                                data-id="<?= encode($val->id_kontrak) ?>" 
-                                data-link="<?= base_url('User1/deleteDataKontrak') ?>" 
-                                data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
-                                data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
-                                class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
-
-                              <button type="button" 
-                                data-id="<?= encode($val->id_kontrak) ?>" 
-                                data-nokontrak="<?= $val->no_kontrak ?>" 
-                                data-nosp2d="<?= $val->no_sp2d ?>" 
-                                data-nilai="<?= nominal($val->nilai_kontrak) ?>" 
-                                data-rekanan="<?= $val->id_rekanan ?>" 
-                                data-ppkom="<?= $val->id_user ?>" 
-                                data-rekening="<?= $val->jenis_rekening ?>" 
-                                data-tgl="<?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?>" 
-                                onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
-                            <?php } else { ?>
-                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
-                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Update Data"><i class="la la-edit font-small-3"></i></button>
-                            <?php } ?>
-                          </td>
-                          <td><?= $val->no_kontrak ?></td>
-                          <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
-                          <td><?= $val->nama_rekanan ?></td>
-                          <td><?= $val->alamat_rekanan ?></td>
-                          <td align="center"><?= $val->kota_rekanan ?></td>
-                          <td><?= $val->no_sp2d ?></td>
-                          <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
-                          <td><?= $val->nama_ppkom ?></td>
-                          <td align="center">
-                              <?= ($val->jenis_rekening==null || $val->jenis_rekening=='')?'-':$val->jenis_rekening ?>
-                          </td>
-                        </tr>
-                      <?php } ?>
-                    </tbody>
-
-                  </table>
+                  <!-- Load table jenis KIB -->
+                  <?= $this->load->view('table_kib/'.$dataJenisKib->nama_tbl_kib) ?>
+                  
                 </div>
               </div>
             </div>
