@@ -21,7 +21,7 @@ class User4 extends Adm_Controller
             // assets_url . "assets/css/style.css",
         );
         $this->foot = array(
-            assets_url . "app-assets/vendors/js/vendors.min.js",
+            // assets_url . "app-assets/vendors/js/vendors.min.js",
             assets_url . "app-assets/js/core/app-menu.js",
             assets_url . "app-assets/js/core/app.js",
             assets_url . "app-assets/js/scripts/customizer.js",

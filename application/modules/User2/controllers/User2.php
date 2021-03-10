@@ -22,7 +22,7 @@ class User2 extends Adm_Controller
             // assets_url . "assets/css/style.css",
         );
         $this->foot = array(
-            assets_url . "app-assets/vendors/js/vendors.min.js",
+            // assets_url . "app-assets/vendors/js/vendors.min.js",
             assets_url . "app-assets/js/core/app-menu.js",
             assets_url . "app-assets/js/core/app.js",
             assets_url . "app-assets/js/scripts/customizer.js",
@@ -63,7 +63,21 @@ class User2 extends Adm_Controller
 
      public function dataAset($id = '') {
 
+        $this->load->helper('searchbar');
+
         $id_jenis_kib = decode($id);
+
+        $kib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib");
+
+        $cekKib = $kib->num_rows();
+
+        if ($cekKib==0) {
+            redirect(base_url('User2/dataAset/'.encode(1)));
+        }
+
+        $dataJenisKib = $kib->row();
+
+        // ===============================================================================
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         // $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
@@ -82,10 +96,12 @@ class User2 extends Adm_Controller
         // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
         // $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
         // ================================================================
-        $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
         // $script[] = "$('.date-range').datepicker({
         //                 autoclose: true,
         //                 todayHighlight: true,
@@ -99,16 +115,20 @@ class User2 extends Adm_Controller
         $footer['js']       = $this->foot;
         $footer['script']   = $script;
         $menu['active']     = '2';
+        $menu['active_sub']     = '2.'.$id_jenis_kib;
 
         // ================================================================
         
-        $dataJenisKib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib")->row();
-        
-        $dataAset = $this->MasterData->selectJoinOrder('*', 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
+        // $select = array(
+        //     'ast.*',
+        //     'kib.*',
+        //     "(SELECT SUM(br.harga_barang) FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) harga_aset",
+        // );
+        // $dataAset = $this->MasterData->selectJoinOrder($select, 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
 
         $content = array(
             'dataJenisKib'   => $dataJenisKib,
-            'dataAset'   => $dataAset,
+            // 'dataAset'       => $dataAset,
         );
 
         $data = array(
@@ -184,6 +204,60 @@ class User2 extends Adm_Controller
             }
         } else {
             redirect(base_url('User1'));
+        }
+    }
+
+    public function getDataAset($tbl='', $id='')
+    {
+        if ($this->input->POST()) {
+            $id_jenis_kib = decode($id);
+            $this->load->model("Data_".$tbl, "DataTable");
+            $fetch_data = $this->DataTable->make_datatables($tbl, $id_jenis_kib);
+
+            $data = array();
+            $i = $_POST['start'];
+            foreach ($fetch_data as $val) {
+                $btn = '';
+                $i++;
+                $btn_hapus = '<button type="button" onclick="hapusData(this)" 
+                data-id="'. encode($val->id_aset) .'" 
+                data-link="'. base_url('User1/deleteDataAset') .'" 
+                data-csrfname="'. $this->security->get_csrf_token_name() .'" 
+                data-csrfcode="'. $this->security->get_csrf_hash() .'" 
+                class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
+                $btn_edit = ' <a href="' . base_url('User2/editDataAset/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+
+                $btn .= $btn_hapus;
+                $btn .= $btn_edit;
+
+                $columns = array(
+                    $i,
+                    $btn,
+                    $val->nama_aset,
+                    ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset,
+                    $val->kode_baru_aset,
+                    $val->no_reg,
+                    $val->luas_tanah,
+                    $val->thn_beli,
+                    $val->letak,
+                    $val->status_tanah,
+                    date('d/m/Y', strtotime($val->tgl_sertifikat)),
+                    $val->no_sertifikat,
+                    $val->penggunaan,
+                    $val->asal_usul,
+                    nominal($val->harga_aset),
+                    $val->ket_aset,
+                );
+
+                $data[] = $columns;
+            }
+            $output = array(
+                "draw"               =>     $_POST["draw"],
+                "recordsTotal"       =>     $this->DataTable->get_all_data($id_jenis_kib),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($tbl, $id_jenis_kib),
+                "data"               =>     $data
+            );
+            echo json_encode($output);
         }
     }
 

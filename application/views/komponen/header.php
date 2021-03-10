@@ -25,7 +25,7 @@
         <link href="<?= $val ?>" type="text/css" rel="stylesheet">
     <?php } ?>
 
-    <!-- <script src="<?//= assets_url ?>app-assets/vendors/js/vendors.min.js" type="text/javascript"></script> -->
+    <script src="<?= assets_url ?>app-assets/vendors/js/vendors.min.js" type="text/javascript"></script>
 
     <?php 
         if (isset($js)) {

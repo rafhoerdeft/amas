@@ -458,11 +458,9 @@ $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array(
                                     'Auth/cek_login',
-                                    // 'Admin/dataIjin',
-                                    // 'Admin/dataPajak',
-                                    // 'Admin/getDataPajak/.*?/.*?/.*?/.*?',
-                                    'Admin/getDataDesa',
-                                    // 'Admin/getDataIjin/.*?/.*?/.*?/.*?'
+                                    // 'Admin/getDataDesa',
+                                    'User2/getDataAset/.*?/.*+',
+                                    // 'Admin/deletePemohon',
                                 );
 
 /*

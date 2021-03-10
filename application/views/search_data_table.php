@@ -20,16 +20,16 @@
     }
 </style>
 
-<div class="pull-right" style="width: 100%">
+<div class="pull-right col-md-4" style="bottom: 5px;">
     <div class="input-group">
-        <input name="caridata" id="caridata" class="form-control" placeholder="Cari..." type="search" value="" onkeypress="if (event.keyCode == 13){cariDataTable('<?= $table_name ?>');}" onkeyup="showHapusInput(this)" style="height: 40px;">
+        <input name="caridata" id="caridata" class="form-control" placeholder="Cari..." type="search" value="" onkeypress="if (event.keyCode == 13){cariDataTable('<?= $table_name ?>');}" onkeyup="showHapusInput(this)">
         <div class="input-group-append">
-            <button type="button" id="hapusInputBtn" class="btn btn-danger hapus-input" style="height: 40px;">
+            <button type="button" id="hapusInputBtn" class="btn btn-danger hapus-input">
                 <i class="la la-close"></i>
             </button>
         </div>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary" onclick="cariDataTable('<?= $table_name ?>')" style="height: 40px;">
+            <button type="submit" class="btn btn-secondary" onclick="cariDataTable('<?= $table_name ?>')">
                 <i class="la la-search"></i>
             </button>
         </div>

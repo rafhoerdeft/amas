@@ -13,17 +13,17 @@
                         <span>Aset</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown dropdown-submenu nav-item <?//= (isset($active_sub) ? ($active_sub == '2.1' ? 'active' : '') : '') ?>" data-menu="dropdown-submenu">
+                        <li class="dropdown dropdown-submenu <?//= (isset($active_sub) ? ($active_sub == '2.1' ? 'active' : '') : '') ?>" data-menu="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Tambah Aset</a>
                             <ul class="dropdown-menu">
                                 <?php //foreach ($dataKib as $val) { ?>
-                                    <li data-menu="" class="nav-item <?//= (isset($active_sub_sub) ? ($active_sub_sub == '2.1.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
+                                    <li data-menu="" class="<?//= (isset($active_sub_sub) ? ($active_sub_sub == '2.1.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
                                         <a class="dropdown-item" href="<?//= base_url('User2/tambahAset/'.$val->jenis_kib) ?>" data-toggle="dropdown">KIB <?//= $val->jenis_kib ?> - <?//= $val->nama_kib ?></a>
                                     </li>
                                 <?php //} ?>
                             </ul>
                         </li>
-                        <li data-menu="" class="nav-item <?//= (isset($active_sub) ? ($active_sub == '2.2' ? 'active' : '') : '') ?>">
+                        <li data-menu="" class="<?//= (isset($active_sub) ? ($active_sub == '2.2' ? 'active' : '') : '') ?>">
                             <a class="dropdown-item" href="<?//= base_url('User2/dataAset') ?>">Data Aset</a>
                         </li>
                     </ul>
@@ -34,7 +34,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <?php foreach ($dataKib as $val) { ?>
-                            <li class="nav-item <?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
+                            <li class="<?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
                                 <a class="dropdown-item" href="<?= base_url('User2/dataAset/'.encode($val->id_jenis_kib)) ?>" data-toggle="dropdown"><?= $val->jenis_kib ?>. <?= $val->nama_kib ?></a>
                             </li>
                         <?php } ?>

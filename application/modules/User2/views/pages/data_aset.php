@@ -53,6 +53,8 @@
                     }
                   </style>
 
+                  <?= formSearch('data_aset') ?>
+
                   <!-- Load table jenis KIB -->
                   <?= $this->load->view('table_kib/'.$dataJenisKib->nama_tbl_kib) ?>
                   
