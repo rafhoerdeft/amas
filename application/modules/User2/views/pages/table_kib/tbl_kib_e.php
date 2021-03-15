@@ -1,4 +1,4 @@
-<table id="dataTable" class="table table-hover table-bordered table-striped table-responsive" style="font-size: 8pt">
+<table id="data_aset" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
     <thead>
         <tr style="text-align: center;">
             <th>No</th>
@@ -22,40 +22,40 @@
         </tr>
     </thead>
 
-    <tbody>
-        <?php $no=1; foreach ($dataAset as $val) { ?>
+    <!-- <tbody>
+        <?php //$no=1; foreach ($dataAset as $val) { ?>
         <tr>
-            <td align="center"><?= $no++ ?></td>
+            <td align="center"><?php //echo $no++; ?></td>
             <td nowrap align="center">
                 <button type="button" onclick="hapusData(this)" 
-                data-id="<?= encode($val->id_aset) ?>" 
-                data-link="<?= base_url('User1/deleteDataAset') ?>" 
-                data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
-                data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
+                data-id="<?php //echo encode($val->id_aset); ?>" 
+                data-link="<?php //echo base_url('User1/deleteDataAset'); ?>" 
+                data-csrfname="<?php //echo $this->security->get_csrf_token_name(); ?>" 
+                data-csrfcode="<?php //echo $this->security->get_csrf_hash(); ?>" 
                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
 
                 <button type="button" 
-                data-id="<?= encode($val->id_aset) ?>" 
+                data-id="<?php //echo encode($val->id_aset); ?>" 
                 onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
             </td>
-            <td><?= $val->nama_aset ?></td>
-            <td><?= $val->kode_lama_aset ?></td>
-            <td><?= $val->kode_baru_aset ?></td>
-            <td align="center"><?= $val->no_reg ?></td>
-            <td align="center"><?= $val->judul_buku ?></td>
-            <td align="left"><?= $val->spesifikasi_buku ?></td>
-            <td align="center"><?= $val->asal_seni ?></td>
-            <td align="center"><?= $val->pencipta_seni ?></td>
-            <td align="center"><?= $val->bahan_seni ?></td>
-            <td align="center"><?= $val->jenis_hewan_tumbuhan ?></td>
-            <td align="center"><?= $val->ukuran_hewan_tumbuhan ?></td>
-            <td align="center"><?= $val->jumlah ?></td>
-            <td align="center"><?= $val->thn_beli ?></td>
-            <td align="left"><?= $val->asal_usul ?></td>
-            <td align="right"><?= nominal($val->harga_aset) ?></td>
-            <td><?= $val->ket_aset ?></td>
+            <td><?php //echo $val->nama_aset; ?></td>
+            <td><?php //echo $val->kode_lama_aset; ?></td>
+            <td><?php //echo $val->kode_baru_aset; ?></td>
+            <td align="center"><?php //echo $val->no_reg; ?></td>
+            <td align="center"><?php //echo $val->judul_buku; ?></td>
+            <td align="left"><?php //echo $val->spesifikasi_buku; ?></td>
+            <td align="center"><?php //echo $val->asal_seni; ?></td>
+            <td align="center"><?php //echo $val->pencipta_seni; ?></td>
+            <td align="center"><?php //echo $val->bahan_seni; ?></td>
+            <td align="center"><?php //echo $val->jenis_hewan_tumbuhan; ?></td>
+            <td align="center"><?php //echo $val->ukuran_hewan_tumbuhan; ?></td>
+            <td align="center"><?php //echo $val->jumlah; ?></td>
+            <td align="center"><?php //echo $val->thn_beli; ?></td>
+            <td align="left"><?php //echo $val->asal_usul; ?></td>
+            <td align="right"><?php //echo nominal($val->harga_aset); ?></td>
+            <td><?php //echo $val->ket_aset; ?></td>
         </tr>
-        <?php } ?>
-    </tbody>
+        <?php //} ?>
+    </tbody> -->
 
 </table>

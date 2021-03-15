@@ -3,7 +3,7 @@ function hapusData(data) {
 	var link = $(data).data().link;
 	var csrf_name = $(data).data().csrfname;
 	var csrf_code = $(data).data().csrfcode;
-	console.log(csrf_name);
+	
 	swal({
 		title: "Hapus Data",
 		text: "Apakah data ingin dihapus?",

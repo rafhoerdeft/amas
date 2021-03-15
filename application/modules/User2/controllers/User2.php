@@ -61,7 +61,7 @@ class User2 extends Adm_Controller
 
      // DATA ASET ==============================================================
 
-     public function dataAset($id = '') {
+    public function dataAset($id = '') {
 
         $this->load->helper('searchbar');
 
@@ -127,6 +127,7 @@ class User2 extends Adm_Controller
         // $dataAset = $this->MasterData->selectJoinOrder($select, 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
 
         $content = array(
+            'id_jenis_kib'   => $id_jenis_kib,
             'dataJenisKib'   => $dataJenisKib,
             // 'dataAset'       => $dataAset,
         );
@@ -135,6 +136,109 @@ class User2 extends Adm_Controller
             'header'    => $header,
             'menu'      => $menu,
             'konten'    => 'pages/data_aset',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function addDataAset($id = '') {
+
+        $id_jenis_kib = decode($id);
+
+        $kib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib");
+
+        $cekKib = $kib->num_rows();
+
+        if ($cekKib==0) {
+            redirect(base_url('User2/dataAset/'.encode(1)));
+        }
+
+        $dataJenisKib = $kib->row();
+
+        // ===============================================================================
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/css/plugins/forms/wizard.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/jquery.steps.min.js";
+        // $this->foot[] = assets_url . "app-assets/js/scripts/forms/wizard-steps.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        // $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        $script[] = '$("#dataTable").DataTable();';
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2();';
+        $script[] = '$(".tab-steps").steps({
+                        headerTag: "h6",
+                        bodyTag: "fieldset",
+                        transitionEffect: "fade",
+                        titleTemplate: "<span class=step>#index#</span> #title#",
+                        labels: {
+                            finish: "Submit"
+                        },
+                        onFinished: function (event, currentIndex) {
+                            alert("Form submitted.");
+                        }
+                    });';
+        $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
+                        let id = $(this).val();
+                        pilihAset(id, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });";
+        $script[] = "$('.skin-radio input').on('ifChecked ifUnchecked', function(event){
+                        if(event.type=='ifChecked'){
+                            asetUtama(this);
+                        }
+                    }).iCheck({
+                        radioClass: 'iradio_square-red'
+                    });";
+       
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '2';
+        $menu['active_sub']     = '2.'.$id_jenis_kib;
+
+        // ================================================================
+    
+        $dataBarang = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "br.id_barang NOT IN (SELECT ar.id_barang FROM tbl_aset_rincian ar)", "pd.id_pengadaan", "DESC")->result();
+
+        $content = array(
+            'id_jenis_kib'   => $id_jenis_kib,
+            'dataJenisKib'   => $dataJenisKib,
+            'dataBarang'     => $dataBarang,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/form_kib',
             'footer'    => $footer,
             'cont'      => $content,
         );
@@ -211,7 +315,7 @@ class User2 extends Adm_Controller
     {
         if ($this->input->POST()) {
             $id_jenis_kib = decode($id);
-            $this->load->model("Data_".$tbl, "DataTable");
+            $this->load->model("Data_tbl_kib", "DataTable");
             $fetch_data = $this->DataTable->make_datatables($tbl, $id_jenis_kib);
 
             $data = array();
@@ -237,17 +341,76 @@ class User2 extends Adm_Controller
                     ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset,
                     $val->kode_baru_aset,
                     $val->no_reg,
-                    $val->luas_tanah,
-                    $val->thn_beli,
-                    $val->letak,
-                    $val->status_tanah,
-                    date('d/m/Y', strtotime($val->tgl_sertifikat)),
-                    $val->no_sertifikat,
-                    $val->penggunaan,
-                    $val->asal_usul,
-                    nominal($val->harga_aset),
-                    $val->ket_aset,
                 );
+
+                if ($id_jenis_kib == 1) {
+                    $columns[] = $val->luas_tanah;
+                    $columns[] = $val->thn_beli;
+                    $columns[] = $val->letak;
+                    $columns[] = $val->status_tanah;
+                    $columns[] = date('d/m/Y', strtotime(str_replace('/', '-', $val->tgl_sertifikat)));
+                    $columns[] = $val->no_sertifikat;
+                    $columns[] = $val->penggunaan;
+                } else if ($id_jenis_kib == 2) {
+                    $columns[] = $val->merk_type;
+                    $columns[] = $val->ukuran_cc;
+                    $columns[] = $val->ukuran_cc;
+                    $columns[] = $val->bahan;
+                    $columns[] = $val->warna;
+                    $columns[] = $val->thn_beli;
+                    $columns[] = ($val->no_pabrik==''&&$val->no_pabrik==null)?'-':$val->no_pabrik;
+                    $columns[] = ($val->no_rangka==''&&$val->no_rangka==null)?'-':$val->no_rangka;
+                    $columns[] = ($val->no_mesin==''&&$val->no_mesin==null)?'-':$val->no_mesin;
+                    $columns[] = ($val->no_polisi==''&&$val->no_polisi==null)?'-':$val->no_polisi;
+                    $columns[] = ($val->no_bpkb==''&&$val->no_bpkb==null)?'-':$val->no_bpkb;
+                } else if ($id_jenis_kib == 3) {
+                    $columns[] = $val->kondisi;
+                    $columns[] = $val->bertingkat;
+                    $columns[] = $val->beton;
+                    $columns[] = $val->luas_lantai;
+                    $columns[] = $val->letak;
+                    $columns[] = date('d/m/Y', strtotime(str_replace('/', '-', $val->tgl_dokumen)));
+                    $columns[] = $val->no_dokumen;
+                    $columns[] = $val->luas_bangunan;
+                    $columns[] = $val->status_tanah;
+                    $columns[] = $val->no_kode_tanah;
+                } else if ($id_jenis_kib == 4) {
+                    $columns[] = ($val->kondisi==''&&$val->kondisi==null)?'-':$val->kondisi;
+                    $columns[] = $val->konstruksi;
+                    $columns[] = $val->panjang;
+                    $columns[] = $val->lebar;
+                    $columns[] = $val->luas;
+                    $columns[] = $val->letak;
+                    $columns[] = date('d/m/Y', strtotime(str_replace('/', '-', $val->tgl_dokumen)));
+                    $columns[] = ($val->no_dokumen==''&&$val->no_dokumen==null)?'-':$val->no_dokumen;
+                    $columns[] = $val->status_tanah;
+                    $columns[] = ($val->no_kode_tanah==''&&$val->no_kode_tanah==null)?'-':$val->no_kode_tanah;
+                } else if ($id_jenis_kib == 5) {
+                    $columns[] = $val->judul_buku;
+                    $columns[] = $val->spesifikasi_buku;
+                    $columns[] = $val->asal_seni;
+                    $columns[] = $val->pencipta_seni;
+                    $columns[] = $val->bahan_seni;
+                    $columns[] = $val->jenis_hewan_tumbuhan;
+                    $columns[] = $val->ukuran_hewan_tumbuhan;
+                    $columns[] = $val->jumlah;
+                    $columns[] = $val->thn_beli;
+                } else {
+                    $columns[] = $val->kondisi;
+                    $columns[] = $val->bertingkat;
+                    $columns[] = $val->beton;
+                    $columns[] = $val->luas_lantai;
+                    $columns[] = $val->letak;
+                    $columns[] = date('d/m/Y', strtotime(str_replace('/', '-', $val->tgl_dokumen)));
+                    $columns[] = $val->no_dokumen;
+                    $columns[] = date('d/m/Y', strtotime(str_replace('/', '-', $val->tgl_mulai)));
+                    $columns[] = $val->status_tanah;
+                    $columns[] = $val->no_kode_tanah;
+                }
+
+                $columns[] = $val->asal_usul;
+                $columns[] = nominal($val->harga_aset);
+                $columns[] = $val->ket_aset;
 
                 $data[] = $columns;
             }

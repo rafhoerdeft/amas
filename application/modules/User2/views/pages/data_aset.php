@@ -7,7 +7,7 @@
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= base_url('User1') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
               <li class="breadcrumb-item active">Data Aset</li>
             </ol>
           </div>
@@ -16,9 +16,9 @@
 
       <div class="content-header-right col-md-4 col-12 mb-2">
         <div class="dropdown float-md-right">
-          <button class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button" onclick="addModal()">
+          <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button" onclick="addModal()">
             <i class="la la-plus font-small-3"></i> Tambah Data
-          </button>
+          </a>
         </div>
       </div>
 
