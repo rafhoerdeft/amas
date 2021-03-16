@@ -7,6 +7,8 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
+            <th>Jumlah</th>
+            <th>Satuan</th>
             <th>Merk/Type</th>
             <th>Ukuran/CC</th>
             <th>Bahan</th>

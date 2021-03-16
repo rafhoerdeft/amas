@@ -7,11 +7,13 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
+            <th>Jumlah</th>
+            <th>Satuan</th>
             <th>Kondisi</th>
             <th>Konstruksi</th>
             <th>Panjang (m)</th>
             <th>Lebar (m)</th>
-            <th>Luas (m2)</th>
+            <th>Luas (m<sup>2</sup>)</th>
             <th>Lokasi</th>
             <th>Tgl. Dokumen</th>
             <th>No. Dokumen</th>

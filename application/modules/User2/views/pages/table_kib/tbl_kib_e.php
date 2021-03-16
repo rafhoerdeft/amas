@@ -7,6 +7,8 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
+            <th>Jumlah</th>
+            <th>Satuan</th>
             <th>Judul Buku</th>
             <th>Spesifikasi Buku</th>
             <th>Asal Seni</th>

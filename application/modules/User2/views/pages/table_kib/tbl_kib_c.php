@@ -7,10 +7,12 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
+            <th>Jumlah</th>
+            <th>Satuan</th>
             <th>Kondisi</th>
             <th>Konst. Bertingkat</th>
             <th>Konst. Beton</th>
-            <th>Luas Lantai (m2)</th>
+            <th>Luas Lantai (m<sup>2</sup>)</th>
             <th>Lokasi</th>
             <th>Tgl. Dokumen</th>
             <th>No. Dokumen</th>

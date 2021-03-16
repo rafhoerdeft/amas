@@ -7,7 +7,9 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
-            <th>Luas (m2)</th>
+            <th>Jumlah</th>
+            <th>Satuan</th>
+            <th>Luas (m<sup>2</sup>)</th>
             <th>Thn Beli</th>
             <th>Lokasi</th>
             <th>Status Tanah</th>

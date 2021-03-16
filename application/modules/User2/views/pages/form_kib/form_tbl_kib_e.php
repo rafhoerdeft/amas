@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="luas_tanah">Luas Tanah (m<sup>2</sup>):</label>
-            <input type="text" class="form-control" name="luas_tanah" id="luas_tanah" placeholder="0" onkeypress="return inputAngka(event);" required>
+            <label for="luas_tanah">Luas Tanah :</label>
+            <input type="text" class="form-control" name="luas_tanah" id="luas_tanah" required>
         </div>
         <div class="form-group">
             <label for="thn_beli">Tahun Beli :</label>
-            <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="thn_beli" id="thn_beli" value="<?= date('Y') ?>" maxlength="4" required>
+            <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="thn_beli" id="thn_beli" value="1" maxlength="4" required>
         </div>
         <div class="form-group">
             <label for="letak">Lokasi :</label>

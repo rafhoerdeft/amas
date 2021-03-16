@@ -172,10 +172,10 @@ class User2 extends Adm_Controller
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
         // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/jquery.steps.min.js";
         // $this->foot[] = assets_url . "app-assets/js/scripts/forms/wizard-steps.js";
         $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/jquery.steps.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
         // $this->foot[] = base_url('assets/js/data_table.js');
         // $this->foot[] = base_url('assets/js/delete_data.js');
@@ -198,22 +198,30 @@ class User2 extends Adm_Controller
                         transitionEffect: "fade",
                         titleTemplate: "<span class=step>#index#</span> #title#",
                         labels: {
-                            finish: "Submit"
+                            finish: "Simpan",
+                            next: "Lanjut",
+                            previous: "Sebelumnya",
+                            loading: "Loading..." 
                         },
                         onFinished: function (event, currentIndex) {
-                            alert("Form submitted.");
+                            var form = $(this);
+                            
+                            // Trigger HTML5 validity.
+                            var reportValidity = form[0].reportValidity();
+
+                            // Then submit if form is OK.
+                            if(reportValidity){
+                                form.submit();
+                            } 
                         }
                     });';
         $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
-                        let id = $(this).val();
-                        pilihAset(id, event.type);
+                        pilihAset(this, event.type);
                     }).iCheck({
                         checkboxClass: 'icheckbox_flat-green'
                     });";
         $script[] = "$('.skin-radio input').on('ifChecked ifUnchecked', function(event){
-                        if(event.type=='ifChecked'){
-                            asetUtama(this);
-                        }
+                        asetUtama(this, event.type);
                     }).iCheck({
                         radioClass: 'iradio_square-red'
                     });";
@@ -249,22 +257,107 @@ class User2 extends Adm_Controller
     public function simpanDataAset() {
         $post = html_escape($this->input->POST());
 
+        // echo json_encode($post);exit();
+
         if ($post) {
 
-            $data = array(
-                'nama_rekanan'   => $post['nama_rekanan'],  
-                'alamat_rekanan' => $post['alamat_rekanan'],  
-                'kota_rekanan'   => $post['kota_rekanan'],  
+            $this->db->trans_begin();
+
+            $data_kib = array();
+            foreach ($post as $key => $val) {
+                if (
+                    $key!='pilih_aset' && 
+                    $key!='pilih_jml_aset' &&
+                    $key!='aset_utama' && 
+                    $key!='kib' && 
+                    $key!='tbl_kib' && 
+                    $key!='dataTable_length' && 
+                    $key!='plh_ast' && 
+                    $key!='ast_utm' && 
+                    $key!='nama_aset' && 
+                    $key!='jml_aset' && 
+                    $key!='kode_baru_aset' && 
+                    $key!='no_reg' && 
+                    $key!='status_masuk_aset' && 
+                    $key!='satuan_aset' && 
+                    $key!='ket_aset' 
+                ) {
+                    if ($key=='harga') {
+                        $data_kib[$key] = str_replace('.', '', $val);
+                    } else {
+                        $data_kib[$key] = $val;
+                    }
+                }
+            }
+
+            $input = $this->MasterData->inputData($data_kib, $post['tbl_kib']);
+
+            $id_kib = $this->db->insert_id();
+
+            $data_aset = array(
+                'id_jenis_kib'      => $post['kib'],  
+                'id_kib'            => $id_kib,  
+                'nama_aset'         => $post['nama_aset'],  
+                'jml_aset'          => $post['jml_aset'],  
+                'satuan_aset'       => $post['satuan_aset'],  
+                'kode_baru_aset'    => $post['kode_baru_aset'],  
+                'no_reg'            => $post['no_reg'],  
+                'status_masuk_aset' => $post['status_masuk_aset'],  
+                'ket_aset'          => $post['ket_aset'],  
             );
 
-            $input = $this->MasterData->inputData($data,'tbl_rekanan');
+            $input = $this->MasterData->inputData($data_aset,'tbl_aset');
 
-            if ($input) {
-                alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+            $id_aset = $this->db->insert_id();
+
+            if ($post['status_masuk_aset'] != 'pengadaan') {
+                $data_brg = array(
+                    'nama_barang'   => $post['nama_aset'],
+                    'satuan_barang' => $post['satuan_aset'],
+                    'harga_barang'  => str_replace('.', '', $post['harga']),
+                    'tgl_masuk'     => date('Y-m-d'),
+                );
+                $input = $this->MasterData->inputData($data_brg,'tbl_barang');
+
+                $id_barang = $this->db->insert_id();
+
+                $data_rincian = array(
+                    'id_aset'       => $id_aset,
+                    'id_barang'     => $id_barang,
+                    'jml_barang'    => $post['jml_aset'],
+                    'posisi'        => 1
+                );
+                $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
+                
             } else {
+                $rincian_barang = explode(';', $post['pilih_aset']);
+                $rincian_jml_barang = explode(';', $post['pilih_jml_aset']);
+
+                foreach ($rincian_barang as $key => $val) {
+                    $data_rincian = array(
+                        'id_aset'       => $id_aset,
+                        'id_barang'     => $val,
+                        'jml_barang'    => $rincian_jml_barang[$key],
+                        'posisi'        => ($val==$post['aset_utama'])?1:2
+                    );
+                    $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
+                }
+            }
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+            }
+            else {
+                $input = $this->db->trans_commit();
+                if ($input) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+                }
             }
         }
     }
@@ -286,10 +379,10 @@ class User2 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . 'User2/dataRekanan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . 'User2/dataRekanan');
             }
         }
     }
@@ -307,7 +400,7 @@ class User2 extends Adm_Controller
                 echo 'Gagal';
             }
         } else {
-            redirect(base_url('User1'));
+            redirect(base_url('User2'));
         }
     }
 
@@ -325,7 +418,7 @@ class User2 extends Adm_Controller
                 $i++;
                 $btn_hapus = '<button type="button" onclick="hapusData(this)" 
                 data-id="'. encode($val->id_aset) .'" 
-                data-link="'. base_url('User1/deleteDataAset') .'" 
+                data-link="'. base_url('User2/deleteDataAset') .'" 
                 data-csrfname="'. $this->security->get_csrf_token_name() .'" 
                 data-csrfcode="'. $this->security->get_csrf_hash() .'" 
                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
@@ -341,6 +434,8 @@ class User2 extends Adm_Controller
                     ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset,
                     $val->kode_baru_aset,
                     $val->no_reg,
+                    $val->jml_aset,
+                    $val->satuan_aset,
                 );
 
                 if ($id_jenis_kib == 1) {
@@ -353,7 +448,6 @@ class User2 extends Adm_Controller
                     $columns[] = $val->penggunaan;
                 } else if ($id_jenis_kib == 2) {
                     $columns[] = $val->merk_type;
-                    $columns[] = $val->ukuran_cc;
                     $columns[] = $val->ukuran_cc;
                     $columns[] = $val->bahan;
                     $columns[] = $val->warna;

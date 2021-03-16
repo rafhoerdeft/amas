@@ -56,11 +56,15 @@
                                     }
                                     </style>
 
-                                    <form action="#" class="tab-steps wizard-circle">
-                                        <input type="text" id="pilih_aset">
-                                        <input type="text" id="aset_utama">
+                                    <form action="<?= base_url('User2/simpanDataAset') ?>" method="POST" class="tab-steps wizard-circle">
+                                        <?= token_csrf() ?>
+                                        <input type="hidden" id="pilih_aset" name="pilih_aset">
+                                        <input type="hidden" id="pilih_jml_aset" name="pilih_jml_aset">
+                                        <input type="hidden" id="aset_utama" name="aset_utama">
+                                        <input type="hidden" id="kib" name="kib" value="<?= $id_jenis_kib ?>">
+                                        <input type="hidden" id="tbl_kib" name="tbl_kib" value="<?= $dataJenisKib->nama_tbl_kib ?>">
                                         <!-- Step 1 -->
-                                        <h6>Step 1</h6>
+                                        <h6><i class="step-icon ft-check-square"></i> Pilih Barang</h6>
                                         <fieldset>
                                             <table id="dataTable"
                                                 class="table table-hover table-bordered table-striped table-responsive d-xl-table"
@@ -85,16 +89,18 @@
                                                         <td align="center"><?= $no ?></td>
                                                         <td nowrap align="center">
                                                             <div class="skin skin-check">
-                                                                <input type="checkbox" name="pilih_aset[]" id="brg_<?= $val->id_barang ?>"
-                                                                    value="<?= $val->id_barang ?>">
+                                                                <input type="checkbox" name="plh_ast[]" id="brg_<?= $val->id_barang ?>"
+                                                                    value="<?= $val->id_barang ?>" 
+                                                                    data-harga="<?= $val->harga_barang ?>" 
+                                                                    data-jml="<?= $val->jml_barang ?>">
                                                             </div>
                                                         </td>
                                                         <td nowrap align="center">
                                                             <div class="skin skin-radio">
-                                                                <input type="radio" name="aset_utama"
+                                                                <input type="radio" name="ast_utm"
                                                                 id="ast_<?= $val->id_barang ?>" value="<?= $val->id_barang ?>" data-nama="<?= $val->nama_barang ?>" 
                                                                 data-satuan="<?= $val->satuan_barang ?>" 
-                                                                data-harga="<?= $val->harga_barang ?>" 
+                                                                data-harga="<?= nominal($val->harga_barang) ?>" 
                                                                 data-jml="<?= nominal($val->jml_barang) ?>" disabled>
                                                             </div>
                                                         </td>
@@ -114,35 +120,53 @@
                                             <hr>
                                         </fieldset>
                                         <!-- Step 2 -->
-                                        <h6>Step 2</h6>
+                                        <h6><i class="step-icon la la-pencil"></i> Lengkapi Data</h6>
                                         <fieldset>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="proposalTitle1">Proposal Title :</label>
-                                                        <input type="text" class="form-control" id="proposalTitle1">
+                                                        <label for="nama_aset">Nama Aset :</label>
+                                                        <input type="text" class="form-control" name="nama_aset" id="nama_aset" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="emailAddress2">Email Address :</label>
-                                                        <input type="email" class="form-control" id="emailAddress2">
+                                                        <label for="jml_aset">Jumlah Aset :</label>
+                                                        <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="jml_aset" id="jml_aset" value="1" maxlength="6" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="videoUrl1">Video URL :</label>
-                                                        <input type="url" class="form-control" id="videoUrl1">
+                                                        <label for="kode_baru_aset">Kode Aset :</label>
+                                                        <input type="text" class="form-control" name="kode_baru_aset" id="kode_baru_aset" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="no_reg">Nomor Register :</label>
+                                                        <input type="text" class="form-control" name="no_reg" id="no_reg" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="jobTitle1">Job Title :</label>
-                                                        <input type="text" class="form-control" id="jobTitle1">
+                                                        <label for="status_masuk_aset">Asal Aset :</label>
+                                                        <select id="status_masuk_aset" name="status_masuk_aset" class="form-control" onchange="changeAsal(this)">
+                                                            <option value="pengadaan" selected>Pengadaan</option>
+                                                            <option value="mutasi">Mutasi</option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="shortDescription1">Short Description :</label>
-                                                        <textarea name="shortDescription" id="shortDescription1"
-                                                            rows="4" class="form-control"></textarea>
+                                                        <label for="satuan_aset">Satuan Aset:</label>
+                                                        <input type="text" class="form-control" name="satuan_aset" id="satuan_aset" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="harga">Harga :</label>
+                                                        <input type="text" class="form-control" name="harga" id="harga" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" maxlength="20" placeholder="0" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ket_aset">Keterangan :</label>
+                                                        <textarea name="ket_aset" id="ket_aset" rows="3" class="form-control"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <hr>
+
+                                            <?= $this->load->view('form_kib/form_'.$dataJenisKib->nama_tbl_kib) ?>
                                         </fieldset>
                                     </form>
 
@@ -157,47 +181,95 @@
 </div>
 
 <script>
-    function pilihAset(id, type) {
-        var select = $('#pilih_aset').val();
-        var value = '';
+
+    function changeAsal(data) {
+        var val = $(data).val();
+        console.log(val);
+    }
+
+    function pilihAset(data, type) {
+        let id         = $(data).val();
+        let jml        = $(data).data().jml;
+        let harga      = parseInt($(data).data().harga);
+
+        var select_id  = $('#pilih_aset').val();
+        var select_jml = $('#pilih_jml_aset').val();
+        var val_harga  = $('#harga').val();
+
+        if (val_harga == '') {
+            val_harga = 0;
+        } else {
+            val_harga  = parseInt($('#harga').val().replace('.', ''));
+        }
+
+        var value_id   = '';
+        var value_jml  = '';
+        var value_hrg  = 0;
 
         if(type=='ifChecked'){
-            if (select == '') {
-                value = id;
+
+            value_hrg = (harga + val_harga);
+
+            if (select_id == '') {
+                value_id  = id;
+                value_jml = jml;
                 $('#ast_'+id).iCheck('check');
             } else {
-                // if (!select.includes(id)) {
-                    value += select + ';' + id;
+                // if (!select_id.includes(id)) {
+                    value_id += select_id + ';' + id;
+                    value_jml += select_jml + ';' + jml;
                 // } else {
-                //     value = select;
+                //     value_id = select_id;
                 // }
             }
             $('#ast_'+id).iCheck('enable');
         } else {
-            var arr = select.split(";");
+            var arr = select_id.split(";");
             var result = arr.filter(function(val){
                 return val != id; 
             });
-            value = result.toString();
+            value_id = result.toString();
+
+            var arr2 = select_jml.split(";");
+            var result2 = arr2.filter(function(val){
+                return val != jml; 
+            });
+            value_jml = result2.toString();
+
             $('#ast_'+id).iCheck('uncheck');
             $('#ast_'+id).iCheck('disable');
 
-            if (value == '') {
+            if (value_id == '') {
                 $('#aset_utama').val('');
+                $("input[name='ast_utm']").attr('required',false);
+            } else {
+                $("input[name='ast_utm']").attr('required',true);
             }
-        }
 
-        $('#pilih_aset').val(value);
+            value_hrg = (val_harga - harga);
+        }
+        var show_hrg = formatRupiah(value_hrg.toString(), 'Rp. ');
+
+        $('#pilih_aset').val(value_id);
+        $('#pilih_jml_aset').val(value_jml);
+        $('#harga').val(show_hrg);
     }
 
-    function asetUtama(data) {
+    function asetUtama(data, type) {
         let id      = $(data).val();
         let nama    = $(data).data().nama;
         let satuan  = $(data).data().satuan;
         let harga   = $(data).data().harga;
         let jml     = $(data).data().jml;
-        
-        $('#aset_utama').val(id);
+
+        if(type=='ifChecked'){
+            $('#aset_utama').val(id);
+            $('#nama_aset').val(nama);
+            $('#jml_aset').val(jml);
+            $('#satuan_aset').val(satuan);
+        } else {
+            $('#aset_utama').val('');
+        }
     }
 </script>
 

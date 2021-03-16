@@ -47,18 +47,18 @@ function showDataTable(link) {
             {  
                 "targets":9,  
                 "class":"text-center" 
-            }, 
+            },
             {  
                 "targets":10,  
-                "width": "150"
+                "class":"text-center" 
             },
             {  
                 "targets":11,  
                 "class":"text-center" 
-            },
+            }, 
             {  
                 "targets":12,  
-                "class":"text-left" 
+                "width": "150"
             },
             {  
                 "targets":13,  
@@ -66,6 +66,10 @@ function showDataTable(link) {
             },
             {  
                 "targets":14,  
+                "class":"text-left" 
+            },
+            {  
+                "targets":15,  
                 "class":"text-center" 
             },
             {  
@@ -73,7 +77,11 @@ function showDataTable(link) {
                 "class":"text-center" 
             },
             {  
-                "targets":17,  
+                "targets":18,  
+                "class":"text-center" 
+            },
+            {  
+                "targets":19,  
                 "class":"text-right" 
             }
         ],  

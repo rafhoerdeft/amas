@@ -38,7 +38,7 @@ function showDataTable(link) {
             },
             {  
                 "targets":7,  
-                "class":"text-left" 
+                "class":"text-center" 
             },
             {  
                 "targets":8,  
@@ -46,7 +46,7 @@ function showDataTable(link) {
             },
             {  
                 "targets":9,  
-                "class":"text-center" 
+                "class":"text-left" 
             },
             {  
                 "targets":10,  
@@ -70,10 +70,18 @@ function showDataTable(link) {
             },
             {  
                 "targets":15,  
+                "class":"text-center" 
+            },
+            {  
+                "targets":16,  
+                "class":"text-center" 
+            },
+            {  
+                "targets":17,  
                 "class":"text-left" 
             },
             {  
-                "targets":14,  
+                "targets":18,  
                 "class":"text-right" 
             }
         ],  

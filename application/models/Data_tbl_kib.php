@@ -8,6 +8,8 @@ class Data_tbl_kib extends CI_Model
         'kode_lama_aset',
         'kode_baru_aset',
         'no_reg',
+        'jml_aset',
+        'satuan_aset',
     );
     
     // var $select_column_search = array(
