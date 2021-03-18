@@ -57,7 +57,7 @@ class User2 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    // ======================================================================
+    // =========================================================================
 
      // DATA ASET ==============================================================
 
@@ -204,15 +204,7 @@ class User2 extends Adm_Controller
                             loading: "Loading..." 
                         },
                         onFinished: function (event, currentIndex) {
-                            var form = $(this);
-                            
-                            // Trigger HTML5 validity.
-                            var reportValidity = form[0].reportValidity();
-
-                            // Then submit if form is OK.
-                            if(reportValidity){
-                                form.submit();
-                            } 
+                            formSubmit(this);
                         }
                     });';
         $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
@@ -234,8 +226,11 @@ class User2 extends Adm_Controller
         $menu['active_sub']     = '2.'.$id_jenis_kib;
 
         // ================================================================
-    
-        $dataBarang = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "br.id_barang NOT IN (SELECT ar.id_barang FROM tbl_aset_rincian ar)", "pd.id_pengadaan", "DESC")->result();
+        $select = array(
+            '*',
+            "(SELECT kt.no_kontrak FROM tbl_kontrak kt WHERE kt.id_kontrak = pd.id_kontrak) no_kontrak",
+        );
+        $dataBarang = $this->MasterData->selectJoinOrder($select, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "br.id_barang NOT IN (SELECT ar.id_barang FROM tbl_aset_rincian ar)", "pd.id_pengadaan", "DESC")->result();
 
         $content = array(
             'id_jenis_kib'   => $id_jenis_kib,
@@ -247,6 +242,134 @@ class User2 extends Adm_Controller
             'header'    => $header,
             'menu'      => $menu,
             'konten'    => 'pages/form_kib',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function editDataAset($kib = '', $id = '') {
+
+        $id_aset = decode($id);
+        $id_jenis_kib = decode($kib);
+
+        $kib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib");
+
+        $cekKib = $kib->num_rows();
+
+        if ($cekKib==0) {
+            redirect(base_url('User2/dataAset/'.encode(1)));
+        }
+
+        $dataJenisKib = $kib->row();
+
+        // ===============================================================================
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/css/plugins/forms/wizard.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
+        // $this->foot[] = assets_url . "app-assets/js/scripts/forms/wizard-steps.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/jquery.steps.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        // $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        $script[] = '$("#dataTable").DataTable();';
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2();';
+        $script[] = '$(".tab-steps").steps({
+                        headerTag: "h6",
+                        bodyTag: "fieldset",
+                        transitionEffect: "fade",
+                        titleTemplate: "<span class=step>#index#</span> #title#",
+                        labels: {
+                            finish: "Simpan",
+                            next: "Lanjut",
+                            previous: "Sebelumnya",
+                            loading: "Loading..." 
+                        },
+                        onFinished: function (event, currentIndex) {
+                            formSubmit(this);
+                        }
+                    });';
+        $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
+                        pilihAset(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });";
+        $script[] = "$('.skin-radio input').on('ifChecked ifUnchecked', function(event){
+                        asetUtama(this, event.type);
+                    }).iCheck({
+                        radioClass: 'iradio_square-red'
+                    });";
+       
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '2';
+        $menu['active_sub']     = '2.'.$id_jenis_kib;
+
+        // ================================================================
+        
+        $select = array(
+            'ast.*',
+            "(SELECT SUM(br.harga_barang) FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as harga_aset",
+        );
+        $dataAset = $this->MasterData->getWhereData($select, 'tbl_aset ast', "id_aset = $id_aset")->row();
+
+        $select = array(
+            "GROUP_CONCAT(id_barang SEPARATOR ';') as pilih_barang",
+            "GROUP_CONCAT(jml_barang SEPARATOR ';') as pilih_jml_barang",
+            "(SELECT ac.id_barang FROM tbl_aset_rincian ac WHERE ac.id_aset = ar.id_aset AND posisi = 1) as utama",
+        );
+        $dataRincian = $this->MasterData->getWhereData($select, 'tbl_aset_rincian ar', "id_aset = $id_aset")->row();
+
+        $dataKib = $this->MasterData->getWhereData('*', $dataJenisKib->nama_tbl_kib, "id_kib = $dataAset->id_kib")->row();
+        
+        $select = array(
+            '*',
+            "(SELECT kt.no_kontrak FROM tbl_kontrak kt WHERE kt.id_kontrak = pd.id_kontrak) no_kontrak",
+            "(SELECT COUNT(ar.id_barang) FROM tbl_aset_rincian ar WHERE ar.id_barang = br.id_barang AND id_aset = $id_aset) cek",
+            "(SELECT COUNT(ar.id_barang) FROM tbl_aset_rincian ar WHERE ar.id_barang = br.id_barang AND ar.posisi = 1 AND id_aset = $id_aset) utama",
+        );
+        $dataBarang = $this->MasterData->selectJoinOrder($select, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "br.id_barang NOT IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset <> $id_aset)", "pd.id_pengadaan", "DESC")->result();
+
+        $content = array(
+            'id_jenis_kib'   => $id_jenis_kib,
+            'dataJenisKib'   => $dataJenisKib,
+            'dataAset'       => $dataAset,
+            'dataBarang'     => $dataBarang,
+            'dataRincian'    => $dataRincian,
+            'dataKib'        => $dataKib,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/form_kib_edit',
             'footer'    => $footer,
             'cont'      => $content,
         );
@@ -328,7 +451,7 @@ class User2 extends Adm_Controller
                     'posisi'        => 1
                 );
                 $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
-                
+
             } else {
                 $rincian_barang = explode(';', $post['pilih_aset']);
                 $rincian_jml_barang = explode(';', $post['pilih_jml_aset']);
@@ -347,16 +470,16 @@ class User2 extends Adm_Controller
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+                redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
             }
             else {
                 $input = $this->db->trans_commit();
                 if ($input) {
                     alert_success('Data berhasil disimpan.');
-                    redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
                 } else {
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User2/addDataAset/'. encode($post['kib']));
+                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
                 }
             }
         }
@@ -367,38 +490,139 @@ class User2 extends Adm_Controller
 
         if ($post) {
 
-            $id = decode($post['id']);
+            $id_aset = decode($post['id_aset']);
+            $id_kib = decode($post['id_kib']);
 
-            $data = array(
-                'nama_rekanan'   => $post['nama_rekanan'],  
-                'alamat_rekanan' => $post['alamat_rekanan'],  
-                'kota_rekanan'   => $post['kota_rekanan'],  
+            $this->db->trans_begin();
+
+            $data_kib = array();
+            foreach ($post as $key => $val) {
+                if (
+                    $key!='id_aset' && 
+                    $key!='id_kib' && 
+                    $key!='pilih_aset' && 
+                    $key!='pilih_jml_aset' &&
+                    $key!='aset_utama' && 
+                    $key!='kib' && 
+                    $key!='tbl_kib' && 
+                    $key!='dataTable_length' && 
+                    $key!='plh_ast' && 
+                    $key!='ast_utm' && 
+                    $key!='nama_aset' && 
+                    $key!='jml_aset' && 
+                    $key!='kode_baru_aset' && 
+                    $key!='no_reg' && 
+                    $key!='status_masuk_aset' && 
+                    $key!='satuan_aset' && 
+                    $key!='ket_aset' 
+                ) {
+                    if ($key=='harga') {
+                        $data_kib[$key] = str_replace('.', '', $val);
+                    } else {
+                        $data_kib[$key] = $val;
+                    }
+                }
+            }
+
+            $input = $this->MasterData->editData("id_kib = $id_kib", $data_kib, $post['tbl_kib']);
+
+            $data_aset = array(
+                'id_jenis_kib'      => $post['kib'],  
+                'id_kib'            => $id_kib,  
+                'nama_aset'         => $post['nama_aset'],  
+                'jml_aset'          => $post['jml_aset'],  
+                'satuan_aset'       => $post['satuan_aset'],  
+                'kode_baru_aset'    => $post['kode_baru_aset'],  
+                'no_reg'            => $post['no_reg'],  
+                'status_masuk_aset' => $post['status_masuk_aset'],  
+                'ket_aset'          => $post['ket_aset'],  
             );
 
-            $input = $this->MasterData->editData("id_rekanan = $id", $data, 'tbl_rekanan');
+            $input = $this->MasterData->editData("id_aset = $id_aset", $data_aset, 'tbl_aset');
 
-            if ($input) {
-                alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+            if ($post['status_masuk_aset'] != 'pengadaan') {
+                $id_barang = $post['pilih_aset'];
+                $data_brg = array(
+                    'nama_barang'   => $post['nama_aset'],
+                    'satuan_barang' => $post['satuan_aset'],
+                    'harga_barang'  => str_replace('.', '', $post['harga']),
+                    'tgl_masuk'     => date('Y-m-d'),
+                );
+                $input = $this->MasterData->editData("id_barang = $id_barang", $data_brg, 'tbl_barang');
+
+                $data_rincian = array(
+                    // 'id_aset'       => $id_aset,
+                    // 'id_barang'     => $id_barang,
+                    'jml_barang'    => $post['jml_aset'],
+                    'posisi'        => 1
+                );
+                $input = $this->MasterData->editData("id_barang = $id_barang AND id_aset = $id_aset", $data_rincian, 'tbl_aset_rincian');
+
             } else {
+                $deleteRincian = $this->MasterData->deleteData("id_aset = $id_aset", 'tbl_aset_rincian');
+
+                $rincian_barang = explode(';', $post['pilih_aset']);
+                $rincian_jml_barang = explode(';', $post['pilih_jml_aset']);
+
+                foreach ($rincian_barang as $key => $val) {
+                    $data_rincian = array(
+                        'id_aset'       => $id_aset,
+                        'id_barang'     => $val,
+                        'jml_barang'    => $rincian_jml_barang[$key],
+                        'posisi'        => ($val==$post['aset_utama'])?1:2
+                    );
+                    $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
+                }
+            }
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+                redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+            }
+            else {
+                $input = $this->db->trans_commit();
+                if ($input) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                }
             }
         }
     }
 
     public function deleteDataAset($value = '') {
         if ($this->input->POST()) {
+
+            $this->db->trans_begin();
+
             $id = decode($this->input->POST('id'));
-            $where = "id_rekanan = $id";
-            $delete = $this->MasterData->deleteData($where, 'tbl_rekanan');
-            if ($delete) {
-                alert_success('Data berhasil dihapus.');
-                echo 'Success';
-            } else {
+            
+            $cekAset = $this->MasterData->getWhereData('*', 'tbl_aset', "id_aset = $id")->row();
+
+            $tblKib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $cekAset->id_jenis_kib")->row()->nama_tbl_kib; 
+
+            $deleteKib = $this->MasterData->deleteData("id_kib = $cekAset->id_kib", $tblKib);
+            $deleteAset = $this->MasterData->deleteData("id_aset = $id", 'tbl_aset');
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
                 alert_failed('Data gagal dihapus.');
                 echo 'Gagal';
             }
+            else {
+                $delete = $this->db->trans_commit();
+                if ($delete) {
+                    alert_success('Data berhasil dihapus.');
+                    echo 'Success';
+                } else {
+                    alert_failed('Data gagal dihapus.');
+                    echo 'Gagal';
+                }
+            }
+
         } else {
             redirect(base_url('User2'));
         }
@@ -422,10 +646,14 @@ class User2 extends Adm_Controller
                 data-csrfname="'. $this->security->get_csrf_token_name() .'" 
                 data-csrfcode="'. $this->security->get_csrf_hash() .'" 
                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
-                $btn_edit = ' <a href="' . base_url('User2/editDataAset/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+                $btn_edit = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+                $btn_detail = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-info" title="Detail Barang"><i class="la la-eye font-small-3"></i></a> ';
+                $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_hapus;
                 $btn .= $btn_edit;
+                $btn .= $btn_detail;
+                $btn .= $btn_print;
 
                 $columns = array(
                     $i,

@@ -30,7 +30,7 @@
                 </li> -->
                 <li class="dropdown nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
-                        <span>Aset</span>
+                        <span>Data Aset</span>
                     </a>
                     <ul class="dropdown-menu">
                         <?php foreach ($dataKib as $val) { ?>
@@ -40,11 +40,21 @@
                         <?php } ?>
                     </ul>
                 </li>
-                <!-- <li class="nav-item <?//= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?//= base_url('User2/dataPengadaan') ?>"><i class="ft-box"></i>
-                        <span>Pengadaan</span>
+                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataKeluar') ?>"><i class="ft-box"></i>
+                        <span>Aset Keluar</span>
                     </a>
-                </li> -->
+                </li>
+                <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataMutasi') ?>"><i class="ft-box"></i>
+                        <span>Mutasi Aset</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataUsulanHapus') ?>"><i class="ft-box"></i>
+                        <span>Usulan Hapus</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

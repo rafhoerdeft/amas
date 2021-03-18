@@ -55,14 +55,17 @@
                                     }
                                     </style>
 
-                                    <form action="<?= base_url('User2/simpanDataAset') ?>" method="POST" class="tab-steps wizard-circle">
+                                    <form action="<?= base_url('User2/updateDataAset') ?>" method="POST" class="<?= (isset($dataAset) && $dataAset->status_masuk_aset=='pengadaan')?'tab-steps wizard-circle':'' ?>">
                                         <?= token_csrf() ?>
-                                        <input type="hidden" id="pilih_aset" name="pilih_aset">
-                                        <input type="hidden" id="pilih_jml_aset" name="pilih_jml_aset">
-                                        <input type="hidden" id="aset_utama" name="aset_utama">
+                                        <input type="hidden" id="id_aset" name="id_aset" value="<?= encode($dataAset->id_aset) ?>">
+                                        <input type="hidden" id="id_kib" name="id_kib" value="<?= encode($dataAset->id_kib) ?>">
+                                        <input type="hidden" id="pilih_aset" name="pilih_aset" value="<?= $dataRincian->pilih_barang ?>">
+                                        <input type="hidden" id="pilih_jml_aset" name="pilih_jml_aset" value="<?= $dataRincian->pilih_jml_barang ?>">
+                                        <input type="hidden" id="aset_utama" name="aset_utama" value="<?= $dataRincian->utama ?>">
                                         <input type="hidden" id="kib" name="kib" value="<?= $id_jenis_kib ?>">
                                         <input type="hidden" id="tbl_kib" name="tbl_kib" value="<?= $dataJenisKib->nama_tbl_kib ?>">
                                         <!-- Step 1 -->
+                                        <?php if (isset($dataAset) && $dataAset->status_masuk_aset=='pengadaan') { ?>
                                         <h6><i class="step-icon ft-check-square"></i> Pilih Barang</h6>
                                         <fieldset>
                                             <table id="dataTable"
@@ -72,7 +75,7 @@
                                                     <tr style="text-align: center;">
                                                         <th>No</th>
                                                         <th>Pilih Aset</th>
-                                                        <th>Pilihan Utama</th>
+                                                        <th>Aset Utama</th>
                                                         <th>No. Kontrak</th>
                                                         <th>Nama Barang</th>
                                                         <th>Merk Barang</th>
@@ -92,7 +95,7 @@
                                                                 <input type="checkbox" name="plh_ast[]" id="brg_<?= $val->id_barang ?>"
                                                                     value="<?= $val->id_barang ?>" 
                                                                     data-harga="<?= $val->harga_barang ?>" 
-                                                                    data-jml="<?= $val->jml_barang ?>">
+                                                                    data-jml="<?= $val->jml_barang ?>" <?= ($val->cek==1)?'checked':'' ?> >
                                                             </div>
                                                         </td>
                                                         <td nowrap align="center">
@@ -101,7 +104,7 @@
                                                                 id="ast_<?= $val->id_barang ?>" value="<?= $val->id_barang ?>" data-nama="<?= $val->nama_barang ?>" 
                                                                 data-satuan="<?= $val->satuan_barang ?>" 
                                                                 data-harga="<?= nominal($val->harga_barang) ?>" 
-                                                                data-jml="<?= nominal($val->jml_barang) ?>" disabled>
+                                                                data-jml="<?= nominal($val->jml_barang) ?>" <?= ($val->utama==1)?'checked':'' ?> <?= ($val->cek!=1)?'disabled':'' ?>>
                                                             </div>
                                                         </td>
                                                         <td align="center"><?= $val->no_kontrak ?></td>
@@ -121,45 +124,46 @@
                                         </fieldset>
                                         <!-- Step 2 -->
                                         <h6><i class="step-icon la la-pencil"></i> Lengkapi Data</h6>
+                                        <?php } ?>
                                         <fieldset>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="nama_aset">Nama Aset :</label>
-                                                        <input type="text" class="form-control" name="nama_aset" id="nama_aset" required>
+                                                        <input type="text" class="form-control" name="nama_aset" id="nama_aset" value="<?= (isset($dataAset))?$dataAset->nama_aset:'' ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="jml_aset">Jumlah Aset :</label>
-                                                        <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="jml_aset" id="jml_aset" value="1" maxlength="6" required>
+                                                        <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="jml_aset" id="jml_aset" maxlength="6" value="<?= (isset($dataAset))?$dataAset->jml_aset:'1' ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="kode_baru_aset">Kode Aset :</label>
-                                                        <input type="text" class="form-control" name="kode_baru_aset" id="kode_baru_aset" required>
+                                                        <input type="text" class="form-control" name="kode_baru_aset" id="kode_baru_aset" value="<?= (isset($dataAset))?$dataAset->kode_baru_aset:'' ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="no_reg">Nomor Register :</label>
-                                                        <input type="text" class="form-control" name="no_reg" id="no_reg" required>
+                                                        <input type="text" class="form-control" name="no_reg" id="no_reg" value="<?= (isset($dataAset))?$dataAset->no_reg:'' ?>" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
+                                                    <div class="form-group d-none">
                                                         <label for="status_masuk_aset">Asal Aset :</label>
                                                         <select id="status_masuk_aset" name="status_masuk_aset" class="form-control">
-                                                            <option value="pengadaan" selected>Pengadaan</option>
-                                                            <option value="mutasi">Mutasi SKPD</option>
+                                                            <option value="pengadaan" <?= (isset($dataAset) && $dataAset->status_masuk_aset=='pengadaan')?'selected':'' ?> >Pengadaan</option>
+                                                            <option value="mutasi" <?= (isset($dataAset) && $dataAset->status_masuk_aset=='mutasi')?'selected':'' ?> >Mutasi SKPD</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="satuan_aset">Satuan Aset:</label>
-                                                        <input type="text" class="form-control" name="satuan_aset" id="satuan_aset" required>
+                                                        <input type="text" class="form-control" name="satuan_aset" id="satuan_aset" value="<?= (isset($dataAset))?$dataAset->satuan_aset:'' ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="harga">Harga :</label>
-                                                        <input type="text" class="form-control" name="harga" id="harga" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" maxlength="20" placeholder="0" required>
+                                                        <input type="text" class="form-control" name="harga" id="harga" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" maxlength="20" placeholder="0" value="<?= (isset($dataAset))?nominal($dataAset->harga_aset):'' ?>" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="ket_aset">Keterangan :</label>
-                                                        <textarea name="ket_aset" id="ket_aset" rows="1" class="form-control"></textarea>
+                                                        <textarea name="ket_aset" id="ket_aset" rows="1" class="form-control"><?= (isset($dataAset))?$dataAset->ket_aset:'' ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -167,6 +171,8 @@
                                             <hr>
 
                                             <?= $this->load->view('form_kib/form_'.$dataJenisKib->nama_tbl_kib) ?>
+
+                                            <button type="submit" class="btn btn-primary float-right <?= (isset($dataAset) && $dataAset->status_masuk_aset=='pengadaan')?'d-none':'' ?>">Simpan</button>
                                         </fieldset>
                                         <hr>
 
