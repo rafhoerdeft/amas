@@ -394,6 +394,11 @@ class User2 extends Adm_Controller
                     $key!='aset_utama' && 
                     $key!='kib' && 
                     $key!='tbl_kib' && 
+                    $key!='data_update_barang' && 
+                    $key!='nama_barang' && 
+                    $key!='merk_barang' && 
+                    $key!='sn_barang' && 
+                    $key!='satuan_barang' && 
                     $key!='dataTable_length' && 
                     $key!='plh_ast' && 
                     $key!='ast_utm' && 
@@ -453,6 +458,21 @@ class User2 extends Adm_Controller
                 $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
 
             } else {
+
+                if ($post['data_update_barang'] != null && $post['data_update_barang'] != '') {
+                    $data_update_barang = json_decode(html_entity_decode($post['data_update_barang']), true);
+    
+                    foreach ($data_update_barang as $val) {
+                        $data = array(
+                            'nama_barang'   => $val['nama_barang'],
+                            'merk_barang'   => $val['merk_barang'],
+                            'sn_barang'     => $val['sn_barang'],
+                            'satuan_barang' => $val['satuan_barang'],
+                        );
+                        $update = $this->MasterData->editData("id_barang = ".$val['id_barang'], $data, 'tbl_barang');
+                    }
+                }
+
                 $rincian_barang = explode(';', $post['pilih_aset']);
                 $rincian_jml_barang = explode(';', $post['pilih_jml_aset']);
 
@@ -505,6 +525,11 @@ class User2 extends Adm_Controller
                     $key!='aset_utama' && 
                     $key!='kib' && 
                     $key!='tbl_kib' && 
+                    $key!='data_update_barang' && 
+                    $key!='nama_barang' && 
+                    $key!='merk_barang' && 
+                    $key!='sn_barang' && 
+                    $key!='satuan_barang' && 
                     $key!='dataTable_length' && 
                     $key!='plh_ast' && 
                     $key!='ast_utm' && 
@@ -559,6 +584,20 @@ class User2 extends Adm_Controller
                 $input = $this->MasterData->editData("id_barang = $id_barang AND id_aset = $id_aset", $data_rincian, 'tbl_aset_rincian');
 
             } else {
+                if ($post['data_update_barang'] != null && $post['data_update_barang'] != '') {
+                    $data_update_barang = json_decode(html_entity_decode($post['data_update_barang']), true);
+    
+                    foreach ($data_update_barang as $val) {
+                        $data = array(
+                            'nama_barang'   => $val['nama_barang'],
+                            'merk_barang'   => $val['merk_barang'],
+                            'sn_barang'     => $val['sn_barang'],
+                            'satuan_barang' => $val['satuan_barang'],
+                        );
+                        $update = $this->MasterData->editData("id_barang = ".$val['id_barang'], $data, 'tbl_barang');
+                    }
+                }
+
                 $deleteRincian = $this->MasterData->deleteData("id_aset = $id_aset", 'tbl_aset_rincian');
 
                 $rincian_barang = explode(';', $post['pilih_aset']);
@@ -646,8 +685,16 @@ class User2 extends Adm_Controller
                 data-csrfname="'. $this->security->get_csrf_token_name() .'" 
                 data-csrfcode="'. $this->security->get_csrf_hash() .'" 
                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
+                
                 $btn_edit = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
-                $btn_detail = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-info" title="Detail Barang"><i class="la la-eye font-small-3"></i></a> ';
+
+                $btn_detail = ' <button type="button" onclick="rincianModal(this)"
+                data-nama="'. $val->nm_brg .'"
+                data-merk="'. $val->merk_brg .'"
+                data-satuan="'. $val->sat_brg .'"
+                data-harga="'. $val->hrg_brg .'"
+                class="btn btn-sm btn-info" title="Detail Barang"><i class="la la-eye font-small-3"></i></button> ';
+
                 $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_hapus;

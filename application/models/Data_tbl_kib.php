@@ -102,6 +102,11 @@ class Data_tbl_kib extends CI_Model
         $this->select_column[] = "(SELECT SUM(br.harga_barang) FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as harga_aset";
         $this->select_column[] = 'ket_aset';
 
+        $this->select_column[] = "(SELECT GROUP_CONCAT(br.nama_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as nm_brg";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(br.merk_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as merk_brg";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(br.satuan_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as sat_brg";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(br.harga_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as hrg_brg";
+
         $this->db->select($this->select_column);
         $this->db->where("ast.id_jenis_kib = $id_jenis_kib");
         $this->db->join($tbl.' kib', 'ast.id_kib = kib.id_kib', 'left');
@@ -110,13 +115,15 @@ class Data_tbl_kib extends CI_Model
         $order_column = array();
         foreach ($this->select_column as $val) {
             $select = explode(" as ", $val);
-            if ($select[1] != 'harga_aset') {
+            if ($select[1] != 'harga_aset' && $select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg') {
                 $this->select_column_search[] = $select[0];
             }
 
             if ($select[0] != 'id_aset') {
                 if ($select[1] != null && $select[1] != '') {
-                    $order_column[] = $select[1];
+                    if ($select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg') {
+                        $order_column[] = $select[1];
+                    }
                 } else {
                     $order_column[] = $select[0];
                 }

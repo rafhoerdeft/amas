@@ -62,6 +62,8 @@
                                         <input type="hidden" id="aset_utama" name="aset_utama">
                                         <input type="hidden" id="kib" name="kib" value="<?= $id_jenis_kib ?>">
                                         <input type="hidden" id="tbl_kib" name="tbl_kib" value="<?= $dataJenisKib->nama_tbl_kib ?>">
+
+                                        <input type="hidden" id="data_update_barang" name="data_update_barang">
                                         <!-- Step 1 -->
                                         <h6><i class="step-icon ft-check-square"></i> Pilih Barang</h6>
                                         <fieldset>
@@ -76,6 +78,7 @@
                                                         <th>No. Kontrak</th>
                                                         <th>Nama Barang</th>
                                                         <th>Merk Barang</th>
+                                                        <th>Serial Number</th>
                                                         <th>Satuan</th>
                                                         <th>Harga (Rp)</th>
                                                         <th>Jumlah</th>
@@ -107,7 +110,8 @@
                                                         <td align="center"><?= $val->no_kontrak ?></td>
                                                         <td><?= $val->nama_barang ?></td>
                                                         <td><?= $val->merk_barang ?></td>
-                                                        <td align="cener"><?= $val->satuan_barang ?></td>
+                                                        <td><?= $val->sn_barang ?></td>
+                                                        <td align="center"><?= $val->satuan_barang ?></td>
                                                         <td align="right"><?= nominal($val->harga_barang) ?></td>
                                                         <td align="center"><?= nominal($val->jml_barang) ?></td>
                                                         <!-- <td align="right">
@@ -188,6 +192,26 @@
         var form = $(data);
         var asal = $('#status_masuk_aset').val();
 
+        var data_update_barang = [];
+        $('textarea[name="nama_barang"]').each(function(e){
+            let ids     = $(this).attr('id');
+            let id      = ids.split("_")[1];
+            let nama    = $(this).val();
+            let merk    = $('#merk_'+id).val();
+            let sn      = $('#sn_'+id).val();
+            let satuan  = $('#satuan_'+id).val();
+            
+            data_update_barang.push({
+                id_barang: id,
+                nama_barang: nama,
+                merk_barang: merk,
+                sn_barang: sn,
+                satuan_barang: satuan
+            });
+        });
+
+        $('#data_update_barang').val(JSON.stringify(data_update_barang));
+
         if (asal == 'pengadaan') {
             var pil_ast = $('#pilih_aset').val();
             var ast_utm = $('#aset_utama').val();
@@ -227,6 +251,31 @@
         var value_hrg  = 0;
 
         if(type=='ifChecked'){
+            //ambil isian dalam element td
+            var td = $(data).parent().parent().parent().parent().children();
+
+            //ambil value dalam input td nama
+            var td_nama = td.eq(4);
+            var val_td_nama = td_nama.html();
+            // td_nama.html("<input type='text' name='nama_barang' value='"+val_td_nama+"'>");
+            td_nama.html("<textarea id='nama_"+id+"' name='nama_barang' rows='1'>"+val_td_nama+"</textarea>");
+
+            //ambil value dalam input td merk
+            var td_merk = td.eq(5);
+            var val_td_merk = td_merk.html();
+            // td_merk.html("<input type='text' name='merk_barang' value='"+val_td_merk+"'>");
+            td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1'>"+val_td_merk+"</textarea>");
+
+            //ambil value dalam input td SN
+            var td_sn = td.eq(6);
+            var val_td_sn = td_sn.html();
+            // td_sn.html("<input type='text' name='sn_barang' value='"+val_td_sn+"'>");
+            td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1'>"+val_td_sn+"</textarea>");
+
+            //ambil value dalam input td satuan
+            var td_satuan = td.eq(7);
+            var val_td_satuan = td_satuan.html();
+            td_satuan.html("<input type='text' id='satuan_"+id+"' name='satuan_barang' value='"+val_td_satuan+"' style='width:80px;'>");
 
             value_hrg = (harga + val_harga);
 
@@ -244,6 +293,29 @@
             }
             $('#ast_'+id).iCheck('enable');
         } else {
+            //ambil isian dalam element td
+            var td = $(data).parent().parent().parent().parent().children();
+
+            //ambil value dalam input td nama
+            var td_nama = td.eq(4);
+            var val_td_nama = td_nama.children().val();
+            td_nama.html(val_td_nama);
+            
+            //ambil value dalam input td merk
+            var td_merk = td.eq(5);
+            var val_td_merk = td_merk.children().val();
+            td_merk.html(val_td_merk);
+
+            //ambil value dalam input td SN
+            var td_sn = td.eq(6);
+            var val_td_sn = td_sn.children().val();
+            td_sn.html(val_td_sn);
+
+            //ambil value dalam input td satuan
+            var td_satuan = td.eq(7);
+            var val_td_satuan = td_satuan.children().val();
+            td_satuan.html(val_td_satuan);
+
             var arr = select_id.split(";");
             var result = arr.filter(function(val){
                 return val != id; 

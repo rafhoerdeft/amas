@@ -300,8 +300,8 @@ function rincianModal(data) {
     var nama    = $(data).data().nama.split(';');
     var merk    = $(data).data().merk.split(';');
     var satuan  = $(data).data().satuan.split(';');
-    var harga   = $(data).data().harga.split(';');
-    var jml     = $(data).data().jml.split(';');
+    var harga   = $(data).data().harga.toString().split(';');
+    var jml     = $(data).data().jml.toString().split(';');
 
     var row = '';
     var tot = 0;

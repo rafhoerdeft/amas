@@ -16,7 +16,7 @@
 
       <div class="content-header-right col-md-4 col-12 mb-2">
         <div class="dropdown float-md-right">
-          <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button" onclick="addModal()">
+          <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
             <i class="la la-plus font-small-3"></i> Tambah Data
           </a>
         </div>
@@ -66,6 +66,39 @@
       </section>
     </div>
   </div>
+</div>
+
+<div class="modal animated bounceInUp text-left" id="modal_rincian" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel10" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="modal_header" class="modal-header bg-success">
+                <h4 class="modal-title white" id="modal_title">Rincian Barang</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <table id="tbl_rincian" class="table table-hover table-bordered table-striped table-responsive d-lg-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Merk</th>
+                            <th>Satuan</th>
+                            <th>Harga (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <!-- <button type="button" id="btn_reset" class="btn btn-success waves-effect" onclick="tableToExcel('tbl_rincian', 'RincianBarangPengadaan', 'RincianBarangPengadaan.xls')">EXPORT (.XLS)</button> -->
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal animated bounceInDown text-left" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
@@ -234,6 +267,33 @@
       $('#modal_form #tgl_kontrak').datepicker("refresh");
       
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
+  }
+</script>
+
+<script>
+  function rincianModal(data) {
+
+      var nama    = $(data).data().nama.split(';');
+      var merk    = $(data).data().merk.split(';');
+      var satuan  = $(data).data().satuan.split(';');
+      var harga   = $(data).data().harga.toString().split(';');
+
+      var row = '';
+      for (let i = 0; i < nama.length; i++) {
+          row +=  "<tr>"+
+                      "<td>"+nama[i]+"</td>"+
+                      "<td>"+merk[i]+"</td>"+
+                      "<td>"+satuan[i]+"</td>"+
+                      "<td align='right'>"+formatRupiah(harga[i].toString(), 'Rp. ')+"</td>"+
+                  "</tr>";
+      }
+
+      $('#modal_rincian #tbl_rincian tbody').html(row);
+
+      $('#modal_rincian').modal({
+          backdrop: 'static',
+          keyboard: false
+      });
   }
 </script>
 
