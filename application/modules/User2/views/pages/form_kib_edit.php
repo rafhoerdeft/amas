@@ -79,12 +79,13 @@
                                                         <th>Pilih Aset</th>
                                                         <th>Aset Utama</th>
                                                         <th>No. Kontrak</th>
+                                                        <th>Kode</th>
                                                         <th>Nama Barang</th>
                                                         <th>Merk Barang</th>
                                                         <th>Serial Number</th>
                                                         <th>Satuan</th>
                                                         <th>Harga (Rp)</th>
-                                                        <th>Jumlah</th>
+                                                        <!-- <th>Jumlah</th> -->
                                                         <!-- <th>Total (Rp)</th> -->
                                                     </tr>
                                                 </thead>
@@ -111,12 +112,13 @@
                                                             </div>
                                                         </td>
                                                         <td align="center"><?= $val->no_kontrak ?></td>
+                                                        <td align="center"><?= $val->kode_barang ?></td>
                                                         <td><?= ($val->cek==1)?"<textarea id='nama_".$val->id_barang."' name='nama_barang' rows='1'>".$val->nama_barang."</textarea>":$val->nama_barang?></td>
                                                         <td><?= ($val->cek==1)?"<textarea id='merk_".$val->id_barang."' name='merk_barang' rows='1'>".$val->merk_barang."</textarea>":$val->merk_barang?></td>
                                                         <td><?= ($val->cek==1)?"<textarea id='sn_".$val->id_barang."' name='sn_barang' rows='1'>".$val->sn_barang."</textarea>":$val->sn_barang?></td>
                                                         <td align="center"><?= ($val->cek==1)?"<input type='text' id='satuan_".$val->id_barang."' name='satuan_barang' value='".$val->satuan_barang."' style='width:80px;'>":$val->satuan_barang?></td>
                                                         <td align="right"><?= nominal($val->harga_barang) ?></td>
-                                                        <td align="center"><?= nominal($val->jml_barang) ?></td>
+                                                        <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
                                                         <!-- <td align="right">
                                                             <?php //echo nominal($val->harga_barang * $val->jml_barang); ?>
                                                         </td> -->
@@ -136,10 +138,10 @@
                                                         <label for="nama_aset">Nama Aset :</label>
                                                         <input type="text" class="form-control" name="nama_aset" id="nama_aset" value="<?= (isset($dataAset))?$dataAset->nama_aset:'' ?>" required>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="jml_aset">Jumlah Aset :</label>
-                                                        <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="jml_aset" id="jml_aset" maxlength="6" value="<?= (isset($dataAset))?$dataAset->jml_aset:'1' ?>" required>
-                                                    </div>
+                                                    <!-- <div class="form-group">
+                                                        <label for="jml_aset">Jumlah Aset :</label> -->
+                                                        <input type="hidden" class="form-control" onkeypress="return inputAngka(event);" name="jml_aset" id="jml_aset" maxlength="6" value="<?= (isset($dataAset))?$dataAset->jml_aset:'1' ?>" required>
+                                                    <!-- </div> -->
                                                     <div class="form-group">
                                                         <label for="kode_baru_aset">Kode Aset :</label>
                                                         <input type="text" class="form-control" name="kode_baru_aset" id="kode_baru_aset" value="<?= (isset($dataAset))?$dataAset->kode_baru_aset:'' ?>" required>
@@ -261,25 +263,25 @@
             var td = $(data).parent().parent().parent().parent().children();
 
             //ambil value dalam input td nama
-            var td_nama = td.eq(4);
+            var td_nama = td.eq(5);
             var val_td_nama = td_nama.html();
             // td_nama.html("<input type='text' name='nama_barang' value='"+val_td_nama+"'>");
             td_nama.html("<textarea id='nama_"+id+"' name='nama_barang' rows='1'>"+val_td_nama+"</textarea>");
 
             //ambil value dalam input td merk
-            var td_merk = td.eq(5);
+            var td_merk = td.eq(6);
             var val_td_merk = td_merk.html();
             // td_merk.html("<input type='text' name='merk_barang' value='"+val_td_merk+"'>");
             td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1'>"+val_td_merk+"</textarea>");
 
             //ambil value dalam input td SN
-            var td_sn = td.eq(6);
+            var td_sn = td.eq(7);
             var val_td_sn = td_sn.html();
             // td_sn.html("<input type='text' name='sn_barang' value='"+val_td_sn+"'>");
             td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1'>"+val_td_sn+"</textarea>");
 
             //ambil value dalam input td satuan
-            var td_satuan = td.eq(7);
+            var td_satuan = td.eq(8);
             var val_td_satuan = td_satuan.html();
             td_satuan.html("<input type='text' id='satuan_"+id+"' name='satuan_barang' value='"+val_td_satuan+"' style='width:80px;'>");
 
@@ -303,22 +305,22 @@
             var td = $(data).parent().parent().parent().parent().children();
             
             //ambil value dalam input td nama
-            var td_nama = td.eq(4);
+            var td_nama = td.eq(5);
             var val_td_nama = td_nama.children().val();
             td_nama.html(val_td_nama);
             
             //ambil value dalam input td merk
-            var td_merk = td.eq(5);
+            var td_merk = td.eq(6);
             var val_td_merk = td_merk.children().val();
             td_merk.html(val_td_merk);
 
             //ambil value dalam input td SN
-            var td_sn = td.eq(6);
+            var td_sn = td.eq(7);
             var val_td_sn = td_sn.children().val();
             td_sn.html(val_td_sn);
 
             //ambil value dalam input td satuan
-            var td_satuan = td.eq(7);
+            var td_satuan = td.eq(8);
             var val_td_satuan = td_satuan.children().val();
             td_satuan.html(val_td_satuan);
 
@@ -326,13 +328,13 @@
             var result = arr.filter(function(val){
                 return val != id; 
             });
-            value_id = result.toString();
+            value_id = result.join(';');
 
             var arr2 = select_jml.split(";");
             var result2 = arr2.filter(function(val){
                 return val != jml; 
             });
-            value_jml = result2.toString();
+            value_jml = result2.join(';');
 
             $('#ast_'+id).iCheck('uncheck');
             $('#ast_'+id).iCheck('disable');
@@ -363,7 +365,7 @@
         if(type=='ifChecked'){
             $('#aset_utama').val(id);
             $('#nama_aset').val(nama);
-            $('#jml_aset').val(jml);
+            // $('#jml_aset').val(jml);
             $('#satuan_aset').val(satuan);
         } else {
             $('#aset_utama').val('');

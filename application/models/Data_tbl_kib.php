@@ -119,7 +119,7 @@ class Data_tbl_kib extends CI_Model
                 $this->select_column_search[] = $select[0];
             }
 
-            if ($select[0] != 'id_aset') {
+            if ($select[0] != 'id_aset' && $select[0] != 'jml_aset') {
                 if ($select[1] != null && $select[1] != '') {
                     if ($select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg') {
                         $order_column[] = $select[1];

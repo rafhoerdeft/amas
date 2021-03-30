@@ -17,11 +17,21 @@
                 </div>
             </div>
 
-            <div class="content-header-right col-md-4 col-12 mb-2">
+            <div class="content-header-right col-md-2 col-12 mb-2">
                 <div class="dropdown float-md-right">
                     <button class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="addModal()">
                         <i class="la la-plus font-small-3"></i> Tambah Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-header-right col-md-2 col-12 mb-2">
+                <div class="dropdown float-md-right">
+                    <input type="text" name="delete_all" id="delete_all">
+                    <button class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                        onclick="deleteAll()">
+                        <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
                     </button>
                 </div>
             </div>
@@ -62,13 +72,17 @@
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>No</th>
+                                                <th>Cek</th>
                                                 <th>Aksi</th>
+                                                <th>Kode</th>
                                                 <th>Nama Barang</th>
                                                 <th>Merk Barang</th>
+                                                <th>Serial Number</th>
+                                                <th>Lokasi</th>
                                                 <th>Satuan</th>
                                                 <th>Harga (Rp)</th>
-                                                <th>Jumlah</th>
-                                                <th>Total (Rp)</th>
+                                                <!-- <th>Jumlah</th> -->
+                                                <!-- <th>Total (Rp)</th> -->
                                             </tr>
                                         </thead>
 
@@ -76,6 +90,11 @@
                                             <?php $no=1; $tot_harga = 0; foreach ($dataRincian as $val) { ?>
                                             <tr>
                                                 <td align="center"><?= $no++ ?></td>
+                                                <td nowrap align="center">
+                                                    <div class="skin skin-check">
+                                                        <input type="checkbox" name="plh_brg[]" value="<?= $val->id_barang ?>">
+                                                    </div>
+                                                </td>
                                                 <td nowrap align="center">
                                                     <button type="button" onclick="hapusData(this)"
                                                         data-id="<?= encode($val->id_barang) ?>"
@@ -96,19 +115,22 @@
                                                         title="Update Data"><i
                                                             class="la la-edit font-small-3"></i></button>
                                                 </td>
+                                                <td align="center"><?= $val->kode_barang ?></td>
                                                 <td><?= $val->nama_barang ?></td>
                                                 <td><?= $val->merk_barang ?></td>
-                                                <td><?= $val->satuan_barang ?></td>
+                                                <td align="center"><?= ($val->sn_barang!=null && $val->sn_barang!='')?$val->sn_barang:'-' ?></td>
+                                                <td></td>
+                                                <td align="center"><?= $val->satuan_barang ?></td>
                                                 <td align="right"><?= nominal($val->harga_barang) ?></td>
-                                                <td align="center"><?= nominal($val->jml_barang) ?></td>
-                                                <td align="right"><?= nominal($val->harga_barang * $val->jml_barang) ?></td>
+                                                <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
+                                                <!-- <td align="right"><?php //echo nominal($val->harga_barang * $val->jml_barang); ?></td> -->
                                             </tr>
                                             <?php $tot_harga += $val->harga_barang * $val->jml_barang; } ?>
                                         </tbody>
 
                                         <tfoot>
                                             <tr>
-                                                <th colspan="7">Total Harga (Rp)</th>
+                                                <th colspan="8">Total Harga (Rp)</th>
                                                 <th style="text-align: right;"><?= nominal($tot_harga) ?></th>
                                             </tr>
                                         </tfoot>
@@ -133,7 +155,6 @@
                 <input type="hidden" name="id" id="id">
                 <input type="hidden" name="id_kontrak" id="id_kontrak" value="<?= encode($dataKontrak->id_kontrak) ?>">
                 <input type="hidden" name="tgl_kontrak" id="tgl_kontrak" value="<?= $dataKontrak->tgl_kontrak ?>">
-
 
                 <?= token_csrf() ?>
 
@@ -252,12 +273,41 @@ function editModal(data) {
     $('#modal_form #satuan_barang').val(satuan);
     $('#modal_form #harga_barang').val(harga);
     $('#modal_form #jml_barang').val(jml);
+    
+    $('#modal_form #jml_barang').parent().parent().hide();
 
     $('#modal_form').modal({
         backdrop: 'static',
         keyboard: false
     });
 }
+</script>
+
+<script>
+    function pilihBarang(data, type) {
+        let id = $(data).val();
+
+        var select_id  = $('#delete_all').val();
+        var value_id   = '';
+
+        if(type=='ifChecked'){
+
+            if (select_id == '') {
+                value_id  = id;
+            } else {
+                value_id += select_id + ';' + id;
+            }
+        } else {
+            var arr = select_id.split(";");
+            var result = arr.filter(function(val){
+                return val != id; 
+            });
+            console.log(result);
+            value_id = result.join(';');
+        }
+        $('#delete_all').val(value_id);
+    }
+
 </script>
 
 <script type="text/javascript">

@@ -487,6 +487,7 @@ class User1 extends Adm_Controller
     // RINCIAN PENGADAAN ============================================================
 
     public function rincianPengadaan($id = 0) {
+        // $this->load->helper('kodeotomatis');
 
         $id_kontrak = decode($id);
 
@@ -496,9 +497,12 @@ class User1 extends Adm_Controller
         // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
         // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
         $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
         // ================================================================
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
         $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
@@ -520,6 +524,11 @@ class User1 extends Adm_Controller
         //                 orientation: 'bottom left'
         //             });";
         $script[] = '$(".select2").select2();';
+        $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
+                        pilihBarang(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });";
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
@@ -537,9 +546,12 @@ class User1 extends Adm_Controller
 
         $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
 
+        // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
+
         $content = array(
             'dataRincian'   => $dataRincian,
             'dataKontrak'   => $dataKontrak,
+            // 'kodeBarang'    => $kodeBarang,
         );
 
         $data = array(
@@ -554,31 +566,36 @@ class User1 extends Adm_Controller
     }
 
     public function simpanRincianPengadaan() {
+        $this->load->helper('kodeotomatis');
         $post = html_escape($this->input->POST());
 
         if ($post) {
 
             $this->db->trans_begin();
 
-            $data = array(
-                'nama_barang'     => $post['nama_barang'],   
-                'merk_barang'     => $post['merk_barang'],   
-                'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
-                'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_kontrak'],   
-            );
-
-            $this->MasterData->inputData($data,'tbl_barang');
-
-            $id_barang = $this->db->insert_id();
-
-            $data = array(
-                'id_kontrak'    => decode($post['id_kontrak']),   
-                'id_barang'     => $id_barang,   
-                'jml_barang'    => $post['jml_barang'],   
-            );
-
-            $input = $this->MasterData->inputData($data,'tbl_pengadaan');
+            for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+                $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
+                $data = array(
+                    'kode_barang'     => $kodeBarang,
+                    'nama_barang'     => $post['nama_barang'],   
+                    'merk_barang'     => $post['merk_barang'],   
+                    'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                    'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
+                    'tgl_masuk'       => $post['tgl_kontrak'],   
+                );
+    
+                $this->MasterData->inputData($data,'tbl_barang');
+    
+                $id_barang = $this->db->insert_id();
+    
+                $data = array(
+                    'id_kontrak'    => decode($post['id_kontrak']),   
+                    'id_barang'     => $id_barang,   
+                    'jml_barang'    => 1,   
+                );
+    
+                $input = $this->MasterData->inputData($data,'tbl_pengadaan');
+            }
 
             if ($this->db->trans_status() === FALSE)
             {
@@ -608,7 +625,7 @@ class User1 extends Adm_Controller
             $this->db->trans_begin();
 
             $id = decode($post['id']);
-            $id_barang = $this->db->query("SELECT id_barang FROM tbl_pengadaan_rincian WHERE id_pengadaan_rincian = $id")->row()->id_barang;
+            $id_barang = $this->db->query("SELECT id_barang FROM tbl_pengadaan WHERE id_pengadaan = $id")->row()->id_barang;
 
             $data = array(
                 'nama_barang'     => $post['nama_barang'],   
@@ -618,15 +635,15 @@ class User1 extends Adm_Controller
                 'tgl_masuk'       => $post['tgl_kontrak'],   
             );
 
-            $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
+            $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
 
-            $data = array(
-                'id_kontrak'    => decode($post['id_kontrak']),   
-                'id_barang'     => $id_barang,   
-                'jml_barang'    => $post['jml_barang'],   
-            );
+            // $data = array(
+            //     'id_kontrak'    => decode($post['id_kontrak']),   
+            //     'id_barang'     => $id_barang,   
+            //     'jml_barang'    => 1,   
+            // );
 
-            $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
+            // $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
 
             if ($this->db->trans_status() === FALSE)
             {

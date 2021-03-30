@@ -480,7 +480,7 @@ class User2 extends Adm_Controller
                     $data_rincian = array(
                         'id_aset'       => $id_aset,
                         'id_barang'     => $val,
-                        'jml_barang'    => $rincian_jml_barang[$key],
+                        // 'jml_barang'    => $rincian_jml_barang[$key],
                         'posisi'        => ($val==$post['aset_utama'])?1:2
                     );
                     $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
@@ -607,7 +607,7 @@ class User2 extends Adm_Controller
                     $data_rincian = array(
                         'id_aset'       => $id_aset,
                         'id_barang'     => $val,
-                        'jml_barang'    => $rincian_jml_barang[$key],
+                        // 'jml_barang'    => $rincian_jml_barang[$key],
                         'posisi'        => ($val==$post['aset_utama'])?1:2
                     );
                     $input = $this->MasterData->inputData($data_rincian,'tbl_aset_rincian');
@@ -709,7 +709,7 @@ class User2 extends Adm_Controller
                     ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset,
                     $val->kode_baru_aset,
                     $val->no_reg,
-                    $val->jml_aset,
+                    // $val->jml_aset,
                     $val->satuan_aset,
                 );
 

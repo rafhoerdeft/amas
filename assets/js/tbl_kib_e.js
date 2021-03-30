@@ -32,6 +32,10 @@ function showDataTable(link) {
                 "targets":5,  
                 "class":"text-center" 
             },
+            // {  
+            //     "targets":6,  
+            //     "class":"text-center" 
+            // },
             {  
                 "targets":6,  
                 "class":"text-center" 
@@ -42,11 +46,11 @@ function showDataTable(link) {
             },
             {  
                 "targets":8,  
-                "class":"text-center" 
+                "class":"text-left" 
             },
             {  
                 "targets":9,  
-                "class":"text-left" 
+                "class":"text-center" 
             },
             {  
                 "targets":10,  
@@ -74,14 +78,10 @@ function showDataTable(link) {
             },
             {  
                 "targets":16,  
-                "class":"text-center" 
-            },
-            {  
-                "targets":17,  
                 "class":"text-left" 
             },
             {  
-                "targets":18,  
+                "targets":17,  
                 "class":"text-right" 
             }
         ],  

@@ -7,7 +7,7 @@
             <th>Kode Lama</th>
             <th>Kode Baru</th>
             <th>No. Reg</th>
-            <th>Jumlah</th>
+            <!-- <th>Jumlah</th> -->
             <th>Satuan</th>
             <th>Kondisi</th>
             <th>Konstruksi</th>
