@@ -1,8 +1,9 @@
-function hapusData(data) {
-	var dataid = $(data).data().dataid;
-	var link = $(data).data().link;
-	var csrf_name = $(data).data().csrfname;
-	var csrf_code = $(data).data().csrfcode;
+function hapusDataAll(data) {
+	var dataid      = data.dataid;
+	var link        = data.link;
+	var table       = data.table;
+	var csrf_name   = data.csrfname;
+    var csrf_code   = data.csrfcode;
 	
 	swal({
 		title: "Hapus Data",
@@ -30,6 +31,7 @@ function hapusData(data) {
 			$.post(
 				link,
 				{
+                    table: table,
 					dataid: dataid,
 					[csrf_name]: csrf_code,
 				},

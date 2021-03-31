@@ -513,9 +513,10 @@ class User1 extends Adm_Controller
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
         // $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/delete_all_data.js');
         // ================================================================
         // $script[] = "showDataTable('Rincian Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7]);";
-        $script[] = "$('#dataTable').DataTable();";
+       
         // $script[] = "$('.date-picker').datepicker({
         //                 autoclose: true,
         //                 todayHighlight: true,
@@ -524,10 +525,13 @@ class User1 extends Adm_Controller
         //                 orientation: 'bottom left'
         //             });";
         $script[] = '$(".select2").select2();';
-        $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
+        $script[] = "var iCek = $('.skin-check input').on('ifChecked ifUnchecked', function(event){
                         pilihBarang(this, event.type);
                     }).iCheck({
                         checkboxClass: 'icheckbox_flat-green'
+                    });";
+        $script[] = "$('#dataTable').DataTable().on('page.dt', function () {
+                        // $('#check_all').iCheck('uncheck');
                     });";
         // ================================================================
         $header['css']      = $this->head;
@@ -630,6 +634,7 @@ class User1 extends Adm_Controller
             $data = array(
                 'nama_barang'     => $post['nama_barang'],   
                 'merk_barang'     => $post['merk_barang'],   
+                'sn_barang'       => $post['sn_barang'],   
                 'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
                 'tgl_masuk'       => $post['tgl_kontrak'],   
@@ -683,6 +688,38 @@ class User1 extends Adm_Controller
     }
 
     // ======================================================================
+
+    // DELETE DATA ARRAY ====================================================
+    public function deleteAll() {
+        if ($this->input->POST()) {
+            $post   = $this->input->POST();
+            $table  = $post['table'];
+            $dataid = $post['dataid'];
+            $data   = explode(";", $dataid);
+
+            $this->db->trans_begin();
+
+            $this->db->where_in('id_'.$table, $data);
+            $this->db->delete('tbl_'.$table); 
+
+            if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    alert_failed('Data gagal dihapus.');
+                    echo 'Gagal';
+            } else {
+                    $exec = $this->db->trans_commit();
+                    if ($exec) {
+                        alert_success('Data berhasil dihapus.');
+                        echo 'Success';
+                    } else {
+                        alert_failed('Data gagal dihapus.');
+                        echo 'Gagal';
+                    }
+            }
+        } else {
+            redirect(base_url('User1'));
+        }
+    }
 
     public function getDataDesa()
     {

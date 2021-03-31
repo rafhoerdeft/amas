@@ -183,7 +183,6 @@ class User2 extends Adm_Controller
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
         // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
-        $script[] = '$("#dataTable").DataTable();';
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -217,6 +216,7 @@ class User2 extends Adm_Controller
                     }).iCheck({
                         radioClass: 'iradio_square-red'
                     });";
+        $script[] = '$("#dataTable").DataTable();';
        
         // ================================================================
         $header['css']      = $this->head;
@@ -290,7 +290,6 @@ class User2 extends Adm_Controller
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
         // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
-        $script[] = '$("#dataTable").DataTable();';
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -325,6 +324,7 @@ class User2 extends Adm_Controller
                         radioClass: 'iradio_square-red'
                     });";
        
+        $script[] = '$("#dataTable").DataTable();';
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;

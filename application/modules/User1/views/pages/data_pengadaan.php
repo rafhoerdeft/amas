@@ -229,7 +229,7 @@
                             <th>Merk</th>
                             <th>Satuan</th>
                             <th>Harga (Rp)</th>
-                            <th>Jumlah</th>
+                            <!-- <th>Jumlah</th> -->
                             <th>Total (Rp)</th>
                         </tr>
                     </thead>
@@ -309,16 +309,16 @@ function rincianModal(data) {
         row +=  "<tr>"+
                     "<td>"+nama[i]+"</td>"+
                     "<td>"+merk[i]+"</td>"+
-                    "<td>"+satuan[i]+"</td>"+
+                    "<td align='center'>"+satuan[i]+"</td>"+
                     "<td align='right'>"+formatRupiah(harga[i].toString(), 'Rp. ')+"</td>"+
-                    "<td align='center'>"+jml[i]+"</td>"+
+                    // "<td align='center'>"+jml[i]+"</td>"+
                     "<td align='right'>"+formatRupiah((jml[i]*harga[i]).toString(), 'Rp. ')+"</td>"+
                 "</tr>";
         tot += jml[i]*harga[i];
     }
 
     var tfoot = "<tr>"+
-                    "<th colspan='5'>Total Harga (Rp)</th>"+
+                    "<th colspan='4'>Total Harga (Rp)</th>"+
                     "<th style='text-align: right; padding-inline: 16px;'>"+formatRupiah(tot.toString(), 'Rp. ')+"</th>"+
                 "</tr>";
 

@@ -28,9 +28,9 @@
 
             <div class="content-header-right col-md-2 col-12 mb-2">
                 <div class="dropdown float-md-right">
-                    <input type="text" name="delete_all" id="delete_all">
-                    <button class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
-                        onclick="deleteAll()">
+                    <input type="hidden" name="delete_all" id="delete_all">
+                    <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                        onclick="deleteAll()" disabled>
                         <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
                     </button>
                 </div>
@@ -72,7 +72,11 @@
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>No</th>
-                                                <th>Cek</th>
+                                                <th>
+                                                    <div class="skin skin-check">
+                                                        <input type="checkbox" name="plh_brg_all" id="check_all" value="0">
+                                                    </div>
+                                                </th>
                                                 <th>Aksi</th>
                                                 <th>Kode</th>
                                                 <th>Nama Barang</th>
@@ -111,6 +115,7 @@
                                                         data-satuan="<?= $val->satuan_barang ?>"
                                                         data-harga="<?= nominal($val->harga_barang) ?>"
                                                         data-jml="<?= nominal($val->jml_barang) ?>"
+                                                        data-sn="<?= $val->sn_barang ?>"
                                                         onclick="editModal(this)" class="btn btn-sm btn-info"
                                                         title="Update Data"><i
                                                             class="la la-edit font-small-3"></i></button>
@@ -130,7 +135,7 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th colspan="8">Total Harga (Rp)</th>
+                                                <th colspan="9">Total Harga (Rp)</th>
                                                 <th style="text-align: right;"><?= nominal($tot_harga) ?></th>
                                             </tr>
                                         </tfoot>
@@ -183,6 +188,16 @@
                         <div class="controls">
                             <input type="text" id="merk_barang" name="merk_barang" class="form-control"
                                 placeholder="Isi merk barang" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h5>Serial Number
+                            <!-- <span class="required text-danger">*</span> -->
+                        </h5>
+                        <div class="controls">
+                            <input type="text" id="sn_barang" name="sn_barang" class="form-control"
+                                placeholder="Isi serial number barang">
                         </div>
                     </div>
 
@@ -241,6 +256,7 @@ function clear_data() {
     $('#modal_form #satuan_barang').val('');
     $('#modal_form #harga_barang').val('');
     $('#modal_form #jml_barang').val('');
+    $('#modal_form #sn_barang').val('');
 }
 
 function addModal() {
@@ -248,6 +264,10 @@ function addModal() {
     $('#modal_form #modal_title').html('Tambah Data Kontrak');
     $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
+
+    $('#modal_form #sn_barang').parent().parent().hide();
+    $('#modal_form #jml_barang').parent().parent().show();
+
     $('#modal_form').modal({
         backdrop: 'static',
         keyboard: false
@@ -261,6 +281,7 @@ function editModal(data) {
     var satuan = $(data).data().satuan;
     var harga = $(data).data().harga;
     var jml = $(data).data().jml;
+    var sn = $(data).data().sn;
 
     clear_data();
     $('#modal_form #modal_title').html('Update Data Kontrak');
@@ -273,7 +294,9 @@ function editModal(data) {
     $('#modal_form #satuan_barang').val(satuan);
     $('#modal_form #harga_barang').val(harga);
     $('#modal_form #jml_barang').val(jml);
+    $('#modal_form #sn_barang').val(sn);
     
+    $('#modal_form #sn_barang').parent().parent().show();
     $('#modal_form #jml_barang').parent().parent().hide();
 
     $('#modal_form').modal({
@@ -284,28 +307,55 @@ function editModal(data) {
 </script>
 
 <script>
+    function deleteAll() {
+        var dataid      = $('#delete_all').val();
+        var link        = "<?= base_url('User1/deleteAll') ?>";
+        var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
+        var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
+        var table       = "barang";
+        var data = {
+            dataid:dataid,
+            link:link,
+            table:table,
+            csrfname:csrfname,
+            csrfcode:csrfcode,
+        };
+        hapusDataAll(data);
+    }
+
     function pilihBarang(data, type) {
         let id = $(data).val();
-
-        var select_id  = $('#delete_all').val();
-        var value_id   = '';
-
-        if(type=='ifChecked'){
-
-            if (select_id == '') {
-                value_id  = id;
+        
+        if (id == 0) {
+            if(type=='ifChecked'){
+                $('.skin-check input:checkbox').iCheck('check');
             } else {
-                value_id += select_id + ';' + id;
+                $('.skin-check input:checkbox').iCheck('uncheck');
             }
         } else {
-            var arr = select_id.split(";");
-            var result = arr.filter(function(val){
-                return val != id; 
-            });
-            console.log(result);
-            value_id = result.join(';');
+            var select_id  = $('#delete_all').val();
+            var value_id   = '';
+
+            if(type=='ifChecked'){
+                if (select_id == '') {
+                    value_id  = id;
+                    $('#btn_delete').attr('disabled',false);
+                } else {
+                    value_id += select_id + ';' + id;
+                }
+            } else {
+                var arr = select_id.split(";");
+                var result = arr.filter(function(val){
+                    return val != id; 
+                });
+                value_id = result.join(';');
+
+                if (result.length == 0) {
+                    $('#btn_delete').attr('disabled',true);
+                }
+            }
+            $('#delete_all').val(value_id);
         }
-        $('#delete_all').val(value_id);
     }
 
 </script>
