@@ -2,6 +2,11 @@
     <thead>
         <tr style="text-align: center;">
             <th>No</th>
+            <th>
+                <div class="skin skin-check-all">
+                    <input type="checkbox" name="plh_aset_all" id="check_all" value="0">
+                </div>
+            </th>
             <th>Aksi</th>
             <th>Nama</th>
             <th>Kode Lama</th>

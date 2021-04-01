@@ -18,22 +18,22 @@
             </div>
 
             <div class="content-header-right col-md-2 col-12 mb-2">
-                <div class="dropdown float-md-right">
+                <!-- <div class="dropdown float-md-right"> -->
                     <button class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="addModal()">
                         <i class="la la-plus font-small-3"></i> Tambah Data
                     </button>
-                </div>
+                <!-- </div> -->
             </div>
 
             <div class="content-header-right col-md-2 col-12 mb-2">
-                <div class="dropdown float-md-right">
+                <!-- <div class="dropdown float-md-right"> -->
                     <input type="hidden" name="delete_all" id="delete_all">
                     <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="deleteAll()" disabled>
                         <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
                     </button>
-                </div>
+                <!-- </div> -->
             </div>
 
         </div>

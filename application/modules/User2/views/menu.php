@@ -41,7 +41,7 @@
                     </ul>
                 </li>
                 <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataKeluar') ?>"><i class="ft-box"></i>
+                    <a class="nav-link" href="<?= base_url('User2/asetKeluar') ?>"><i class="ft-box"></i>
                         <span>Aset Keluar</span>
                     </a>
                 </li>

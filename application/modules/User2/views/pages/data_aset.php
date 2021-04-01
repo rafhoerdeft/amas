@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Data Aset - <?= $dataJenisKib->nama_kib ?></h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
@@ -14,12 +14,31 @@
         </div>
       </div>
 
-      <div class="content-header-right col-md-4 col-12 mb-2">
-        <div class="dropdown float-md-right">
+      <div class="content-header-right col-md-2 col-12 mb-2">
+        <!-- <div class="dropdown"> -->
           <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
             <i class="la la-plus font-small-3"></i> Tambah Data
           </a>
-        </div>
+        <!-- </div> -->
+      </div>
+
+      <div class="content-header-right col-md-2 col-12 mb-2">
+          <!-- <div class="dropdown"> -->
+              <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                  onclick="showModalEksekusi()" disabled>
+                  <i class="la la-check font-small-3"></i> Eksekusi Aset
+              </button>
+          <!-- </div> -->
+      </div>
+
+      <div class="content-header-right col-md-2 col-12 mb-2">
+          <!-- <div class="dropdown"> -->
+              <input type="hidden" name="delete_all" id="delete_all">
+              <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                  onclick="deleteAll()" disabled>
+                  <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
+              </button>
+          <!-- </div> -->
       </div>
 
     </div>
@@ -107,11 +126,12 @@
       <form name="form_input" id="form_input" method="post" action="">
         
         <input type="hidden" name="id" id="id">
+        <input type="text" name="kib" id="kib" value="<?= encode($id_jenis_kib) ?>">
 
         <?= token_csrf() ?>
 
-        <div id="modal_header" class="modal-header bg-success">
-          <h4 class="modal-title white" id="modal_title">Tambah Data</h4>
+        <div id="modal_header" class="modal-header bg-info">
+          <h4 class="modal-title white" id="modal_title">Eksekusi Aset</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -119,53 +139,16 @@
 
         <div class="modal-body">
           <div class="form-group">
-            <h5>Nomor Kontrak
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="no_kontrak" name="no_kontrak" class="form-control" placeholder="Isi nomor kontrak" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-              <h5>Tanggal Kontrak
+              <h5>Jenis Eksekusi
                   <span class="required text-danger">*</span>
               </h5>
               <div class="controls">
-                  <input type="text" class="form-control date-picker" id="tgl_kontrak" name="tgl_kontrak"
-                      placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
-              </div>
-          </div>
-
-          <div class="form-group">
-            <h5>Nomor SP2D
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="no_sp2d" name="no_sp2d" class="form-control" placeholder="Isi nomor kontrak" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <h5>Nilai Kontrak (Rp)
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="nilai_kontrak" name="nilai_kontrak" class="form-control" placeholder="Isi nomor kontrak" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-              <h5>Rekanan
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <select id="rekanan" name="rekanan" class="form-control select2" required>
-                      <option value="">Pilih Rekanan</option>
+                  <select id="id_aset_status" name="id_aset_status" class="form-control select2" onchange="changeExec(this)" required>
+                    <option value="">Pilih Jenis Eksekusi</option>
                       <?php
-                      foreach ($dataRekanan as $val) {
+                      foreach ($statusAset as $val) {
                       ?>
-                          <option value="<?= $val->id_rekanan ?>"><?= $val->nama_rekanan ?></option>
+                          <option value="<?= $val->id_aset_status ?>"><?= $val->nama_status ?></option>
                       <?php
                       }
                       ?>
@@ -174,35 +157,51 @@
           </div>
 
           <div class="form-group">
-              <h5>PPKom
+              <h5>Tanggal
                   <span class="required text-danger">*</span>
               </h5>
               <div class="controls">
-                  <input type="text" id="ppkom" name="ppkom" class="form-control" value="<?= $this->nama_user ?>" readonly required>
-                  <!-- <select id="ppkom" name="ppkom" class="form-control select2" required>
-                      <option value="">Pilih PPKom</option>
-                      <?php
-                      //foreach ($dataPpkom as $val) {
-                      ?>
-                          <option value="<?php //echo $val->id_user; ?>"><?php //echo $val->nama_user; ?></option>
-                      <?php
-                      //}
-                      ?>
-                  </select> -->
+                  <input type="text" class="form-control date-picker" id="tgl_histori" name="tgl_histori"
+                      placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
               </div>
           </div>
 
-          <div class="form-group">
-              <h5>Jenis Rekening
-                  <span class="required text-danger">*</span>
+          <div id="not_hapus" style="display: none;">
+            <div class="form-group">
+              <h5>Lokasi
+                  <!-- <span class="required text-danger">*</span> -->
               </h5>
               <div class="controls">
-                  <select id="rekening" name="rekening" class="form-control select2" required>
-                      <option value="">Pilih Jenis Rekening</option>
-                      <option value="Modal">Modal</option>
-                      <option value="Barang Jasa">Barang Jasa</option>
-                  </select>
+                  <textarea name="lokasi_histori" id="lokasi_histori" rows="2" class="form-control"></textarea>
               </div>
+            </div>
+
+            <div class="form-group">
+              <h5>Keperluan
+                  <!-- <span class="required text-danger">*</span> -->
+              </h5>
+              <div class="controls">
+                  <textarea name="keperluan_histori" id="keperluan_histori" rows="2" class="form-control"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <h5>Pemegang
+                  <!-- <span class="required text-danger">*</span> -->
+              </h5>
+              <div class="controls">
+                  <input type="text" name="pemegang" id="pemegang" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <h5>Keterangan
+                <!-- <span class="required text-danger">*</span> -->
+            </h5>
+            <div class="controls">
+                <textarea name="ket_histori" id="ket_histori" rows="2" class="form-control"></textarea>
+            </div>
           </div>
 
         </div>
@@ -222,52 +221,97 @@
 
 <script>
   function clear_data() {
-      $('#modal_form #id').val('');
-      $('#modal_form #no_kontrak').val('');
-      $('#modal_form #no_sp2d').val('');
-      $('#modal_form #nilai_kontrak').val('');
-      $('#modal_form #rekanan').val('').change();
-      // $('#modal_form #ppkom').val('').change();
-      $('#modal_form #rekening').val('').change();
-      $('#modal_form #tgl_kontrak').datepicker("setDate", "<?= date('d/m/Y') ?>");
-      $('#modal_form #tgl_kontrak').datepicker("refresh");
-  }
-
-  function addModal() {
-      clear_data();
-      $('#modal_form #modal_title').html('Tambah Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanDataKontrak'; ?>");
-      $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
-      $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
-  }
-
-  function editModal(data) {
-      var id            = $(data).data().id;
-      var no_kontrak    = $(data).data().nokontrak;
-      var no_sp2d       = $(data).data().nosp2d;
-      var nilai         = $(data).data().nilai;
-      var rekanan       = $(data).data().rekanan;
-      var ppkom         = $(data).data().ppkom;
-      var rekening      = $(data).data().rekening;
-      var tgl = $(data).data().tgl;
-
-      clear_data();
-      $('#modal_form #modal_title').html('Update Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User1/updateDataKontrak'; ?>");
-      $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
-
-      $('#modal_form #id').val(id);
-      $('#modal_form #no_kontrak').val(no_kontrak);
-      $('#modal_form #no_sp2d').val(no_sp2d);
-      $('#modal_form #nilai_kontrak').val(nilai);
-      $('#modal_form #rekanan').val(rekanan).change();
-      // $('#modal_form #ppkom').val(ppkom).change();
-      $('#modal_form #rekening').val(rekening).change();
-      $('#modal_form #tgl_kontrak').datepicker("setDate", tgl);
-      $('#modal_form #tgl_kontrak').datepicker("refresh");
+      var dataid = $('#delete_all').val();
+      $('#modal_form #id').val(dataid);
+      $('#modal_form #id_aset_status').val('').change();
+      $('#modal_form #tgl_histori').datepicker("setDate", "<?= date('d/m/Y') ?>");
+      $('#modal_form #tgl_histori').datepicker("refresh");
+      $('#modal_form #lokasi_histori').val('');
+      $('#modal_form #keperluan_histori').val('');
+      $('#modal_form #pemegang').val('');
+      $('#modal_form #ket_histori').val('');
       
-      $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
+
+  function showModalEksekusi() {
+    clear_data();
+    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/eksekusiAset'; ?>");
+    $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
+  }
+
+  function changeExec(data) {
+    var value = $(data).val();
+    var select = $(data).find('option:selected').text();
+    
+    if (select == 'Usulan Hapus' ||  value == '') {
+      $('#not_hapus').hide();
+    } else {
+      $('#not_hapus').show();
+    }
+  }
+</script>
+
+<script>
+    function deleteAll() {
+        var dataid      = $('#delete_all').val();
+        var link        = "<?= base_url('User2/deleteAsetAll') ?>";
+        var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
+        var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
+        var table       = "aset";
+        var data = {
+            dataid:dataid,
+            link:link,
+            table:table,
+            csrfname:csrfname,
+            csrfcode:csrfcode,
+        };
+        hapusDataAll(data);
+    }
+
+    function pilihAset(data, type) {
+        let id = $(data).val();
+        
+        if (id == 0) {
+            if(type=='ifChecked'){
+                $('.skin-check input:checkbox').iCheck('check');
+            } else {
+                $('.skin-check input:checkbox').iCheck('uncheck');
+            }
+        } else {
+            var select_id  = $('#delete_all').val();
+            var value_id   = '';
+
+            if(type=='ifChecked'){
+                if (select_id == '') {
+                    value_id  = id;
+                    $('#btn_delete').attr('disabled',false);
+                    $('#btn_eksekusi').attr('disabled',false);
+                } else {
+                    value_id += select_id + ';' + id;
+                }
+            } else {
+                var arr = select_id.split(";");
+                var result = arr.filter(function(val){
+                    return val != id; 
+                });
+                value_id = result.join(';');
+
+                if (result.length == 0) {
+                    $('#btn_delete').attr('disabled',true);
+                    $('#btn_eksekusi').attr('disabled',true);
+                }
+            }
+            $('#delete_all').val(value_id);
+        }
+    }
+
+    function cekChangePage() {
+      var select_id  = $('#delete_all').val();
+      var arr = select_id.split(";");
+      arr.forEach(function(value, index) {
+        $('.skin-check input:checkbox[value="'+value+'"]').iCheck('check');
+      });
+    }
 </script>
 
 <script>
@@ -298,7 +342,6 @@
 </script>
 
 <script type="text/javascript">
-
     function changeRupe(data){
         var val = formatRupiah($(data).val(), 'Rp. ');
         $(data).val(val);

@@ -20,26 +20,28 @@ function showDataTable(link) {
                 "class":"text-center" 
             }, 
             {  
+                "width": "10",
                 "targets":1,  
+                "orderable":false,  
+                "class":"text-center" 
+            }, 
+            {  
+                "targets":2,  
                 "orderable":false, 
                 "class":"no-wrap" 
             },
             {  
-                "targets":2,  
+                "targets":3,  
                 "width": "150"
             },
             {  
-                "targets":5,  
+                "targets":6,  
                 "class":"text-center" 
             },
             // {  
             //     "targets":6,  
             //     "class":"text-center" 
             // },
-            {  
-                "targets":6,  
-                "class":"text-center" 
-            },
             {  
                 "targets":7,  
                 "class":"text-center" 
@@ -55,36 +57,43 @@ function showDataTable(link) {
             {  
                 "targets":10,  
                 "class":"text-center" 
-            }, 
+            },
             {  
                 "targets":11,  
+                "class":"text-center" 
+            }, 
+            {  
+                "targets":12,  
                 "width": "150"
             },
             {  
-                "targets":12,  
-                "class":"text-center" 
-            },
-            {  
                 "targets":13,  
-                "class":"text-left" 
+                "class":"text-center" 
             },
             {  
                 "targets":14,  
-                "class":"text-center" 
+                "class":"text-left" 
             },
             {  
                 "targets":15,  
                 "class":"text-center" 
             },
             {  
-                "targets":17,  
+                "targets":16,  
                 "class":"text-center" 
             },
             {  
                 "targets":18,  
+                "class":"text-center" 
+            },
+            {  
+                "targets":19,  
                 "class":"text-right" 
             }
         ],  
         "pageLength": 10
+    }).on('draw.dt', function () {
+        cekChangePage();
+        activeIcheck();
     });
 }
