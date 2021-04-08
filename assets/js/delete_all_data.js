@@ -47,3 +47,38 @@ function hapusDataAll(data) {
 		}
 	});
 }
+
+function pilihBarang(data, type) {
+	let id = $(data).val();
+	
+	if (id == 0) {
+		if(type=='ifChecked'){
+			$('.skin-check input:checkbox').iCheck('check');
+		} else {
+			$('.skin-check input:checkbox').iCheck('uncheck');
+		}
+	} else {
+		var select_id  = $('#delete_all').val();
+		var value_id   = '';
+
+		if(type=='ifChecked'){
+			if (select_id == '') {
+				value_id  = id;
+				$('#btn_delete').attr('disabled',false);
+			} else {
+				value_id += select_id + ';' + id;
+			}
+		} else {
+			var arr = select_id.split(";");
+			var result = arr.filter(function(val){
+				return val != id; 
+			});
+			value_id = result.join(';');
+
+			if (result.length == 0) {
+				$('#btn_delete').attr('disabled',true);
+			}
+		}
+		$('#delete_all').val(value_id);
+	}
+}

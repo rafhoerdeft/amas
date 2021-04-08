@@ -8,8 +8,8 @@
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?= base_url('User1') ?>">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="<?= base_url('User1/dataPengadaan') ?>">Data
+                            <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url('User2/dataPengadaan') ?>">Data
                                     Pengadaan</a></li>
                             <li class="breadcrumb-item active">Rincian Pengadaan</li>
                         </ol>
@@ -102,7 +102,7 @@
                                                 <td nowrap align="center">
                                                     <button type="button" onclick="hapusData(this)"
                                                         data-id="<?= encode($val->id_barang) ?>"
-                                                        data-link="<?= base_url('User1/deleteRincianPengadaan') ?>"
+                                                        data-link="<?= base_url('User2/deleteRincianPengadaan') ?>"
                                                         data-csrfname="<?= $this->security->get_csrf_token_name(); ?>"
                                                         data-csrfcode="<?= $this->security->get_csrf_hash(); ?>"
                                                         class="btn btn-sm btn-danger" title="Hapus Data"><i
@@ -124,7 +124,7 @@
                                                 <td><?= $val->nama_barang ?></td>
                                                 <td><?= $val->merk_barang ?></td>
                                                 <td align="center"><?= ($val->sn_barang!=null && $val->sn_barang!='')?$val->sn_barang:'-' ?></td>
-                                                <td><?= $val->lokasi_aset ?></td>
+                                                <td></td>
                                                 <td align="center"><?= $val->satuan_barang ?></td>
                                                 <td align="right"><?= nominal($val->harga_barang) ?></td>
                                                 <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
@@ -262,7 +262,7 @@ function clear_data() {
 function addModal() {
     clear_data();
     $('#modal_form #modal_title').html('Tambah Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanRincianPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
 
     $('#modal_form #sn_barang').parent().parent().hide();
@@ -285,7 +285,7 @@ function editModal(data) {
 
     clear_data();
     $('#modal_form #modal_title').html('Update Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/updateRincianPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
     $('#modal_form #id').val(id);
@@ -309,7 +309,7 @@ function editModal(data) {
 <script>
     function deleteAll() {
         var dataid      = $('#delete_all').val();
-        var link        = "<?= base_url('User1/deleteAll') ?>";
+        var link        = "<?= base_url('User2/deleteAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
         var table       = "barang";

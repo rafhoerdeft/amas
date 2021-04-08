@@ -11,23 +11,6 @@ class Data_tbl_kib extends CI_Model
         'jml_aset',
         'satuan_aset',
     );
-    
-    // var $select_column_search = array(
-    //     'id_aset',
-    //     'nama_aset',
-    //     'kode_lama_aset',
-    //     'kode_baru_aset',
-    //     'no_reg',
-    //     'luas_tanah',
-    //     'thn_beli',
-    //     'letak',
-    //     'status_tanah',
-    //     'DATE_FORMAT(tgl_sertifikat, "%d-%m-%Y")',
-    //     'no_sertifikat',
-    //     'penggunaan',
-    //     'asal_usul',
-    //     'ket_aset',
-    // );
 
     var $select_column_search = array();
 
@@ -42,6 +25,7 @@ class Data_tbl_kib extends CI_Model
             $this->select_column[] = 'no_sertifikat';
             $this->select_column[] = 'penggunaan';
         } else if ($id_jenis_kib == 2) {
+            $this->select_column[] = "(SELECT brg.sn_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset AND ar.posisi = 1)) as sn_aset";
             $this->select_column[] = 'merk_type';
             $this->select_column[] = 'ukuran_cc';
             $this->select_column[] = 'ukuran_cc';
@@ -102,20 +86,32 @@ class Data_tbl_kib extends CI_Model
         $this->select_column[] = "(SELECT SUM(br.harga_barang) FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as harga_aset";
         $this->select_column[] = 'ket_aset';
 
+        // Detail Rincian Aset
         $this->select_column[] = "(SELECT GROUP_CONCAT(br.nama_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as nm_brg";
         $this->select_column[] = "(SELECT GROUP_CONCAT(br.merk_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as merk_brg";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(br.sn_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as sn_brg";
         $this->select_column[] = "(SELECT GROUP_CONCAT(br.satuan_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as sat_brg";
         $this->select_column[] = "(SELECT GROUP_CONCAT(br.harga_barang SEPARATOR ';') FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as hrg_brg";
 
+        //Detail Histori Aset
+        // $this->select_column[] = "(SELECT GROUP_CONCAT(st.nama_status SEPARATOR ';') FROM tbl_aset_status st WHERE st.id_aset_status IN (SELECT hst.id_aset_status FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset)) as status_aset";
+        $this->select_column[] = "(SELECT GROUP_CONCAT((SELECT usr.nama_user FROM tbl_user usr WHERE usr.id_user = hst.id_user) ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as nama_penanggung";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(hst.pemegang ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as pemegang";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(hst.lokasi_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as lokasi_histori";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(DATE_FORMAT(hst.tgl_histori, '%d-%m-%Y') ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as tgl_histori";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(hst.keperluan_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as keperluan_histori";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(hst.ket_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as ket_histori";
+
         $this->db->select($this->select_column);
         $this->db->where("ast.id_jenis_kib = $id_jenis_kib");
+        $this->db->where("ast.id_aset_status  = 1");
         $this->db->join($tbl.' kib', 'ast.id_kib = kib.id_kib', 'left');
         $this->db->from($this->table);
 
         $order_column = array();
         foreach ($this->select_column as $val) {
             $select = explode(" as ", $val);
-            if ($select[1] != 'harga_aset' && $select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg') {
+            if ($select[1] != 'harga_aset' && $select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg' && $select[1] != 'sn_aset') {
                 $this->select_column_search[] = $select[0];
             }
 
@@ -132,24 +128,6 @@ class Data_tbl_kib extends CI_Model
                 $order_column[] = null;
             }
         }
-
-        // $order_column = array(
-        //     null, null, 
-        //     'nama_aset',
-        //     'kode_lama_aset',
-        //     'kode_baru_aset',
-        //     'no_reg',
-        //     'luas_tanah',
-        //     'thn_beli',
-        //     'letak',
-        //     'status_tanah',
-        //     'tgl_sertifikat',
-        //     'no_sertifikat',
-        //     'penggunaan',
-        //     'asal_usul',
-        //     'harga_aset',
-        //     'ket_aset',
-        // );
         
         $i = 0;
         foreach ($this->select_column_search as $item) {

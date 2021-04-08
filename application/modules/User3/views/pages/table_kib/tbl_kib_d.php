@@ -14,17 +14,16 @@
             <th>No. Reg</th>
             <!-- <th>Jumlah</th> -->
             <th>Satuan</th>
-            <th>Serial Number</th>
-            <th>Merk/Type</th>
-            <th>Ukuran/CC</th>
-            <th>Bahan</th>
-            <th>Warna</th>
-            <th>Thn. Beli</th>
-            <th>No. Pabrik</th>
-            <th>No. Rangka</th>
-            <th>No. Mesin</th>
-            <th>No. Polisi</th>
-            <th>BPKB</th>
+            <th>Kondisi</th>
+            <th>Konstruksi</th>
+            <th>Panjang (m)</th>
+            <th>Lebar (m)</th>
+            <th>Luas (m<sup>2</sup>)</th>
+            <th>Lokasi</th>
+            <th>Tgl. Dokumen</th>
+            <th>No. Dokumen</th>
+            <th>Status Tanah</th>
+            <th>No. Kode Tanah</th>
             <th>Asal Usul</th>
             <th>Harga</th>
             <th>Keterangan</th>
@@ -51,16 +50,16 @@
             <td><?php //echo ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset; ?></td>
             <td><?php //echo $val->kode_baru_aset; ?></td>
             <td align="center"><?php //echo $val->no_reg; ?></td>
-            <td align="center"><?php //echo $val->merk_type; ?></td>
-            <td align="center"><?php //echo $val->ukuran_cc; ?></td>
-            <td align="center"><?php //echo $val->bahan; ?></td>
-            <td align="center"><?php //echo $val->warna; ?></td>
-            <td align="center"><?php //echo $val->thn_beli; ?></td>
-            <td align="center"><?php //echo ($val->no_pabrik==''&&$val->no_pabrik==null)?'-':$val->no_pabrik; ?></td>
-            <td align="center"><?php //echo ($val->no_rangka==''&&$val->no_rangka==null)?'-':$val->no_rangka; ?></td>
-            <td align="center"><?php //echo ($val->no_mesin==''&&$val->no_mesin==null)?'-':$val->no_mesin; ?></td>
-            <td align="center"><?php //echo ($val->no_polisi==''&&$val->no_polisi==null)?'-':$val->no_polisi; ?></td>
-            <td align="center"><?php //echo ($val->no_bpkb==''&&$val->no_bpkb==null)?'-':$val->no_bpkb; ?></td>
+            <td align="center"><?php //echo ($val->kondisi==''&&$val->kondisi==null)?'-':$val->kondisi; ?></td>
+            <td align="center"><?php //echo $val->konstruksi; ?></td>
+            <td align="center"><?php //echo $val->panjang; ?></td>
+            <td align="center"><?php //echo $val->lebar; ?></td>
+            <td align="center"><?php //echo $val->luas; ?></td>
+            <td><?php //echo $val->letak; ?></td>
+            <td align="center"><?php //echo date('d/m/Y', strtotime($val->tgl_dokumen)); ?></td>
+            <td align="center"><?php //echo ($val->no_dokumen==''&&$val->no_dokumen==null)?'-':$val->no_dokumen; ?></td>
+            <td align="center"><?php //echo $val->status_tanah; ?></td>
+            <td><?php //echo ($val->no_kode_tanah==''&&$val->no_kode_tanah==null)?'-':$val->no_kode_tanah; ?></td>
             <td align="center"><?php //echo $val->asal_usul; ?></td>
             <td align="right"><?php //echo nominal($val->harga_aset); ?></td>
             <td><?php //echo $val->ket_aset; ?></td>

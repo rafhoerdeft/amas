@@ -7,7 +7,7 @@
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= base_url('User1') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
               <li class="breadcrumb-item active">Data Kontrak</li>
             </ol>
           </div>
@@ -79,7 +79,7 @@
                             <?php if ($this->id_user == $val->id_user) { ?>
                               <button type="button" onclick="hapusData(this)" 
                                 data-id="<?= encode($val->id_kontrak) ?>" 
-                                data-link="<?= base_url('User1/deleteDataKontrak') ?>" 
+                                data-link="<?= base_url('User2/deleteDataKontrak') ?>" 
                                 data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
                                 data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
                                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
@@ -260,7 +260,7 @@
   function addModal() {
       clear_data();
       $('#modal_form #modal_title').html('Tambah Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
@@ -277,7 +277,7 @@
 
       clear_data();
       $('#modal_form #modal_title').html('Update Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User1/updateDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
       $('#modal_form #id').val(id);

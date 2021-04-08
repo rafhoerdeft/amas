@@ -14,19 +14,17 @@
             <th>No. Reg</th>
             <!-- <th>Jumlah</th> -->
             <th>Satuan</th>
-            <th>Serial Number</th>
-            <th>Merk/Type</th>
-            <th>Ukuran/CC</th>
-            <th>Bahan</th>
-            <th>Warna</th>
-            <th>Thn. Beli</th>
-            <th>No. Pabrik</th>
-            <th>No. Rangka</th>
-            <th>No. Mesin</th>
-            <th>No. Polisi</th>
-            <th>BPKB</th>
+            <th>Judul Buku</th>
+            <th>Spesifikasi Buku</th>
+            <th>Asal Seni</th>
+            <th>Pencipta Seni</th>
+            <th>Bahan Seni</th>
+            <th>Jenis Hewan/Tumbuhan</th>
+            <th>Ukuran Hewan/Tumbuhan</th>
+            <th>Jumlah</th>
+            <th>Thn. Cetak/Beli</th>
             <th>Asal Usul</th>
-            <th>Harga</th>
+            <th>Harga (Rp)</th>
             <th>Keterangan</th>
         </tr>
     </thead>
@@ -48,20 +46,19 @@
                 onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
             </td>
             <td><?php //echo $val->nama_aset; ?></td>
-            <td><?php //echo ($val->kode_lama_aset=='' && $val->kode_lama_aset==null)?'-':$val->kode_lama_aset; ?></td>
+            <td><?php //echo $val->kode_lama_aset; ?></td>
             <td><?php //echo $val->kode_baru_aset; ?></td>
             <td align="center"><?php //echo $val->no_reg; ?></td>
-            <td align="center"><?php //echo $val->merk_type; ?></td>
-            <td align="center"><?php //echo $val->ukuran_cc; ?></td>
-            <td align="center"><?php //echo $val->bahan; ?></td>
-            <td align="center"><?php //echo $val->warna; ?></td>
+            <td align="center"><?php //echo $val->judul_buku; ?></td>
+            <td align="left"><?php //echo $val->spesifikasi_buku; ?></td>
+            <td align="center"><?php //echo $val->asal_seni; ?></td>
+            <td align="center"><?php //echo $val->pencipta_seni; ?></td>
+            <td align="center"><?php //echo $val->bahan_seni; ?></td>
+            <td align="center"><?php //echo $val->jenis_hewan_tumbuhan; ?></td>
+            <td align="center"><?php //echo $val->ukuran_hewan_tumbuhan; ?></td>
+            <td align="center"><?php //echo $val->jumlah; ?></td>
             <td align="center"><?php //echo $val->thn_beli; ?></td>
-            <td align="center"><?php //echo ($val->no_pabrik==''&&$val->no_pabrik==null)?'-':$val->no_pabrik; ?></td>
-            <td align="center"><?php //echo ($val->no_rangka==''&&$val->no_rangka==null)?'-':$val->no_rangka; ?></td>
-            <td align="center"><?php //echo ($val->no_mesin==''&&$val->no_mesin==null)?'-':$val->no_mesin; ?></td>
-            <td align="center"><?php //echo ($val->no_polisi==''&&$val->no_polisi==null)?'-':$val->no_polisi; ?></td>
-            <td align="center"><?php //echo ($val->no_bpkb==''&&$val->no_bpkb==null)?'-':$val->no_bpkb; ?></td>
-            <td align="center"><?php //echo $val->asal_usul; ?></td>
+            <td align="left"><?php //echo $val->asal_usul; ?></td>
             <td align="right"><?php //echo nominal($val->harga_aset); ?></td>
             <td><?php //echo $val->ket_aset; ?></td>
         </tr>

@@ -8,6 +8,26 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+
+                <!-- ======================================================================== -->
+                <li class="nav-item <?= ($active == '6' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataRekanan') ?>"><i class="la la-group"></i>
+                        <span>Rekanan</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '7' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataKontrak') ?>"><i class="la la-paste"></i>
+                        <span>Kontrak</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '8' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataPengadaan') ?>"><i class="ft-box"></i>
+                        <span>Pengadaan</span>
+                    </a>
+                </li>
+
+                <!-- =========================================================================== -->
+
                 <!-- <li class="dropdown nav-item <?//= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
                         <span>Aset</span>
@@ -28,6 +48,7 @@
                         </li>
                     </ul>
                 </li> -->
+
                 <li class="dropdown nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
                         <span>Data Aset</span>
@@ -41,20 +62,21 @@
                     </ul>
                 </li>
                 <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/asetKeluar') ?>"><i class="ft-box"></i>
-                        <span>Aset Keluar</span>
+                    <a class="nav-link" href="<?= base_url('User2/historiAset') ?>"><i class="la la-history"></i>
+                        <span>Histori Aset</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataMutasi') ?>"><i class="ft-box"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dataMutasi') ?>"><i class="ft-log-out"></i>
                         <span>Mutasi Aset</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataUsulanHapus') ?>"><i class="ft-box"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dataUsulanHapus') ?>"><i class="ft-trash-2"></i>
                         <span>Usulan Hapus</span>
                     </a>
                 </li>
+                
             </ul>
         </div>
     </div>

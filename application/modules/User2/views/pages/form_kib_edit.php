@@ -107,6 +107,7 @@
                                                                 <input type="radio" name="ast_utm"
                                                                 id="ast_<?= $val->id_barang ?>" value="<?= $val->id_barang ?>" data-nama="<?= $val->nama_barang ?>" 
                                                                 data-satuan="<?= $val->satuan_barang ?>" 
+                                                                data-merk="<?= $val->merk_barang ?>" 
                                                                 data-harga="<?= nominal($val->harga_barang) ?>" 
                                                                 data-jml="<?= nominal($val->jml_barang) ?>" <?= ($val->utama==1)?'checked':'' ?> <?= ($val->cek!=1)?'disabled':'' ?>>
                                                             </div>
@@ -361,14 +362,25 @@
         let satuan  = $(data).data().satuan;
         let harga   = $(data).data().harga;
         let jml     = $(data).data().jml;
+        let merk    = $(data).data().merk;
 
         if(type=='ifChecked'){
             $('#aset_utama').val(id);
             $('#nama_aset').val(nama);
             // $('#jml_aset').val(jml);
             $('#satuan_aset').val(satuan);
+            
+            if ($('#merk_type').length > 0) {
+                $('#merk_type').val(merk);
+            }
         } else {
             $('#aset_utama').val('');
+            $('#nama_aset').val('');
+            // $('#jml_aset').val('');
+            $('#satuan_aset').val('');
+            if ($('#merk_type').length > 0) {
+                $('#merk_type').val('');
+            }
         }
     }
 </script>

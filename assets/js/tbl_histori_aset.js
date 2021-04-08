@@ -2,7 +2,7 @@ var protocol = window.location.protocol;
 var host = window.location.hostname;
 
 function showDataTable(link) {
-    $("#data_aset").DataTable({
+    $("#data_histori").DataTable({
         "processing": true,
         "serverSide": true,
         "searching": true,
@@ -14,94 +14,78 @@ function showDataTable(link) {
         },  
         "columnDefs":[  
             {  
-                "width": "10",
                 "targets":0,  
+                "width": "10",
                 "orderable":false,  
                 "class":"text-center" 
             }, 
             {  
-                "width": "10",
                 "targets":1,  
-                "orderable":false,  
+                "width": "50",
                 "class":"text-center" 
             }, 
             {  
                 "targets":2,  
-                "orderable":false, 
-                "class":"no-wrap" 
+                "width": "50",
+                "class":"text-center" 
             },
             {  
                 "targets":3,  
+                "width": "100"
+            },
+            {  
+                "targets":4,  
+                "width": "100"
+            },
+            {  
+                "targets":5,  
                 "width": "150"
             },
             {  
                 "targets":6,  
+                "width": "150"
+            },
+            {  
+                "targets":7,  
                 "class":"text-center" 
-            }, 
+            },
+            {  
+                "targets":8,  
+                "class":"text-center" 
+            },
             // {  
             //     "targets":6,  
             //     "class":"text-center" 
             // }, 
             {  
-                "targets":7,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":8,  
-                "width": "100"
-            }, 
-            {  
                 "targets":9,  
-                "width": "100"
+                "class":"text-center" 
             }, 
             {  
                 "targets":10,  
-                "class":"text-center" 
+                "width": "100"
             }, 
             {  
                 "targets":11,  
-                "class":"text-center" 
-            }, 
+                "width": "150"
+            },
             {  
                 "targets":12,  
-                "class":"text-center" 
+                "width": "80"
             }, 
             {  
                 "targets":13,  
-                "class":"text-center" 
+                "width": "80"
             }, 
             {  
                 "targets":14,  
-                "class":"text-center" 
-            }, 
+                "width": "150"
+            },
             {  
                 "targets":15,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":16,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":17,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":18,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":19,  
-                "class":"text-center" 
-            }, 
-            {  
-                "targets":20,  
-                "class":"text-right" 
+                "width": "100"
             }
         ],  
         "pageLength": 10
-    }).on('draw.dt', function () {
-        cekChangePage();
-        activeIcheck();
     });
 }

@@ -484,7 +484,7 @@ class User1 extends Adm_Controller
 
     // ======================================================================
 
-    // RINCIAN PENGADAAN ============================================================
+    // RINCIAN PENGADAAN ====================================================
 
     public function rincianPengadaan($id = 0) {
         // $this->load->helper('kodeotomatis');
@@ -511,11 +511,12 @@ class User1 extends Adm_Controller
         // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        // $this->foot[] = base_url('assets/js/data_table.js');
+        $this->foot[] = base_url('assets/js/icheck_config.js');
+        $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         $this->foot[] = base_url('assets/js/delete_all_data.js');
         // ================================================================
-        // $script[] = "showDataTable('Rincian Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7]);";
+        $script[] = "showDataTable('Rincian Pengadaan', '', '".date('dmY')."', [ 0, 3, 4, 5, 6, 7, 8, 9]);";
        
         // $script[] = "$('.date-picker').datepicker({
         //                 autoclose: true,
@@ -525,14 +526,6 @@ class User1 extends Adm_Controller
         //                 orientation: 'bottom left'
         //             });";
         $script[] = '$(".select2").select2();';
-        $script[] = "var iCek = $('.skin-check input').on('ifChecked ifUnchecked', function(event){
-                        pilihBarang(this, event.type);
-                    }).iCheck({
-                        checkboxClass: 'icheckbox_flat-green'
-                    });";
-        $script[] = "$('#dataTable').DataTable().on('page.dt', function () {
-                        // $('#check_all').iCheck('uncheck');
-                    });";
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
@@ -548,7 +541,11 @@ class User1 extends Adm_Controller
         
         $dataKontrak = $this->MasterData->getWhereData($select, 'tbl_kontrak kt', "kt.id_kontrak = $id_kontrak")->row();
 
-        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        $select_rincian = array(
+            '*',
+            "(SELECT hst.lokasi_histori FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+        );
+        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
 
         // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
 
@@ -721,57 +718,5 @@ class User1 extends Adm_Controller
         }
     }
 
-    public function getDataDesa()
-    {
-        if (html_escape($this->input->POST())) {
-            $kode_kec = $this->input->POST('kode_kecamatan');
-            $where = "kode_kecamatan = '$kode_kec'";
-            $data = $this->MasterData->getDataWhere('tbl_desa', $where)->result();
-            if ($data) {
-                $result = array(
-                    'response' => true,
-                    'data' => $data
-                );
-            } else {
-                $result = array(
-                    'response' => false
-                );
-            }
-        } else {
-            $result = array(
-                'response' => false
-            );
-        }
-        echo json_encode($result);
-    }
 
-    public function uploadFile()
-    {
-        $this->load->view('upload_file');
-    }
-
-    public function prosesUpload()
-    {
-        if (html_escape($this->input->POST())) {
-            $this->load->helper('upload');
-            $name_post = 'file_upload';
-            $size_file = 2048;
-            $overwrite = true;
-            $allow     = '*';
-            $path_file = 'assets/upload';
-            $new_path = 'assets/upload/thumb';
-            $width     = 250;
-            $height    = 250;
-            $x         = 100;
-            $y         = 100;
-            // $upload = upload_files($name_post, $size_file, $overwrite, $allow, $path_file);
-            // $upload = upload_photo($name_post, $size_file, $overwrite, $path_file, $width, $height, TRUE, $new_path);
-            $upload = upload_crop_photo($name_post, $size_file, $overwrite, $path_file, $width, $height, $x, $y);
-            if ($upload['respons']) {
-                echo "File ".$upload['data']." berhasil diupload.";
-            } else {
-                echo "Gaga diupload. <br>".$upload['data'];
-            }
-        }
-    }
 }

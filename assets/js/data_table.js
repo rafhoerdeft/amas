@@ -1,4 +1,5 @@
 function showDataTable(title, msg, date_print, col_print) {
+
     $("#dataTable").DataTable({
         // "scrollX": true,
         "language" : {

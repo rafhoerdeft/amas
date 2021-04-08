@@ -3,56 +3,62 @@
         <div class="navbar-container main-menu-content" data-menu="menu-container">
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
-                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin') ?>"><i class="la la-home"></i>
+                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User3') ?>"><i class="la la-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item <?//= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?//= base_url('Admin/dataPajak') ?>"><i class="la la-puzzle-piece"></i>
-                        <span>Pajak</span>
+                <!-- <li class="dropdown nav-item <?//= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
+                        <span>Aset</span>
                     </a>
-                </li>
-                <li class="nav-item <?//= ($active == '3' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?//= base_url('Admin/dataIjin') ?>"><i class="la la-paste"></i>
-                        <span>Perizinan</span>
-                    </a>
-                </li> -->
-                <!-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#"
-                        data-toggle="dropdown"><i class="la la-television"></i><span>Templates</span></a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a
-                                class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Vertical</a>
+                        <li class="dropdown dropdown-submenu <?//= (isset($active_sub) ? ($active_sub == '2.1' ? 'active' : '') : '') ?>" data-menu="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Tambah Aset</a>
                             <ul class="dropdown-menu">
-                                <li data-menu=""><a class="dropdown-item" href="../vertical-menu-template"
-                                        data-toggle="dropdown">Classic Menu</a>
-                                </li>
-                                <li data-menu=""><a class="dropdown-item" href="../vertical-modern-menu-template"
-                                        data-toggle="dropdown">Modern Menu</a>
-                                </li>
-                                <li data-menu=""><a class="dropdown-item" href="../vertical-compact-menu-template"
-                                        data-toggle="dropdown">Compact Menu</a>
-                                </li>
-                                <li data-menu=""><a class="dropdown-item" href="../vertical-content-menu-template"
-                                        data-toggle="dropdown">Content Menu</a>
-                                </li>
-                                <li data-menu=""><a class="dropdown-item" href="../vertical-overlay-menu-template"
-                                        data-toggle="dropdown">Overlay Menu</a>
-                                </li>
+                                <?php //foreach ($dataKib as $val) { ?>
+                                    <li data-menu="" class="<?//= (isset($active_sub_sub) ? ($active_sub_sub == '2.1.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
+                                        <a class="dropdown-item" href="<?//= base_url('User3/tambahAset/'.$val->jenis_kib) ?>" data-toggle="dropdown">KIB <?//= $val->jenis_kib ?> - <?//= $val->nama_kib ?></a>
+                                    </li>
+                                <?php //} ?>
                             </ul>
                         </li>
-                        <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a
-                                class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Horizontal</a>
-                            <ul class="dropdown-menu">
-                                <li data-menu=""><a class="dropdown-item" href="../horizontal-menu-template"
-                                        data-toggle="dropdown">Classic</a>
-                                </li>
-                                <li data-menu=""><a class="dropdown-item" href="../horizontal-menu-template-nav"
-                                        data-toggle="dropdown">Full Width</a>
-                                </li>
-                            </ul>
+                        <li data-menu="" class="<?//= (isset($active_sub) ? ($active_sub == '2.2' ? 'active' : '') : '') ?>">
+                            <a class="dropdown-item" href="<?//= base_url('User3/dataAset') ?>">Data Aset</a>
                         </li>
                     </ul>
+                </li> -->
+                <li class="dropdown nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
+                        <span>Data Aset</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($dataKib as $val) { ?>
+                            <li class="<?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
+                                <a class="dropdown-item" href="<?= base_url('User3/dataAset/'.encode($val->id_jenis_kib)) ?>" data-toggle="dropdown"><?= $val->jenis_kib ?>. <?= $val->nama_kib ?></a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </li>
+                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User3/historiAset') ?>"><i class="la la-history"></i>
+                        <span>Histori Aset</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User3/dataMutasi') ?>"><i class="ft-log-out"></i>
+                        <span>Mutasi Aset</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User3/dataUsulanHapus') ?>"><i class="ft-trash-2"></i>
+                        <span>Usulan Hapus</span>
+                    </a>
+                </li>
+                <!-- <li class="nav-item <?//= ($active == '6' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?//= base_url('User3/historiAset') ?>"><i class="ft-box"></i>
+                        <span>Histori Aset</span>
+                    </a>
                 </li> -->
             </ul>
         </div>

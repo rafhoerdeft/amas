@@ -2,12 +2,12 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Data Aset - <?= $dataJenisKib->nama_kib ?></h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url('User3') ?>">Dashboard</a></li>
               <li class="breadcrumb-item active">Data Aset</li>
             </ol>
           </div>
@@ -15,28 +15,11 @@
       </div>
 
       <div class="content-header-right col-md-2 col-12 mb-2">
-        <!-- <div class="dropdown"> -->
-          <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
-            <i class="la la-plus font-small-3"></i> Tambah Data
-          </a>
-        <!-- </div> -->
-      </div>
-
-      <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
+              <input type="hidden" name="delete_all" id="delete_all">
               <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                   onclick="showModalEksekusi()" disabled>
                   <i class="la la-check font-small-3"></i> Eksekusi Aset
-              </button>
-          <!-- </div> -->
-      </div>
-
-      <div class="content-header-right col-md-2 col-12 mb-2">
-          <!-- <div class="dropdown"> -->
-              <input type="hidden" name="delete_all" id="delete_all">
-              <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
-                  onclick="deleteAll()" disabled>
-                  <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
               </button>
           <!-- </div> -->
       </div>
@@ -164,7 +147,7 @@
         
         <input type="hidden" name="id" id="id">
         <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
-        <input type="hidden" name="back" id="back" value="<?= base_url('User2/dataAset/'.encode($id_jenis_kib)) ?>">
+        <input type="hidden" name="back" id="back" value="<?= base_url('User3/dataAset/'.encode($id_jenis_kib)) ?>">
         <input type="hidden" id="data_update_barang" name="data_update_barang">
 
         <?= token_csrf() ?>
@@ -291,7 +274,8 @@
 
   function showModalEksekusi() {
     clear_data();
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/eksekusiAset'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().'User3/eksekusiAset'; ?>");
+
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
 
@@ -310,7 +294,7 @@
 <script>
     function deleteAll() {
         var dataid      = $('#delete_all').val();
-        var link        = "<?= base_url('User2/deleteAsetAll') ?>";
+        var link        = "<?= base_url('User3/deleteAsetAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
         var table       = "aset";
@@ -351,7 +335,7 @@
                   var val_td_merk = td_merk.html();
                   td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
                 }
-
+                
                 if (select_id == '') {
                     value_id  = id;
                     $('#btn_delete').attr('disabled',false);
@@ -386,6 +370,13 @@
             }
             $('#delete_all').val(value_id);
         }
+
+        // $('#data_aset').DataTable({
+        //   'drawCallback': function (settings) {
+        //     var api = this.api();
+        //     api.fixedHeader.adjust();
+        //   }
+        // });
     }
 
     function cekChangePage() {

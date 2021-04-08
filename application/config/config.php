@@ -460,6 +460,9 @@ $config['csrf_exclude_uris'] = array(
                                     'Auth/cek_login',
                                     // 'Admin/getDataDesa',
                                     'User2/getDataAset/.*?/.*+',
+                                    'User2/getDataHistori/.*?/.*+',
+                                    'User3/getDataAset/.*?/.*+',
+                                    'User3/getDataHistori/.*?/.*+',
                                     // 'Admin/deletePemohon',
                                 );
 
