@@ -461,8 +461,11 @@ $config['csrf_exclude_uris'] = array(
                                     // 'Admin/getDataDesa',
                                     'User2/getDataAset/.*?/.*+',
                                     'User2/getDataHistori/.*?/.*+',
+                                    'User2/cetakLabelAset',
+                                    // =============================
                                     'User3/getDataAset/.*?/.*+',
                                     'User3/getDataHistori/.*?/.*+',
+                                    'User3/cetakLabelAset',
                                     // 'Admin/deletePemohon',
                                 );
 

@@ -752,11 +752,11 @@ class User3 extends Adm_Controller
                 data-tgl="'. $val->tgl_histori .'"
                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
-                $btn_print = ' <a href="' . base_url('User3/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+                // $btn_print = ' <a href="' . base_url('User3/cetakLabelAset/'. encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_detail;
                 $btn .= $btn_histori;
-                $btn .= $btn_print;
+                // $btn .= $btn_print;
 
                 $columns = array(
                     $i,
@@ -1273,5 +1273,47 @@ class User3 extends Adm_Controller
     }
 
     // =====================================================================
+
+    public function cetakLabelAset($id='') {
+        $post = $this->input->POST();
+
+        if ($post) {
+            $id_aset = explode(';', $post['delete_all']);
+            // $dataAset = $this->MasterData->getWhereData('*','tbl_aset',"id_aset IN $id_aset")->row();
+            $dataAset = $this->db->SELECT('*')
+                             ->where_in('id_aset', $id_aset )
+                             ->GET('tbl_aset')->result();
+
+            if (count($dataAset) > 0) {
+                $this->load->library('phpqrcode');
+
+                $tempdir = FCPATH.'assets/img/qrcode/'; //Nama folder tempat menyimpan file qrcode
+                // var_dump($tempdir);
+                if (!file_exists($tempdir)) //Buat folder penyimpanan
+                    mkdir($tempdir);
+
+                foreach ($dataAset as $val) {
+                    //isi qrcode jika di scan
+                    $codeContents = $val->kode_baru_aset; 
+                    $dirFile = $tempdir.$val->id_aset.'_code.png';
+                    
+                    if (!file_exists($dirFile)) {
+                        //nilai konfigurasi Frame di bawah 4 tidak direkomendasikan 
+                        QRcode::png($codeContents, $dirFile, QR_ECLEVEL_H, 4, 4);
+                    }
+                }
+
+                $data = array(
+                    'dataAset' => $dataAset,
+                );
+
+                $this->load->library('PhpExcelNew/PHPExcel');
+                $this->load->view('User3/print/label_aset', $data);
+            } else {
+                redirect(base_url('User3'));
+            }
+        }
+
+    }
 
 }
