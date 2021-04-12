@@ -16,7 +16,7 @@
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-          <form action="<?= base_url('User3/cetakLabelAset') ?>" method="POST" >
+          <form action="<?= base_url('User3/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
               <?= token_csrf() ?>
               <input type="hidden" name="delete_all" id="delete_all">
               <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit"

@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-4 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Data Aset - <?= $dataJenisKib->nama_kib ?></h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
@@ -33,10 +33,23 @@
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
+          <form action="<?= base_url('User2/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
+              <?= token_csrf() ?>
               <input type="hidden" name="delete_all" id="delete_all">
+              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit"
+                   disabled>
+                  <i class="la la-print font-small-3"></i> Cetak Label
+              </button>
+          </form>
+          <!-- </div> -->
+      </div>
+
+      <div class="content-header-right col-md-2 col-12 mb-2">
+          <!-- <div class="dropdown"> -->
+              <!-- <input type="hidden" name="delete_all" id="delete_all"> -->
               <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                   onclick="deleteAll()" disabled>
-                  <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
+                  <i class="la la-trash font-small-3"></i> Hapus Data
               </button>
           <!-- </div> -->
       </div>
@@ -356,6 +369,7 @@
                     value_id  = id;
                     $('#btn_delete').attr('disabled',false);
                     $('#btn_eksekusi').attr('disabled',false);
+                    $('#btn_print_all').attr('disabled',false);
                 } else {
                     value_id += select_id + ';' + id;
                 }
@@ -382,6 +396,7 @@
                 if (result.length == 0) {
                     $('#btn_delete').attr('disabled',true);
                     $('#btn_eksekusi').attr('disabled',true);
+                    $('#btn_print_all').attr('disabled',true);
                 }
             }
             $('#delete_all').val(value_id);

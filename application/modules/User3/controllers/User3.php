@@ -1274,15 +1274,24 @@ class User3 extends Adm_Controller
 
     // =====================================================================
 
+    // CETAK LABEL ASET ====================================================
+
     public function cetakLabelAset($id='') {
         $post = $this->input->POST();
 
         if ($post) {
+            $id_jenis_kib = decode($id);
+            $tbl_kib = $this->MasterData->getWhereData('*','tbl_jenis_kib',"id_jenis_kib = $id_jenis_kib")->row()->nama_tbl_kib;
             $id_aset = explode(';', $post['delete_all']);
             // $dataAset = $this->MasterData->getWhereData('*','tbl_aset',"id_aset IN $id_aset")->row();
-            $dataAset = $this->db->SELECT('*')
-                             ->where_in('id_aset', $id_aset )
-                             ->GET('tbl_aset')->result();
+            $select = array(
+                'ast.*',
+                "(SELECT brg.merk_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT rc.id_barang FROM tbl_aset_rincian rc WHERE rc.id_aset = ast.id_aset AND rc.posisi = 1)) merk_aset",
+                "(SELECT kib.harga FROM $tbl_kib kib WHERE kib.id_kib = ast.id_kib) harga_aset",
+            );
+            $dataAset = $this->db->SELECT($select)
+                                 ->where_in('ast.id_aset', $id_aset)
+                                 ->GET('tbl_aset ast')->result();
 
             if (count($dataAset) > 0) {
                 $this->load->library('phpqrcode');
@@ -1299,7 +1308,7 @@ class User3 extends Adm_Controller
                     
                     if (!file_exists($dirFile)) {
                         //nilai konfigurasi Frame di bawah 4 tidak direkomendasikan 
-                        QRcode::png($codeContents, $dirFile, QR_ECLEVEL_H, 4, 4);
+                        QRcode::png($codeContents, $dirFile, QR_ECLEVEL_M, 4, 2);
                     }
                 }
 

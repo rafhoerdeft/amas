@@ -16,7 +16,7 @@
 		'font' => array(
 			'name'  => 'Arial',
 	      	'bold' => TRUE,
-	      	'size' => (10)
+	      	'size' => (9)
 		),
 		'alignment' => array(
 			'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT, // Set text jadi ditengah secara horizontal (center)
@@ -38,7 +38,7 @@
 		'font' => array(
 			'name'  => 'Arial',
 	      	'bold' => FALSE,
-	      	'size' => (8)
+	      	'size' => (7)
 		),
 		'alignment' => array(
 			'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT, // Set text jadi ditengah secara horizontal (center)
@@ -60,7 +60,7 @@
 		'font' => array(
 			'name'  => 'Arial',
 	      	'bold' => FALSE,
-	      	'size' => (8)
+	      	'size' => (7)
 		),
 		'alignment' => array(
 			'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT, // Set text jadi ditengah secara horizontal (center)
@@ -68,7 +68,7 @@
         ),
         'borders' => array(
 			'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
-			'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+			// 'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
 			'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
 			// 'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
 		),
@@ -133,40 +133,15 @@
     $excel->getActiveSheet()->getColumnDimension('A')->setWidth(12);
 	// $excel->getActiveSheet()->getColumnDimension('B')->setWidth(9.3);
 	$excel->getActiveSheet()->getColumnDimension('B')->setWidth(9);
-	$excel->getActiveSheet()->getColumnDimension('C')->setWidth(11.2);
+	$excel->getActiveSheet()->getColumnDimension('C')->setWidth(10.5);
 	// $excel->getActiveSheet()->getColumnDimension('C')->setWidth(9);
 	$excel->getActiveSheet()->getColumnDimension('D')->setWidth(1.4);
-	$excel->getActiveSheet()->getColumnDimension('E')->setWidth(26.2);
+	$excel->getActiveSheet()->getColumnDimension('E')->setWidth(22);
 	// $excel->getActiveSheet()->getColumnDimension('E')->setWidth(20.7);
 	$excel->getActiveSheet()->getColumnDimension('F')->setWidth(12.7);
 
     // Set height all row
 	$excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(14);
-
-    // Set margin
-    $excel->getActiveSheet()->getPageMargins()->setTop(0.5);
-    $excel->getActiveSheet()->getPageMargins()->setRight(0.5);
-    $excel->getActiveSheet()->getPageMargins()->setLeft(0.5);
-    // $excel->getActiveSheet()->getPageMargins()->setBottom(1);
-
-    // Setting the print area
-    $jml_data_aset      = count($dataAset);
-    $jml_data_per_page  = 8;
-    $jml_page           = ceil($jml_data_aset / $jml_data_per_page);
-    $first_column       = 'A';
-    $first_row          = 1;
-    $last_column        = 'H';
-    $last_row           = 56;
-
-    $param_print = array();
-    for ($i=1; $i <= $jml_page; $i++) { 
-        $param_print[] = $first_column.$first_row.':'.$last_column.($last_row * $i);
-        $first_row += $last_row;
-    }
-    
-    $excel->getActiveSheet()->getPageSetup()->setPrintArea(implode(',', $param_print));
-
-    // ==============================================================
 
 	// BARIS BODY / ISI DATA
     $row         = 1;
@@ -221,24 +196,20 @@
         $excel->getActiveSheet()->mergeCells('B'.$row.':B'.$row_merge_1);
 
         $excel->getActiveSheet()->mergeCells('C'.$row.':E'.$row_merge_2);
-		$excel->getActiveSheet()->setCellValue('C'.$row, "PEMERINTAH KABUPATEN MAGELANG\nDINAS KOMUNIKASI DAN INFORMATIKA");
-        $excel->getActiveSheet()->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+		$excel->setActiveSheetIndex(0)->setCellValue('C'.$row, 'PEMERINTAH KABUPATEN MAGELANG DINAS KOMUNIKASI DAN INFORMATIKA');
+        $excel->setActiveSheetIndex(0)->getStyle('C'.$row)->getAlignment()->setWrapText(true);
         
-        $excel->getActiveSheet()->setCellValue('C'.($row+$merge_2), 'KODE LOKASI');
-        $excel->getActiveSheet()->setCellValue('D'.($row+$merge_2), ':');
-        $excel->getActiveSheet()->setCellValue('E'.($row+$merge_2), $kode_lokasi);
+        $excel->setActiveSheetIndex(0)->setCellValue('C'.($row+$merge_2), 'KODE LOKASI');
+        $excel->setActiveSheetIndex(0)->setCellValue('D'.($row+$merge_2), ':');
+        $excel->setActiveSheetIndex(0)->setCellValue('E'.($row+$merge_2), $kode_lokasi);
 
-        $excel->getActiveSheet()->setCellValue('C'.($row+$merge_2+1), 'KODE BARANG');
-        $excel->getActiveSheet()->setCellValue('D'.($row+$merge_2+1), ':');
-        $excel->getActiveSheet()->setCellValue('E'.($row+$merge_2+1), $kode_barang);
+        $excel->setActiveSheetIndex(0)->setCellValue('C'.($row+$merge_2+1), 'KODE BARANG');
+        $excel->setActiveSheetIndex(0)->setCellValue('D'.($row+$merge_2+1), ':');
+        $excel->setActiveSheetIndex(0)->setCellValue('E'.($row+$merge_2+1), $kode_barang);
 
-        $excel->getActiveSheet()->mergeCells('A'.($row_merge_1 + 1).':E'.($row_merge_1 + 1));
-		$excel->getActiveSheet()->setCellValue('A'.($row_merge_1 + 1), $val->nama_aset);
-        $excel->getActiveSheet()->getStyle('A'.($row_merge_1 + 1))->getAlignment()->setWrapText(true);
-
-        // Set Row auto height according to content
-        $row_name_aset = $row_merge_1 + 1;
-        $excel->getActiveSheet()->getRowDimension($row_name_aset)->setRowHeight(-1);
+        $excel->getActiveSheet()->mergeCells('F'.$row.':F'.$row_merge_1);
+		$excel->setActiveSheetIndex(0)->setCellValue('F'.$row, $val->nama_aset);
+        $excel->setActiveSheetIndex(0)->getStyle('F'.$row)->getAlignment()->setWrapText(true);
 
 
 		// Apply style
@@ -251,11 +222,15 @@
         $excel->getActiveSheet()->getStyle('C'.($row+$merge_2+1))->applyFromArray($style2);
 		$excel->getActiveSheet()->getStyle('D'.($row+$merge_2+1))->applyFromArray($style2);
 		$excel->getActiveSheet()->getStyle('E'.($row+$merge_2+1))->applyFromArray($style3);
-		$excel->getActiveSheet()->getStyle('A'.($row_merge_1 + 1).':E'.($row_merge_1 + 1))->applyFromArray($style4);
+		$excel->getActiveSheet()->getStyle('F'.$row.':F'.$row_merge_1)->applyFromArray($style4);
 
-        $row         += $merge_1 + $space_row + 1;
-        $row_merge_1 += $merge_1 + $space_row + 1;
-        $row_merge_2 += $merge_1 + $space_row + 1;
+        // for ($i=$row; $i <= $row_merge_1; $i++) { 
+        //     $excel->getActiveSheet()->getRowDimension($i)->setRowHeight(14);
+        // }
+
+        $row         += $merge_1 + $space_row;
+        $row_merge_1 += $merge_1 + $space_row;
+        $row_merge_2 += $merge_1 + $space_row;
 	}
 
 

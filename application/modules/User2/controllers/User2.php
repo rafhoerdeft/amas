@@ -764,14 +764,14 @@ class User2 extends Adm_Controller
                 data-tgl="'. $val->tgl_histori .'"
                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
-                $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+                // $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_hapus;
                 $btn .= $btn_edit;
-                $btn .= $btn_detail;
                 $btn .= "<br>";
+                $btn .= $btn_detail;
                 $btn .= $btn_histori;
-                $btn .= $btn_print;
+                // $btn .= $btn_print;
 
                 $columns = array(
                     $i,
@@ -1939,6 +1939,59 @@ class User2 extends Adm_Controller
         } else {
             redirect(base_url('User2'));
         }
+    }
+
+    // =====================================================================
+
+    // CETAK LABEL ASET ====================================================
+
+    public function cetakLabelAset($id='') {
+        $post = $this->input->POST();
+
+        if ($post) {
+            $id_jenis_kib = decode($id);
+            $tbl_kib = $this->MasterData->getWhereData('*','tbl_jenis_kib',"id_jenis_kib = $id_jenis_kib")->row()->nama_tbl_kib;
+            $id_aset = explode(';', $post['delete_all']);
+            // $dataAset = $this->MasterData->getWhereData('*','tbl_aset',"id_aset IN $id_aset")->row();
+            $select = array(
+                'ast.*',
+                "(SELECT brg.merk_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT rc.id_barang FROM tbl_aset_rincian rc WHERE rc.id_aset = ast.id_aset AND rc.posisi = 1)) merk_aset",
+                "(SELECT kib.harga FROM $tbl_kib kib WHERE kib.id_kib = ast.id_kib) harga_aset",
+            );
+            $dataAset = $this->db->SELECT($select)
+                                 ->where_in('ast.id_aset', $id_aset)
+                                 ->GET('tbl_aset ast')->result();
+
+            if (count($dataAset) > 0) {
+                $this->load->library('phpqrcode');
+
+                $tempdir = FCPATH.'assets/img/qrcode/'; //Nama folder tempat menyimpan file qrcode
+                // var_dump($tempdir);
+                if (!file_exists($tempdir)) //Buat folder penyimpanan
+                    mkdir($tempdir);
+
+                foreach ($dataAset as $val) {
+                    //isi qrcode jika di scan
+                    $codeContents = $val->kode_baru_aset; 
+                    $dirFile = $tempdir.$val->id_aset.'_code.png';
+                    
+                    if (!file_exists($dirFile)) {
+                        //nilai konfigurasi Frame di bawah 4 tidak direkomendasikan 
+                        QRcode::png($codeContents, $dirFile, QR_ECLEVEL_M, 4, 2);
+                    }
+                }
+
+                $data = array(
+                    'dataAset' => $dataAset,
+                );
+
+                $this->load->library('PhpExcelNew/PHPExcel');
+                $this->load->view('User3/print/label_aset', $data);
+            } else {
+                redirect(base_url('User2'));
+            }
+        }
+
     }
 
 }
