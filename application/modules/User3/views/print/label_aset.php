@@ -99,6 +99,28 @@
         //     'color' => array('rgb' => 'ffffff')
         // )
 	);
+
+    $style5 = array(
+		'font' => array(
+			'name'  => 'Arial',
+	      	'bold' => FALSE,
+	      	'size' => (6)
+		),
+		'alignment' => array(
+			'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT, // Set text jadi ditengah secara horizontal (center)
+			'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP // Set text jadi di tengah secara vertical (middle)
+        ),
+        // 'borders' => array(
+		// 	'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+		// 	'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+		// 	'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+		// 	'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+		// ),
+		// 'fill' => array(
+        //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+        //     'color' => array('rgb' => 'ffffff')
+        // )
+	);
 	
 
 	// BARIS HEADER
@@ -138,7 +160,8 @@
 	$excel->getActiveSheet()->getColumnDimension('D')->setWidth(1.4);
 	$excel->getActiveSheet()->getColumnDimension('E')->setWidth(26.2);
 	// $excel->getActiveSheet()->getColumnDimension('E')->setWidth(20.7);
-	$excel->getActiveSheet()->getColumnDimension('F')->setWidth(12.7);
+	$excel->getActiveSheet()->getColumnDimension('F')->setWidth(3);
+	$excel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
 
     // Set height all row
 	$excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(14);
@@ -240,6 +263,10 @@
         $row_name_aset = $row_merge_1 + 1;
         $excel->getActiveSheet()->getRowDimension($row_name_aset)->setRowHeight(-1);
 
+        $excel->getActiveSheet()->mergeCells('G'.$row.':H'.($row_merge_1 + 1));
+		$excel->getActiveSheet()->setCellValue('G'.$row, "$val->nama_aset\n$val->merk_aset\n".nominal($val->harga_aset)."\n$kode_barang");
+        $excel->getActiveSheet()->getStyle('G'.$row.':H'.($row_merge_1 + 1))->getAlignment()->setWrapText(true);
+
 
 		// Apply style
 		$excel->getActiveSheet()->getStyle('A'.$row.':A'.$row_merge_1)->applyFromArray($style4);
@@ -252,6 +279,7 @@
 		$excel->getActiveSheet()->getStyle('D'.($row+$merge_2+1))->applyFromArray($style2);
 		$excel->getActiveSheet()->getStyle('E'.($row+$merge_2+1))->applyFromArray($style3);
 		$excel->getActiveSheet()->getStyle('A'.($row_merge_1 + 1).':E'.($row_merge_1 + 1))->applyFromArray($style4);
+		$excel->getActiveSheet()->getStyle('G'.$row.':H'.($row_merge_1 + 1))->applyFromArray($style5);
 
         $row         += $merge_1 + $space_row + 1;
         $row_merge_1 += $merge_1 + $space_row + 1;
