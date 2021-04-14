@@ -7,7 +7,7 @@
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
               <li class="breadcrumb-item active">Data Aset</li>
             </ol>
           </div>
@@ -15,12 +15,22 @@
       </div>
 
       <div class="content-header-right col-md-2 col-12 mb-2">
-        <!-- <div class="dropdown"> -->
-          <a href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
+        <!-- <div class="btn-group float-md-right"> -->
+          <button class="btn btn-success btn-block round dropdown-toggle dropdown-menu-right px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="la la-plus font-small-3"></i> Tambah Data
-          </a>
+          </button>
+          <div class="dropdown-menu arrow">
+            <a class="dropdown-item" href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib).'/pengadaan') ?>">Pengadaan</a>
+            <a class="dropdown-item" href="<?= base_url('User2/addDataAset/'.encode($id_jenis_kib).'/mutasi') ?>">Mutasi SKPD</a>
+          </div>
         <!-- </div> -->
       </div>
+
+      <!-- <div class="content-header-right col-md-2 col-12 mb-2">
+          <a href="<?php //echo base_url('User2/addDataAset/'.encode($id_jenis_kib)); ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
+            <i class="la la-plus font-small-3"></i> Tambah Data
+          </a>
+      </div> -->
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->

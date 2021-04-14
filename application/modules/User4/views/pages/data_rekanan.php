@@ -69,7 +69,7 @@
                         <tr>
                           <td align="center"><?= $no++ ?></td>
                           <td nowrap align="center">
-                            <button type="button" onclick="hapusData(this)" data-id="<?= encode($val->id_rekanan) ?>" data-link="<?= base_url('User2/deleteDataRekanan') ?>" data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" class="btn btn-sm btn-danger"  title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
+                            <button type="button" onclick="hapusData(this)" data-id="<?= encode($val->id_rekanan) ?>" data-link="<?= base_url($this->controller.'/deleteDataRekanan') ?>" data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" class="btn btn-sm btn-danger"  title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
 
                             <button type="button" data-id="<?= encode($val->id_rekanan) ?>" data-nama="<?= $val->nama_rekanan ?>" data-almt="<?= $val->alamat_rekanan ?>" data-kota="<?= $val->kota_rekanan ?>" onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
                           </td>
@@ -160,7 +160,7 @@
   function addModal() {
       clear_data();
       $('#modal_form #modal_title').html('Tambah Data Rekanan');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanDataRekanan'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanDataRekanan'; ?>");
       $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
@@ -173,7 +173,7 @@
 
       clear_data();
       $('#modal_form #modal_title').html('Update Data Rekanan');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateDataRekanan'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateDataRekanan'; ?>");
       $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
       $('#modal_form #id').val(id);

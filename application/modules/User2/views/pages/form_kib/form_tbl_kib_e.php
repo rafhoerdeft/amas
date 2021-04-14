@@ -43,7 +43,7 @@
         </div>
         <div class="form-group">
             <label for="thn_beli">Tahun Beli :</label>
-            <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="thn_beli" id="thn_beli" value="<?= date('Y') ?>" maxlength="4" value="<?php echo (isset($dataKib))?$dataKib->thn_beli:''; ?>" required>
+            <input type="text" class="form-control" onkeypress="return inputAngka(event);" name="thn_beli" id="thn_beli" maxlength="4" value="<?php echo (isset($dataKib))?$dataKib->thn_beli:date('Y'); ?>" required>
         </div>
         <div class="form-group">
             <label for="asal_usul">Asal Usul :</label>

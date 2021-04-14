@@ -4,22 +4,22 @@
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
                 <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1') ?>"><i class="la la-home"></i>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dashBoard') ?>" title="Dashboard"><i class="la la-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1/dataRekanan') ?>"><i class="la la-group"></i>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataRekanan') ?>" title="Rekanan"><i class="la la-group"></i>
                         <span>Rekanan</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1/dataKontrak') ?>"><i class="la la-paste"></i>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataKontrak') ?>" title="Kontrak"><i class="la la-paste"></i>
                         <span>Kontrak</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User1/dataPengadaan') ?>"><i class="ft-box"></i>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataPengadaan') ?>" title="Pengadaan"><i class="ft-box"></i>
                         <span>Pengadaan</span>
                     </a>
                 </li>

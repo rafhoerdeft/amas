@@ -3,24 +3,24 @@
     <div class="content-header row">
       
       <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Histori Aset</h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Data Kontrak</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-              <li class="breadcrumb-item active">Histori Aset</li>
+              <li class="breadcrumb-item active">Data Kontrak</li>
             </ol>
           </div>
         </div>
       </div>
 
-      <!-- <div class="content-header-right col-md-4 col-12 mb-2">
+      <div class="content-header-right col-md-4 col-12 mb-2">
         <div class="dropdown float-md-right">
           <button class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button" onclick="addModal()">
             <i class="la la-plus font-small-3"></i> Tambah Data
           </button>
         </div>
-      </div> -->
+      </div>
 
     </div>
     <div class="content-body">
@@ -43,62 +43,9 @@
               
               <div class="card-content collapse show">
                 
-                <?= show_alert() ?>
-
                 <div class="card-body">
 
-                  <form action="<?= base_url('User2/historiAset') ?>" class="row" method="POST">
-                    <?= token_csrf() ?>
-
-                    <div class="col-lg-4" style="margin-bottom: 5px;">
-                      <div class="input-daterange input-group date-range">
-                        <input type="text" class="form-control" id="tgl_awal" name="tgl_awal" placeholder="DD/MM/YYYY" value="<?= $selectTglAwal ?>" />
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-info b-0 text-white">SAMPAI</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" />
-                      </div>
-                    </div>
-
-                    <div class="col-lg-2" style="margin-bottom: 5px;">
-                        <div class="controls">
-                            <select id="status" name="status" class="form-control select2">
-                                <option value="0" selected>Semua Status</option>
-                                <?php
-                                foreach ($dataStatusAset as $sts) {
-                                ?>
-                                    <option <?= ($selectStatus == $sts->id_aset_status?'selected':'') ?> value="<?= $sts->id_aset_status ?>"><?= $sts->nama_status ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3" style="margin-bottom: 5px;">
-                        <div class="controls">
-                            <select id="jenis" name="jenis" class="form-control select2">
-                                <option value="0" selected>Semua Jenis</option>
-                                <?php
-                                foreach ($dataJenisAset as $jns) {
-                                ?>
-                                    <option <?= ($selectJenis == $jns->id_jenis_kib?'selected':'') ?> value="<?= $jns->id_jenis_kib ?>"><?= $jns->nama_kib ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2">
-                      <button type="submit" class="btn btn-success btn-block" title="Tampilkan">
-                        Tampil
-                      </button>
-                    </div>
-
-                  </form>
-
-                  <hr>
+                  <?= show_alert() ?>
 
                   <style>
                     .no-wrap {
@@ -106,29 +53,64 @@
                     }
                   </style>
 
-                  <?= formSearch('data_histori') ?>
-
-                  <table id="data_histori" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
+                  <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table" style="font-size: 8pt">
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>
-                        <th>Tgl Eksekusi</th>
-                        <th>Status</th>
-                        <th>Jenis Aset</th>
-                        <th>Nama Aset</th>
-                        <th>Kode Lama</th>
-                        <th>Kode Baru</th>
-                        <th>No. Reg</th>
-                        <th>Satuan</th>
-                        <th>Merk/Type</th>
-                        <th>Serial Number</th>
-                        <th>Lokasi</th>
-                        <th>Pemegang</th>
-                        <th>Penanggung Jawab</th>
-                        <th>Keperluan</th>
-                        <th>Keterangan</th>
+                        <th>Aksi</th>
+                        <th>Tgl. Nota</th>
+                        <th>No. Nota</th>
+                        <th>Nama Toko</th>
+                        <th>Jml. Barang</th>
                       </tr>
                     </thead>
+
+                    <tbody>
+                      <?php $no=1; foreach ($dataBarang as $val) { ?>
+                        <tr>
+                          <td align="center"><?= $no++ ?></td>
+                          <td nowrap align="center">
+                            <?php if ($this->id_user == $val->id_user) { ?>
+                              <button type="button" onclick="hapusData(this)" 
+                                data-id="<?= encode($val->id_user) ?>" 
+                                data-link="<?= base_url($this->controller.'/deleteBarangMasuk') ?>" 
+                                data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
+                                data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
+                                class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
+
+                              <button type="button" 
+                                data-id="<?= encode($val->id_kontrak) ?>" 
+                                data-nokontrak="<?= $val->no_kontrak ?>" 
+                                data-nosp2d="<?= $val->no_sp2d ?>" 
+                                data-nilai="<?= nominal($val->nilai_kontrak) ?>" 
+                                data-rekanan="<?= $val->id_rekanan ?>" 
+                                data-ppkom="<?= $val->id_user ?>" 
+                                data-rekening="<?= $val->jenis_rekening ?>" 
+                                data-tgl="<?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?>" 
+                                onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
+
+                                <a href="<?= base_url($this->controller.'/rincianBarangMasuk/'.encode($val->id_kontrak)) ?>"
+                                    type="button" class="btn btn-sm btn-primary"
+                                    title="Tambah Rincian"><i class="la la-plus font-small-3"></i></a>
+                            <?php } else { ?>
+                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
+                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Update Data"><i class="la la-edit font-small-3"></i></button>
+                            <?php } ?>
+                          </td>
+                          <td><?= $val->no_kontrak ?></td>
+                          <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
+                          <td><?= $val->nama_rekanan ?></td>
+                          <td><?= $val->alamat_rekanan ?></td>
+                          <td align="center"><?= $val->kota_rekanan ?></td>
+                          <td><?= $val->no_sp2d ?></td>
+                          <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
+                          <td><?= $val->nama_ppkom ?></td>
+                          <td align="center">
+                              <?= ($val->jenis_rekening==null || $val->jenis_rekening=='')?'-':$val->jenis_rekening ?>
+                          </td>
+                        </tr>
+                      <?php } ?>
+                    </tbody>
 
                   </table>
                 </div>
@@ -213,7 +195,7 @@
               </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group d-none">
               <h5>PPKom
                   <span class="required text-danger">*</span>
               </h5>
@@ -276,7 +258,7 @@
   function addModal() {
       clear_data();
       $('#modal_form #modal_title').html('Tambah Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
@@ -293,7 +275,7 @@
 
       clear_data();
       $('#modal_form #modal_title').html('Update Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
       $('#modal_form #id').val(id);

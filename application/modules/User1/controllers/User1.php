@@ -29,9 +29,29 @@ class User1 extends Adm_Controller
             assets_url . "app-assets/js/scripts/footer.min.js",
         ); 
 
+        $this->controller = $this->router->fetch_class();
+
     } 
 
     public function index()
+    {
+        $this->head[] = assets_url . "app-assets/fonts/simple-line-icons/style.css";
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '0';
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'dash',
+            'footer' => $footer,
+            // 'cont'   => $cont,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function dashBoard()
     {
         $this->head[] = assets_url . "app-assets/fonts/simple-line-icons/style.css";
         $header['css'] = $this->head;
@@ -574,7 +594,31 @@ class User1 extends Adm_Controller
 
             $this->db->trans_begin();
 
-            for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+            if ($post['jenis_rekening'] == 'Modal') {
+                for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+                    $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
+                    $data = array(
+                        'kode_barang'     => $kodeBarang,
+                        'nama_barang'     => $post['nama_barang'],   
+                        'merk_barang'     => $post['merk_barang'],   
+                        'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                        'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
+                        'tgl_masuk'       => $post['tgl_kontrak'],   
+                    );
+        
+                    $this->MasterData->inputData($data,'tbl_barang');
+        
+                    $id_barang = $this->db->insert_id();
+        
+                    $data = array(
+                        'id_kontrak'    => decode($post['id_kontrak']),   
+                        'id_barang'     => $id_barang,   
+                        'jml_barang'    => 1,   
+                    );
+        
+                    $input = $this->MasterData->inputData($data,'tbl_pengadaan');
+                }
+            } else {
                 $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
                 $data = array(
                     'kode_barang'     => $kodeBarang,
@@ -592,7 +636,7 @@ class User1 extends Adm_Controller
                 $data = array(
                     'id_kontrak'    => decode($post['id_kontrak']),   
                     'id_barang'     => $id_barang,   
-                    'jml_barang'    => 1,   
+                    'jml_barang'    => (int)$post['jml_barang'],   
                 );
     
                 $input = $this->MasterData->inputData($data,'tbl_pengadaan');
@@ -718,5 +762,118 @@ class User1 extends Adm_Controller
         }
     }
 
+    // =====================================================================
+
+    // EDIT PROFIL =========================================================
+
+    public function dataProfil() {
+
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '0';
+
+        // ========================================
+
+        $dataUser = $this->MasterData->getWhereData('*', 'tbl_user', "id_user = ".$this->id_user)->row();
+
+        $content = array(
+            'dataUser'  => $dataUser,
+        );
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'data_profil',
+            'footer' => $footer,
+            'cont'   => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function simpanProfil() {
+        $post = $this->input->POST();
+        
+        if ($post) {
+            $simpanUser = $this->MasterData->editData("id_user = $this->id_user", $post, 'tbl_user');
+
+            if ($simpanUser) {
+                alert_success('Data berhasil disimpan.');
+                redirect(base_url($this->controller.'/dataProfil'));
+            } else {
+                alert_failed('Data gagal disimpan.');
+                redirect(base_url($this->controller.'/dataProfil'));
+            }
+        } else {
+            alert_failed('Data gagal disimpan.');
+            redirect(base_url($this->controller.'/dataProfil'));
+        }
+    }
+
+    // =====================================================================
+
+    // AKUN LOGIN ==========================================================
+
+    public function akunLogin() {
+
+        $this->head[] = assets_url . "app-assets/css/plugins/forms/validation/form-validation.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/validation/jqBootstrapValidation.js";
+        $this->foot[] = assets_url . "app-assets/js/scripts/forms/validation/form-validation.js";
+
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '0';
+
+        // ========================================
+
+        $dataUser = $this->MasterData->getWhereData('*', 'tbl_user', "id_user = ".$this->id_user)->row();
+
+        $content = array(
+            'dataUser'  => $dataUser,
+        );
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'akun_login',
+            'footer' => $footer,
+            'cont'   => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function simpanAkunLogin() {
+        $post = $this->input->POST();
+        
+        if ($post) {
+            $oldPass = $this->MasterData->getWhereData('password','tbl_user',"id_user = $this->id_user")->row()->password;
+
+            if ($oldPass == md5($post['pass_old'])) {
+                $data = array(
+                    'username'  => $post['username'],
+                    'password'  => md5($post['pass_new']),
+                );
+                $simpanUser = $this->MasterData->editData("id_user = $this->id_user", $data, 'tbl_user');
+
+                if ($simpanUser) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url($this->controller.'/akunLogin'));
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url($this->controller.'/akunLogin'));
+                }
+            } else {
+                alert_failed('Data gagal disimpan. Password lama tidak sesuai');
+                redirect(base_url($this->controller.'/akunLogin'));
+            }
+        } else {
+            alert_failed('Data gagal disimpan.');
+            redirect(base_url($this->controller.'/akunLogin'));
+        }
+    }
+
+    // =====================================================================
 
 }

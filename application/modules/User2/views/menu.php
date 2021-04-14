@@ -4,25 +4,34 @@
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
                 <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2') ?>"><i class="la la-home"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dashBoard') ?>" title="Dashboard"><i class="la la-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <!-- ======================================================================== -->
+
                 <li class="nav-item <?= ($active == '6' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataRekanan') ?>"><i class="la la-group"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dataRekanan') ?>" title="Rekanan"><i class="la la-group"></i>
                         <span>Rekanan</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '7' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataKontrak') ?>"><i class="la la-paste"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dataKontrak') ?>" title="Kontrak"><i class="la la-paste"></i>
                         <span>Kontrak</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '8' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataPengadaan') ?>"><i class="ft-box"></i>
+                    <a class="nav-link" href="<?= base_url('User2/dataPengadaan') ?>" title="Pengadaan"><i class="ft-box"></i>
                         <span>Pengadaan</span>
+                    </a>
+                </li>
+
+                <!-- =========================================================================== -->
+
+                <li class="nav-item <?= ($active == '9' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url('User2/dataBarangJasa') ?>" title="Barang Jasa"><i class="ft-box"></i>
+                        <span>Barang Jasa</span>
                     </a>
                 </li>
 
@@ -49,33 +58,40 @@
                     </ul>
                 </li> -->
 
-                <li class="dropdown nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="la la-puzzle-piece"></i>
-                        <span>Data Aset</span>
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Aset"><i class="la la-puzzle-piece"></i>
+                        <span>Aset</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <?php foreach ($dataKib as $val) { ?>
-                            <li class="<?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
-                                <a class="dropdown-item" href="<?= base_url('User2/dataAset/'.encode($val->id_jenis_kib)) ?>" data-toggle="dropdown"><?= $val->jenis_kib ?>. <?= $val->nama_kib ?></a>
-                            </li>
-                        <?php } ?>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" title="Data Aset"><i class="la la-tablet"></i><span>Data Aset</span></a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($dataJenisKibAset as $val) { ?>
+                                    <li class="<?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
+                                        <a class="dropdown-item" href="<?= base_url('User2/dataAset/'.encode($val->id_jenis_kib)) ?>" data-toggle="dropdown"><span><?= $val->jenis_kib ?>. <?= $val->nama_kib ?></span></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                        <li class="<?= ($active == '3' ? 'active' : '') ?>">
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/historiAset') ?>" title="Histori Aset"><i class="la la-history"></i>
+                                <span>Histori Aset</span>
+                            </a>
+                        </li>
+                        <li class="<?= ($active == '4' ? 'active' : '') ?>">
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataMutasi') ?>" title="Mutasi Aset"><i class="ft-log-out"></i>
+                                <span>Mutasi Aset</span>
+                            </a>
+                        </li>
+                        <li class="<?= ($active == '5' ? 'active' : '') ?>">
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataUsulanHapus') ?>" title="Usulan Hapus"><i class="ft-trash-2"></i>
+                                <span>Usulan Hapus</span>
+                            </a>
+                        </li>
+                        
                     </ul>
                 </li>
-                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/historiAset') ?>"><i class="la la-history"></i>
-                        <span>Histori Aset</span>
-                    </a>
-                </li>
-                <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataMutasi') ?>"><i class="ft-log-out"></i>
-                        <span>Mutasi Aset</span>
-                    </a>
-                </li>
-                <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataUsulanHapus') ?>"><i class="ft-trash-2"></i>
-                        <span>Usulan Hapus</span>
-                    </a>
-                </li>
+                
                 
             </ul>
         </div>

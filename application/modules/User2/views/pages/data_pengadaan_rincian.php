@@ -8,8 +8,8 @@
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="<?= base_url('User2/dataPengadaan') ?>">Data
+                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller.'/dataPengadaan') ?>">Data
                                     Pengadaan</a></li>
                             <li class="breadcrumb-item active">Rincian Pengadaan</li>
                         </ol>

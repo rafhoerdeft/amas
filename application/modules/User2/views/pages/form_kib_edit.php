@@ -7,9 +7,9 @@
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
                             <li class="breadcrumb-item"><a
-                                    href="<?= base_url('User2/dataAset/'.encode($id_jenis_kib)) ?>">Data Aset</a></li>
+                                    href="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">Data Aset</a></li>
                             <li class="breadcrumb-item active">Tambah Aset</li>
                         </ol>
                     </div>
@@ -136,7 +136,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="nama_aset">Nama Aset :</label>
+                                                        <label for="nama_aset">Nama Barang Pengadaan :</label>
                                                         <input type="text" class="form-control" name="nama_aset" id="nama_aset" value="<?= (isset($dataAset))?$dataAset->nama_aset:'' ?>" required>
                                                     </div>
                                                     <!-- <div class="form-group">

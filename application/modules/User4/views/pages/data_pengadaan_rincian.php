@@ -160,7 +160,6 @@
                 <input type="hidden" name="id" id="id">
                 <input type="hidden" name="id_kontrak" id="id_kontrak" value="<?= encode($dataKontrak->id_kontrak) ?>">
                 <input type="hidden" name="tgl_kontrak" id="tgl_kontrak" value="<?= $dataKontrak->tgl_kontrak ?>">
-                <input type="hidden" name="jenis_rekening" id="jenis_rekening" value="<?= $dataKontrak->jenis_rekening ?>">
 
                 <?= token_csrf() ?>
 

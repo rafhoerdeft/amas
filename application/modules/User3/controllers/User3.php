@@ -29,6 +29,8 @@ class User3 extends Adm_Controller
             assets_url . "app-assets/js/scripts/footer.min.js",
         );
 
+        $this->controller = $this->router->fetch_class();
+
         $dataKib = $this->MasterData->getData('tbl_jenis_kib')->result();
 
         $menu = array(
@@ -43,7 +45,7 @@ class User3 extends Adm_Controller
         $this->head[] = assets_url . "app-assets/fonts/simple-line-icons/style.css";
         $header['css'] = $this->head;
         $footer['js'] = $this->foot;
-        $menu['active'] = '1';
+        $menu['active'] = '0';
 
         $data = array(
             'header' => $header,
@@ -51,6 +53,38 @@ class User3 extends Adm_Controller
             'konten' => 'dash',
             'footer' => $footer,
             // 'cont'   => $cont,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function dashBoard()
+    {
+        $this->head[] = assets_url . "app-assets/fonts/simple-line-icons/style.css";
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '1';
+
+        //JML ASET
+        $select = array(
+            'kib.nama_kib as jenis_aset', 
+            "COUNT(ast.id_aset) as jml_aset",
+        );
+        $data_aset = $this->db->SELECT($select)
+                              ->JOIN('tbl_aset ast', "kib.id_jenis_kib = ast.id_jenis_kib", 'LEFT')
+                              ->group_by('kib.id_jenis_kib')
+                              ->GET('tbl_jenis_kib kib')->result();
+
+        $content = array(
+            'data_aset'     => $data_aset,
+        );
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'pages/dashboard',
+            'footer' => $footer,
+            'cont'   => $content,
         );
 
         $this->load->view("view_master_admin", $data);
@@ -1102,7 +1136,7 @@ class User3 extends Adm_Controller
 
     // =====================================================================
 
-    // USULAN HAPUS ASET =========================================================
+    // USULAN HAPUS ASET ===================================================
 
     public function dataUsulanHapus($id_kib='') {
 
@@ -1286,8 +1320,9 @@ class User3 extends Adm_Controller
             // $dataAset = $this->MasterData->getWhereData('*','tbl_aset',"id_aset IN $id_aset")->row();
             $select = array(
                 'ast.*',
-                "(SELECT brg.merk_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT rc.id_barang FROM tbl_aset_rincian rc WHERE rc.id_aset = ast.id_aset AND rc.posisi = 1)) merk_aset",
-                "(SELECT kib.harga FROM $tbl_kib kib WHERE kib.id_kib = ast.id_kib) harga_aset",
+                "IFNULL((SELECT brg.merk_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT rc.id_barang FROM tbl_aset_rincian rc WHERE rc.id_aset = ast.id_aset AND rc.posisi = 1)), '-') merk_aset",
+                "IFNULL((SELECT brg.sn_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT rc.id_barang FROM tbl_aset_rincian rc WHERE rc.id_aset = ast.id_aset AND rc.posisi = 1)), '-') sn_aset",
+                "IFNULL((SELECT kib.harga FROM $tbl_kib kib WHERE kib.id_kib = ast.id_kib), '-') harga_aset",
             );
             $dataAset = $this->db->SELECT($select)
                                  ->where_in('ast.id_aset', $id_aset)
@@ -1324,5 +1359,119 @@ class User3 extends Adm_Controller
         }
 
     }
+
+    // =====================================================================
+
+    // EDIT PROFIL =========================================================
+
+    public function dataProfil() {
+
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '0';
+
+        // ========================================
+
+        $dataUser = $this->MasterData->getWhereData('*', 'tbl_user', "id_user = ".$this->id_user)->row();
+
+        $content = array(
+            'dataUser'  => $dataUser,
+        );
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'data_profil',
+            'footer' => $footer,
+            'cont'   => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function simpanProfil() {
+        $post = $this->input->POST();
+        
+        if ($post) {
+            $simpanUser = $this->MasterData->editData("id_user = $this->id_user", $post, 'tbl_user');
+
+            if ($simpanUser) {
+                alert_success('Data berhasil disimpan.');
+                redirect(base_url($this->controller.'/dataProfil'));
+            } else {
+                alert_failed('Data gagal disimpan.');
+                redirect(base_url($this->controller.'/dataProfil'));
+            }
+        } else {
+            alert_failed('Data gagal disimpan.');
+            redirect(base_url($this->controller.'/dataProfil'));
+        }
+    }
+
+    // =====================================================================
+
+    // AKUN LOGIN ==========================================================
+
+    public function akunLogin() {
+
+        $this->head[] = assets_url . "app-assets/css/plugins/forms/validation/form-validation.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/validation/jqBootstrapValidation.js";
+        $this->foot[] = assets_url . "app-assets/js/scripts/forms/validation/form-validation.js";
+
+        $header['css'] = $this->head;
+        $footer['js'] = $this->foot;
+        $menu['active'] = '0';
+
+        // ========================================
+
+        $dataUser = $this->MasterData->getWhereData('*', 'tbl_user', "id_user = ".$this->id_user)->row();
+
+        $content = array(
+            'dataUser'  => $dataUser,
+        );
+
+        $data = array(
+            'header' => $header,
+            'menu'   => $menu,
+            'konten' => 'akun_login',
+            'footer' => $footer,
+            'cont'   => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function simpanAkunLogin() {
+        $post = $this->input->POST();
+        
+        if ($post) {
+            $oldPass = $this->MasterData->getWhereData('password','tbl_user',"id_user = $this->id_user")->row()->password;
+
+            if ($oldPass == md5($post['pass_old'])) {
+                $data = array(
+                    'username'  => $post['username'],
+                    'password'  => md5($post['pass_new']),
+                );
+                $simpanUser = $this->MasterData->editData("id_user = $this->id_user", $data, 'tbl_user');
+
+                if ($simpanUser) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url($this->controller.'/akunLogin'));
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url($this->controller.'/akunLogin'));
+                }
+            } else {
+                alert_failed('Data gagal disimpan. Password lama tidak sesuai');
+                redirect(base_url($this->controller.'/akunLogin'));
+            }
+        } else {
+            alert_failed('Data gagal disimpan.');
+            redirect(base_url($this->controller.'/akunLogin'));
+        }
+    }
+
+    // =====================================================================
 
 }

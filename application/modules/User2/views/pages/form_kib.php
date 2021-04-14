@@ -7,9 +7,9 @@
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?= base_url('User2') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
                             <li class="breadcrumb-item"><a
-                                    href="<?= base_url('User2/dataAset/'.encode($id_jenis_kib)) ?>">Data Aset</a></li>
+                                    href="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">Data Aset</a></li>
                             <li class="breadcrumb-item active">Tambah Aset</li>
                         </ol>
                     </div>
@@ -65,6 +65,7 @@
 
                                         <input type="hidden" id="data_update_barang" name="data_update_barang">
                                         <!-- Step 1 -->
+                                        <?php if ($status_asal=='pengadaan') { ?>
                                         <h6><i class="step-icon ft-check-square"></i> Pilih Barang</h6>
                                         <fieldset>
                                             <table id="dataTable"
@@ -128,20 +129,21 @@
                                         </fieldset>
                                         <!-- Step 2 -->
                                         <h6><i class="step-icon la la-pencil"></i> Lengkapi Data</h6>
+                                        <?php } ?>
                                         <fieldset>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                         
-                                                    <div class="form-group">
+                                                    <div class="form-group d-none">
                                                         <label for="status_masuk_aset">Asal Aset :</label>
                                                         <select id="status_masuk_aset" name="status_masuk_aset" class="form-control">
-                                                            <option value="pengadaan" selected>Pengadaan</option>
-                                                            <option value="mutasi">Mutasi SKPD</option>
+                                                            <option value="pengadaan" <?= ($status_asal=='pengadaan'?'selected':'') ?> >Pengadaan</option>
+                                                            <option value="mutasi" <?= ($status_asal=='mutasi'?'selected':'') ?> >Mutasi SKPD</option>
                                                         </select>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="nama_aset">Nama Aset :</label>
+                                                        <label for="nama_aset">Nama Barang Pengadaan :</label>
                                                         <input type="text" class="form-control" name="nama_aset" id="nama_aset" required>
                                                     </div>
                                                     <!-- <div class="form-group">
@@ -177,6 +179,8 @@
                                             <hr>
 
                                             <?= $this->load->view('form_kib/form_'.$dataJenisKib->nama_tbl_kib) ?>
+
+                                            <button type="submit" class="btn btn-primary float-right <?= ($status_asal=='pengadaan')?'d-none':'' ?>">Simpan</button>
                                         </fieldset>
                                         <hr>
 
@@ -249,7 +253,7 @@
         if (val_harga == '') {
             val_harga = 0;
         } else {
-            val_harga  = parseInt($('#harga').val().replace('.', ''));
+            val_harga  = parseInt($('#harga').val().replace(/\./gi, ''));
         }
 
         var value_id   = '';
@@ -346,6 +350,7 @@
 
             value_hrg = (val_harga - harga);
         }
+        
         var show_hrg = formatRupiah(value_hrg.toString(), 'Rp. ');
 
         $('#pilih_aset').val(value_id);

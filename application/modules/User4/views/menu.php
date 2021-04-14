@@ -1,21 +1,31 @@
-    <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
+<div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
         role="navigation" data-menu="menu-wrapper">
         <div class="navbar-container main-menu-content" data-menu="menu-container">
             <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
 
-                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin') ?>"><i class="la la-home"></i>
+                <li class="nav-item <?= ($active == '1' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dashBoard') ?>" title="Dashboard"><i class="la la-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataPajak') ?>"><i class="la la-puzzle-piece"></i>
-                        <span>Pajak</span>
+                <li class="nav-item <?= ($active == '2' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataRekanan') ?>" title="Rekanan"><i class="la la-group"></i>
+                        <span>Rekanan</span>
                     </a>
                 </li>
-                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>" data-menu="dropdown">
-                    <a class="nav-link" href="<?= base_url('Admin/dataIjin') ?>"><i class="la la-paste"></i>
-                        <span>Perizinan</span>
+                <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataBarang') ?>" title="Data Barang"><i class="ft-box"></i>
+                        <span>Data Barang</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/barangKeluar') ?>" title="Barang Keluar"><i class="ft-log-out"></i>
+                        <span>Barang Keluar</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/laporan') ?>" title="Laporan"><i class="ft-file-text"></i>
+                        <span>Laporan</span>
                     </a>
                 </li>
                 <!-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#"

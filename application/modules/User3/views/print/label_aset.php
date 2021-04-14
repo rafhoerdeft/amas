@@ -264,7 +264,7 @@
         $excel->getActiveSheet()->getRowDimension($row_name_aset)->setRowHeight(-1);
 
         $excel->getActiveSheet()->mergeCells('G'.$row.':H'.($row_merge_1 + 1));
-		$excel->getActiveSheet()->setCellValue('G'.$row, "$val->nama_aset\n$val->merk_aset\n".nominal($val->harga_aset)."\n$kode_barang");
+		$excel->getActiveSheet()->setCellValue('G'.$row, "$val->nama_aset\n$val->merk_aset\n$val->sn_aset\n".nominal($val->harga_aset)."\n$kode_barang");
         $excel->getActiveSheet()->getStyle('G'.$row.':H'.($row_merge_1 + 1))->getAlignment()->setWrapText(true);
 
 
