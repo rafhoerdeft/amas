@@ -14,6 +14,7 @@ class Data_tbl_histori extends CI_Model
         'satuan_aset',
         'merk_barang',
         'sn_barang',
+        "(SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd) as nama_skpd",
         'lokasi_histori',
         'pemegang',
         'nama_user as user_penanggung',

@@ -462,11 +462,11 @@ $config['csrf_exclude_uris'] = array(
                                     'User2/getDataAset/.*?/.*+',
                                     'User2/getDataHistori/.*?/.*+',
                                     'User2/cetakLabelAset/.*+',
+                                    'User2/getDataBarangJasa',
                                     // =============================
                                     'User3/getDataAset/.*?/.*+',
                                     'User3/getDataHistori/.*?/.*+',
                                     'User3/cetakLabelAset/.*+',
-                                    // 'Admin/deletePemohon',
                                 );
 
 /*

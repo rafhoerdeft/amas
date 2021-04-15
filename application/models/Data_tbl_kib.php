@@ -8,7 +8,7 @@ class Data_tbl_kib extends CI_Model
         'kode_lama_aset',
         'kode_baru_aset',
         'no_reg',
-        'jml_aset',
+        // 'jml_aset',
         'satuan_aset',
     );
 
@@ -98,6 +98,7 @@ class Data_tbl_kib extends CI_Model
         $this->select_column[] = "(SELECT GROUP_CONCAT((SELECT usr.nama_user FROM tbl_user usr WHERE usr.id_user = hst.id_user) ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as nama_penanggung";
         $this->select_column[] = "(SELECT GROUP_CONCAT(hst.pemegang ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as pemegang";
         $this->select_column[] = "(SELECT GROUP_CONCAT(hst.lokasi_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as lokasi_histori";
+        $this->select_column[] = "(SELECT GROUP_CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd) ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as nama_skpd";
         $this->select_column[] = "(SELECT GROUP_CONCAT(DATE_FORMAT(hst.tgl_histori, '%d-%m-%Y') ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as tgl_histori";
         $this->select_column[] = "(SELECT GROUP_CONCAT(hst.keperluan_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as keperluan_histori";
         $this->select_column[] = "(SELECT GROUP_CONCAT(hst.ket_histori ORDER BY hst.tgl_histori DESC SEPARATOR ';') FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 1) as ket_histori";
@@ -115,7 +116,7 @@ class Data_tbl_kib extends CI_Model
                 $this->select_column_search[] = $select[0];
             }
 
-            if ($select[0] != 'id_aset' && $select[0] != 'jml_aset') {
+            if ($select[0] != 'id_aset') {
                 if ($select[1] != null && $select[1] != '') {
                     if ($select[1] != 'nm_brg' && $select[1] != 'merk_brg' && $select[1] != 'sat_brg' && $select[1] != 'hrg_brg') {
                         $order_column[] = $select[1];
@@ -124,6 +125,7 @@ class Data_tbl_kib extends CI_Model
                     $order_column[] = $select[0];
                 }
             } else {
+                $order_column[] = null;
                 $order_column[] = null;
                 $order_column[] = null;
             }

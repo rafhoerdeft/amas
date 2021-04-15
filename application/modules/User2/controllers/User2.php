@@ -189,12 +189,13 @@ class User2 extends Adm_Controller
         // $dataAset = $this->MasterData->selectJoinOrder($select, 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
 
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
             'id_jenis_kib'   => $id_jenis_kib,
             'dataJenisKib'   => $dataJenisKib,
             'statusAset'     => $statusAset,
-            // 'dataAset'       => $dataAset,
+            'dataSkpd'       => $dataSkpd,
         );
 
         $data = array(
@@ -796,6 +797,9 @@ class User2 extends Adm_Controller
                 $btn_edit = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
 
                 $btn_detail = ' <button type="button" onclick="rincianModal(this)"
+                data-namaaset="'.$val->nama_aset.'"
+                data-kode="'.$val->kode_baru_aset.'"
+                data-noreg="'.$val->no_reg.'"
                 data-nama="'. $val->nm_brg .'"
                 data-merk="'. $val->merk_brg .'"
                 data-sn="'. $val->sn_brg .'"
@@ -804,11 +808,15 @@ class User2 extends Adm_Controller
                 style="margin-bottom: 3px;" class="btn btn-sm btn-info" title="Detail Barang"><i class="la la-eye font-small-3"></i></button> ';
 
                 $btn_histori = ' <button type="button" onclick="historiModal(this)"
+                data-namaaset="'.$val->nama_aset.'"
+                data-kode="'.$val->kode_baru_aset.'"
+                data-noreg="'.$val->no_reg.'"
                 data-penanggung="'. $val->nama_penanggung .'"
                 data-pemegang="'. $val->pemegang .'"
                 data-ket="'. $val->ket_histori .'"
                 data-keperluan="'. $val->keperluan_histori .'"
                 data-lokasi="'. $val->lokasi_histori .'"
+                data-skpd="'. $val->nama_skpd .'"
                 data-tgl="'. $val->tgl_histori .'"
                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
@@ -1043,6 +1051,7 @@ class User2 extends Adm_Controller
                     $val->satuan_aset,
                     ($val->merk_barang=='' && $val->merk_barang==null)?'-':$val->merk_barang,
                     ($val->sn_barang=='' && $val->sn_barang==null)?'-':$val->sn_barang,
+                    $val->nama_skpd,
                     $val->lokasi_histori,
                     $val->pemegang,
                     $val->user_penanggung,
@@ -1105,7 +1114,7 @@ class User2 extends Adm_Controller
         // $this->foot[] = base_url('assets/js/cetak_excel.js');
         // $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Mutasi Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7]);";
+        $script[] = "showDataTable('Data Mutasi Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
         // $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
         //                 pilihAset(this, event.type);
         //             }).iCheck({
@@ -1134,7 +1143,8 @@ class User2 extends Adm_Controller
         $select = array(
             'ast.*',
             "(SELECT kib.nama_kib FROM tbl_jenis_kib kib WHERE kib.id_jenis_kib = ast.id_jenis_kib) nama_kib",
-            "(SELECT MAX(hst.tgl_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2) tgl_histori",
+            "(SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = (SELECT hst.id_skpd FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2 ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1)) nama_skpd",
+            "(SELECT MAX(hst.tgl_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2 ORDER BY hst.id_aset_histori DESC LIMIT 1) tgl_histori",
         );
         if ($selectJenis != '') {
             $where_plus = "AND ast.id_jenis_kib = '$selectJenis'";
@@ -1145,12 +1155,14 @@ class User2 extends Adm_Controller
 
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "nama_status != 'Mutasi'")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
             'dataMutasi'      => $dataMutasi,
             'dataJenisAset'   => $dataJenisAset,
             'selectJenis'     => $selectJenis,
-            'statusAset'      => $statusAset,
+            'statusAset'      => $statusAset,   
+            'dataSkpd'        => $dataSkpd,
         );
 
         $data = array(
@@ -1247,12 +1259,14 @@ class User2 extends Adm_Controller
 
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "nama_status != 'Usulan Hapus'")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
-            'dataHapus'      => $dataHapus,
+            'dataHapus'       => $dataHapus,
             'dataJenisAset'   => $dataJenisAset,
             'selectJenis'     => $selectJenis,
             'statusAset'      => $statusAset,
+            'dataSkpd'        => $dataSkpd,
         );
 
         $data = array(
@@ -1301,6 +1315,7 @@ class User2 extends Adm_Controller
                     'id_user'            => $this->id_user,
                     'tgl_histori'        => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_histori']))),
                     'lokasi_histori'     => $post['lokasi_histori'],
+                    'id_skpd'            => $post['id_skpd'],
                     'keperluan_histori'  => $post['keperluan_histori'],
                     'pemegang'           => $post['pemegang'],
                     'id_aset_status'     => $post['id_aset_status'],
@@ -1816,7 +1831,11 @@ class User2 extends Adm_Controller
         
         $dataKontrak = $this->MasterData->getWhereData($select, 'tbl_kontrak kt', "kt.id_kontrak = $id_kontrak")->row();
 
-        $dataRincian = $this->MasterData->selectJoinOrder('*', 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        $select_rincian = array(
+            '*',
+            "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+        );
+        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
 
         // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
 
@@ -1845,7 +1864,31 @@ class User2 extends Adm_Controller
 
             $this->db->trans_begin();
 
-            for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+            if ($post['jenis_rekening'] == 'Modal') {
+                for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+                    $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
+                    $data = array(
+                        'kode_barang'     => $kodeBarang,
+                        'nama_barang'     => $post['nama_barang'],   
+                        'merk_barang'     => $post['merk_barang'],   
+                        'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                        'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
+                        'tgl_masuk'       => $post['tgl_kontrak'],   
+                    );
+        
+                    $this->MasterData->inputData($data,'tbl_barang');
+        
+                    $id_barang = $this->db->insert_id();
+        
+                    $data = array(
+                        'id_kontrak'    => decode($post['id_kontrak']),   
+                        'id_barang'     => $id_barang,   
+                        'jml_barang'    => 1,   
+                    );
+        
+                    $input = $this->MasterData->inputData($data,'tbl_pengadaan');
+                }
+            } else {
                 $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
                 $data = array(
                     'kode_barang'     => $kodeBarang,
@@ -1863,7 +1906,7 @@ class User2 extends Adm_Controller
                 $data = array(
                     'id_kontrak'    => decode($post['id_kontrak']),   
                     'id_barang'     => $id_barang,   
-                    'jml_barang'    => 1,   
+                    'jml_barang'    => (int)$post['jml_barang'],   
                 );
     
                 $input = $this->MasterData->inputData($data,'tbl_pengadaan');
@@ -1873,17 +1916,17 @@ class User2 extends Adm_Controller
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }
@@ -1910,29 +1953,29 @@ class User2 extends Adm_Controller
 
             $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
 
-            // $data = array(
-            //     'id_kontrak'    => decode($post['id_kontrak']),   
-            //     'id_barang'     => $id_barang,   
-            //     'jml_barang'    => 1,   
-            // );
+            $data = array(
+                // 'id_kontrak'    => decode($post['id_kontrak']),   
+                // 'id_barang'     => $id_barang,   
+                'jml_barang'    => $post['jml_barang'],   
+            );
 
-            // $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
+            $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User2/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }
@@ -2042,6 +2085,147 @@ class User2 extends Adm_Controller
         }
 
     }
+
+    // =====================================================================
+
+    // BARANG JASA =========================================================
+
+    public function dataBarangJasa($id = '') {
+
+        $this->load->helper('searchbar');
+
+        // ===============================================================================
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_all_data.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/tbl_barang_jasa.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        $script[] = "showDataTable('" . base_url('User2/getDataBarangJasa') . "')";
+        $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
+                        pilihAset(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });}";
+        $script[] = "$('.skin-check-all input').on('ifChecked ifUnchecked', function(event){
+                        pilihAset(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });";
+        
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2();';
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '9';
+
+        // ================================================================
+
+        // $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
+
+        $content = array(
+            'dataSkpd'        => $dataSkpd,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/data_barang_jasa',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function getDataBarangJasa() {
+        if ($this->input->POST()) {
+            $this->load->model("Data_tbl_barang_jasa", "DataTable");
+            $fetch_data = $this->DataTable->make_datatables();
+
+            $data = array();
+            $i = $_POST['start'];
+            foreach ($fetch_data as $val) {
+                $btn = '';
+                $i++;
+
+                $cekbox = "<div class='skin skin-check'>
+                                <input type='checkbox' name='plh_brg[]' value='".$val->id_barang."'>
+                            </div>";
+
+                // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
+                // data-id="'. encode($val->id_aset) .'" 
+                // data-link="'. base_url('User2/deleteDataAset') .'" 
+                // data-csrfname="'. $this->security->get_csrf_token_name() .'" 
+                // data-csrfcode="'. $this->security->get_csrf_hash() .'" 
+                // style="margin-bottom: 3px;" class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
+                
+                // $btn_edit = ' <a href="' . base_url('User2/editDataAset/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+
+                // $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+
+                // $btn .= $btn_hapus;
+                // $btn .= $btn_edit;
+
+                $columns = array(
+                    $i,
+                    $cekbox,
+                    // $btn,
+                    $val->kode_barang,
+                    $val->tgl_masuk,
+                    $val->nama_barang,
+                    $val->merk_barang,
+                    $val->sn_barang,
+                    $val->satuan_barang,
+                    nominal($val->harga_barang),
+                    $val->jml_barang,
+                    $val->sisa,
+                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px;" disabled>',
+                );
+
+                $data[] = $columns;
+            }
+            $output = array(
+                "draw"               =>     $_POST["draw"],
+                "recordsTotal"       =>     $this->DataTable->get_all_data(),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data(),
+                "data"               =>     $data
+            );
+            echo json_encode($output);
+        }
+    }
+
+    // =====================================================================
 
     // =====================================================================
 

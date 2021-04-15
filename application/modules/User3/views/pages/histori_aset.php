@@ -47,7 +47,7 @@
 
                 <div class="card-body">
 
-                  <form action="<?= base_url('User3/historiAset') ?>" class="row" method="POST">
+                  <form action="<?= base_url($this->controller.'/historiAset') ?>" class="row" method="POST">
                     <?= token_csrf() ?>
 
                     <div class="col-lg-4" style="margin-bottom: 5px;">
@@ -122,6 +122,7 @@
                         <th>Satuan</th>
                         <th>Merk/Type</th>
                         <th>Serial Number</th>
+                        <th>SKPD</th>
                         <th>Lokasi</th>
                         <th>Pemegang</th>
                         <th>Penanggung Jawab</th>
@@ -140,175 +141,6 @@
     </div>
   </div>
 </div>
-
-<div class="modal animated bounceInDown text-left" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form name="form_input" id="form_input" method="post" action="">
-        
-        <input type="hidden" name="id" id="id">
-
-        <?= token_csrf() ?>
-
-        <div id="modal_header" class="modal-header bg-success">
-          <h4 class="modal-title white" id="modal_title">Tambah Data</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-group">
-            <h5>Nomor Kontrak
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="no_kontrak" name="no_kontrak" class="form-control" placeholder="Isi nomor kontrak" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-              <h5>Tanggal Kontrak
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <input type="text" class="form-control date-picker" id="tgl_kontrak" name="tgl_kontrak"
-                      placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
-              </div>
-          </div>
-
-          <div class="form-group">
-            <h5>Nomor SP2D
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="no_sp2d" name="no_sp2d" class="form-control" placeholder="Isi nomor kontrak" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <h5>Nilai Kontrak (Rp)
-                <span class="required text-danger">*</span>
-            </h5>
-            <div class="controls">
-                <input type="text" id="nilai_kontrak" name="nilai_kontrak" class="form-control" placeholder="Isi nomor kontrak" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-              <h5>Rekanan
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <select id="rekanan" name="rekanan" class="form-control select2" required>
-                      <option value="">Pilih Rekanan</option>
-                      <?php
-                      foreach ($dataRekanan as $val) {
-                      ?>
-                          <option value="<?= $val->id_rekanan ?>"><?= $val->nama_rekanan ?></option>
-                      <?php
-                      }
-                      ?>
-                  </select>
-              </div>
-          </div>
-
-          <div class="form-group">
-              <h5>PPKom
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <input type="text" id="ppkom" name="ppkom" class="form-control" value="<?= $this->nama_user ?>" readonly required>
-                  <!-- <select id="ppkom" name="ppkom" class="form-control select2" required>
-                      <option value="">Pilih PPKom</option>
-                      <?php
-                      //foreach ($dataPpkom as $val) {
-                      ?>
-                          <option value="<?php //echo $val->id_user; ?>"><?php //echo $val->nama_user; ?></option>
-                      <?php
-                      //}
-                      ?>
-                  </select> -->
-              </div>
-          </div>
-
-          <div class="form-group">
-              <h5>Jenis Rekening
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <select id="rekening" name="rekening" class="form-control select2" required>
-                      <option value="">Pilih Jenis Rekening</option>
-                      <option value="Modal">Modal</option>
-                      <option value="Barang Jasa">Barang Jasa</option>
-                  </select>
-              </div>
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-danger"><i class="la la-close"></i> Keluar</button>
-          <button type="button" class="btn btn-info" ><i class="la la-save"></i> Simpan</button> -->
-
-          <button type="submit" id="btn_simpan" class="btn btn-primary waves-effect">SIMPAN</button>
-          <button type="reset" id="btn_reset" class="btn btn-warning waves-effect">RESET</button>
-          <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<script>
-  function clear_data() {
-      $('#modal_form #id').val('');
-      $('#modal_form #no_kontrak').val('');
-      $('#modal_form #no_sp2d').val('');
-      $('#modal_form #nilai_kontrak').val('');
-      $('#modal_form #rekanan').val('').change();
-      // $('#modal_form #ppkom').val('').change();
-      $('#modal_form #rekening').val('').change();
-      $('#modal_form #tgl_kontrak').datepicker("setDate", "<?= date('d/m/Y') ?>");
-      $('#modal_form #tgl_kontrak').datepicker("refresh");
-  }
-
-  function addModal() {
-      clear_data();
-      $('#modal_form #modal_title').html('Tambah Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User3/simpanDataKontrak'; ?>");
-      $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
-      $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
-  }
-
-  function editModal(data) {
-      var id            = $(data).data().id;
-      var no_kontrak    = $(data).data().nokontrak;
-      var no_sp2d       = $(data).data().nosp2d;
-      var nilai         = $(data).data().nilai;
-      var rekanan       = $(data).data().rekanan;
-      var ppkom         = $(data).data().ppkom;
-      var rekening      = $(data).data().rekening;
-      var tgl = $(data).data().tgl;
-
-      clear_data();
-      $('#modal_form #modal_title').html('Update Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User3/updateDataKontrak'; ?>");
-      $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
-
-      $('#modal_form #id').val(id);
-      $('#modal_form #no_kontrak').val(no_kontrak);
-      $('#modal_form #no_sp2d').val(no_sp2d);
-      $('#modal_form #nilai_kontrak').val(nilai);
-      $('#modal_form #rekanan').val(rekanan).change();
-      // $('#modal_form #ppkom').val(ppkom).change();
-      $('#modal_form #rekening').val(rekening).change();
-      $('#modal_form #tgl_kontrak').datepicker("setDate", tgl);
-      $('#modal_form #tgl_kontrak').datepicker("refresh");
-      
-      $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
-  }
-</script>
 
 <script type="text/javascript">
 

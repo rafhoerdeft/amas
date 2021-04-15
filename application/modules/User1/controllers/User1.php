@@ -158,10 +158,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             }
         }
     }
@@ -183,10 +183,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             }
         }
     }
@@ -299,10 +299,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             }
         }
     }
@@ -328,10 +328,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             }
         }
     }
@@ -452,10 +452,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             }
         }
     }
@@ -477,10 +477,10 @@ class User1 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User1/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User1/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             }
         }
     }
@@ -563,7 +563,7 @@ class User1 extends Adm_Controller
 
         $select_rincian = array(
             '*',
-            "(SELECT hst.lokasi_histori FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
         );
         $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
 
@@ -646,17 +646,17 @@ class User1 extends Adm_Controller
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }
@@ -683,29 +683,29 @@ class User1 extends Adm_Controller
 
             $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
 
-            // $data = array(
-            //     'id_kontrak'    => decode($post['id_kontrak']),   
-            //     'id_barang'     => $id_barang,   
-            //     'jml_barang'    => 1,   
-            // );
+            $data = array(
+                // 'id_kontrak'    => decode($post['id_kontrak']),   
+                // 'id_barang'     => $id_barang,   
+                'jml_barang'    => $post['jml_barang'],   
+            );
 
-            // $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
+            $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . 'User1/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
                     }
             }
         }

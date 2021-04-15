@@ -57,7 +57,7 @@
                                 <div class="card-body">
                                     <?= show_alert() ?>
 
-                                    <form action="<?= base_url('User2/dataUsulanHapus') ?>" class="row" method="POST">
+                                    <form action="<?= base_url($this->controller.'/dataUsulanHapus') ?>" class="row" method="POST">
                                         <?= token_csrf() ?>
 
                                         <div class="col-lg-3" style="margin-bottom: 5px;">
@@ -142,14 +142,14 @@
     </div>
 </div>
 
-<div class="modal animated bounceInDown text-left" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
+<div class="modal animated bounceInDown text-left" id="modal_form" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form name="form_input" id="form_input" method="post" action="">
         
         <input type="hidden" name="id" id="id">
         <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
-        <input type="hidden" name="back" id="back" value="<?= base_url('User2/dataUsulanHapus'.($selectJenis!=''?'/'.encode($selectJenis):'')) ?>">
+        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataUsulanHapus'.($selectJenis!=''?'/'.encode($selectJenis):'')) ?>">
 
         <?= token_csrf() ?>
 
@@ -191,9 +191,25 @@
 
           <div id="not_hapus" style="display: none;">
             <div class="form-group">
-              <h5>Lokasi
+              <h5>SKPD
                   <!-- <span class="required text-danger">*</span> -->
               </h5>
+              <div class="controls">
+                  <select id="id_skpd" name="id_skpd" class="form-control select2">
+                    <!-- <option value="">Pilih SKPD</option> -->
+                      <?php
+                      foreach ($dataSkpd as $val) {
+                      ?>
+                          <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                      <?php
+                      }
+                      ?>
+                  </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <h5>Lokasi/Ruang</h5>
               <div class="controls">
                   <textarea name="lokasi_histori" id="lokasi_histori" rows="2" class="form-control"></textarea>
               </div>
@@ -249,6 +265,7 @@
       $('#modal_form #id_aset_status').val('').change();
       $('#modal_form #tgl_histori').datepicker("setDate", "<?= date('d/m/Y') ?>");
       $('#modal_form #tgl_histori').datepicker("refresh");
+      $('#modal_form #id_skpd').val(1).change();
       $('#modal_form #lokasi_histori').val('');
       $('#modal_form #keperluan_histori').val('');
       $('#modal_form #pemegang').val('');
@@ -257,7 +274,7 @@
 
   function showModalEksekusi() {
     clear_data();
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/eksekusiAset'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiAset'; ?>");
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
 

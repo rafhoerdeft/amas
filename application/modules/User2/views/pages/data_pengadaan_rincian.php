@@ -85,8 +85,7 @@
                                                 <th>Lokasi</th>
                                                 <th>Satuan</th>
                                                 <th>Harga (Rp)</th>
-                                                <!-- <th>Jumlah</th> -->
-                                                <!-- <th>Total (Rp)</th> -->
+                                                <?= ($dataKontrak->jenis_rekening!='Modal')?"<th>Jumlah</th> <th>Total (Rp)</th>":'' ?>
                                             </tr>
                                         </thead>
 
@@ -102,7 +101,7 @@
                                                 <td nowrap align="center">
                                                     <button type="button" onclick="hapusData(this)"
                                                         data-id="<?= encode($val->id_barang) ?>"
-                                                        data-link="<?= base_url('User2/deleteRincianPengadaan') ?>"
+                                                        data-link="<?= base_url($this->controller.'/deleteRincianPengadaan') ?>"
                                                         data-csrfname="<?= $this->security->get_csrf_token_name(); ?>"
                                                         data-csrfcode="<?= $this->security->get_csrf_hash(); ?>"
                                                         class="btn btn-sm btn-danger" title="Hapus Data"><i
@@ -124,18 +123,21 @@
                                                 <td><?= $val->nama_barang ?></td>
                                                 <td><?= $val->merk_barang ?></td>
                                                 <td align="center"><?= ($val->sn_barang!=null && $val->sn_barang!='')?$val->sn_barang:'-' ?></td>
-                                                <td></td>
+                                                <?php $lokasi = explode(';', $val->lokasi_aset); ?>
+                                                <td><?= $lokasi[0] ?><?= ($lokasi[1]!='' && $lokasi[1]!=null)?', '.$lokasi[1]:'' ?></td>
                                                 <td align="center"><?= $val->satuan_barang ?></td>
                                                 <td align="right"><?= nominal($val->harga_barang) ?></td>
-                                                <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
-                                                <!-- <td align="right"><?php //echo nominal($val->harga_barang * $val->jml_barang); ?></td> -->
+
+                                                <?= ($dataKontrak->jenis_rekening!='Modal')?
+                                                    '<td align="center">'.nominal($val->jml_barang).'</td>'.'<td align="right">'.nominal($val->harga_barang * $val->jml_barang).'</td>'
+                                                    :'' ?>
                                             </tr>
                                             <?php $tot_harga += $val->harga_barang * $val->jml_barang; } ?>
                                         </tbody>
 
                                         <tfoot>
                                             <tr>
-                                                <th colspan="9">Total Harga (Rp)</th>
+                                                <th colspan="<?= ($dataKontrak->jenis_rekening!='Modal')?'11':'9' ?>">Total Harga (Rp)</th>
                                                 <th style="text-align: right;"><?= nominal($tot_harga) ?></th>
                                             </tr>
                                         </tfoot>
@@ -160,6 +162,7 @@
                 <input type="hidden" name="id" id="id">
                 <input type="hidden" name="id_kontrak" id="id_kontrak" value="<?= encode($dataKontrak->id_kontrak) ?>">
                 <input type="hidden" name="tgl_kontrak" id="tgl_kontrak" value="<?= $dataKontrak->tgl_kontrak ?>">
+                <input type="hidden" name="jenis_rekening" id="jenis_rekening" value="<?= $dataKontrak->jenis_rekening ?>">
 
                 <?= token_csrf() ?>
 
@@ -262,7 +265,7 @@ function clear_data() {
 function addModal() {
     clear_data();
     $('#modal_form #modal_title').html('Tambah Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanRincianPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
 
     $('#modal_form #sn_barang').parent().parent().hide();
@@ -282,10 +285,11 @@ function editModal(data) {
     var harga = $(data).data().harga;
     var jml = $(data).data().jml;
     var sn = $(data).data().sn;
+    var jns_rek = "<?= $dataKontrak->jenis_rekening ?>";
 
     clear_data();
     $('#modal_form #modal_title').html('Update Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateRincianPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
     $('#modal_form #id').val(id);
@@ -297,7 +301,9 @@ function editModal(data) {
     $('#modal_form #sn_barang').val(sn);
     
     $('#modal_form #sn_barang').parent().parent().show();
-    $('#modal_form #jml_barang').parent().parent().hide();
+    if (jns_rek=='Modal') {
+        $('#modal_form #jml_barang').parent().parent().hide();
+    }
 
     $('#modal_form').modal({
         backdrop: 'static',
@@ -309,7 +315,7 @@ function editModal(data) {
 <script>
     function deleteAll() {
         var dataid      = $('#delete_all').val();
-        var link        = "<?= base_url('User2/deleteAll') ?>";
+        var link        = "<?= base_url($this->controller.'/deleteAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
         var table       = "barang";

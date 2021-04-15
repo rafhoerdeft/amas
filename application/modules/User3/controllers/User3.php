@@ -173,12 +173,13 @@ class User3 extends Adm_Controller
         // $dataAset = $this->MasterData->selectJoinOrder($select, 'tbl_aset ast', $dataJenisKib->nama_tbl_kib.' kib', "ast.id_kib = kib.id_kib", 'LEFT', "ast.id_jenis_kib = $id_jenis_kib", 'ast.id_aset', 'DESC')->result();
 
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
             'id_jenis_kib'   => $id_jenis_kib,
             'dataJenisKib'   => $dataJenisKib,
             'statusAset'     => $statusAset,
-            // 'dataAset'       => $dataAset,
+            'dataSkpd'       => $dataSkpd,
         );
 
         $data = array(
@@ -770,6 +771,9 @@ class User3 extends Adm_Controller
                             </div>";
 
                 $btn_detail = ' <button type="button" onclick="rincianModal(this)"
+                data-namaaset="'.$val->nama_aset.'"
+                data-kode="'.$val->kode_baru_aset.'"
+                data-noreg="'.$val->no_reg.'"
                 data-nama="'. $val->nm_brg .'"
                 data-merk="'. $val->merk_brg .'"
                 data-sn="'. $val->sn_brg .'"
@@ -778,11 +782,15 @@ class User3 extends Adm_Controller
                 style="margin-bottom: 3px;" class="btn btn-sm btn-info" title="Detail Barang"><i class="la la-eye font-small-3"></i></button> ';
 
                 $btn_histori = ' <button type="button" onclick="historiModal(this)"
+                data-namaaset="'.$val->nama_aset.'"
+                data-kode="'.$val->kode_baru_aset.'"
+                data-noreg="'.$val->no_reg.'"
                 data-penanggung="'. $val->nama_penanggung .'"
                 data-pemegang="'. $val->pemegang .'"
                 data-ket="'. $val->ket_histori .'"
                 data-keperluan="'. $val->keperluan_histori .'"
                 data-lokasi="'. $val->lokasi_histori .'"
+                data-skpd="'. $val->nama_skpd .'"
                 data-tgl="'. $val->tgl_histori .'"
                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
@@ -1013,6 +1021,7 @@ class User3 extends Adm_Controller
                     $val->satuan_aset,
                     ($val->merk_barang=='' && $val->merk_barang==null)?'-':$val->merk_barang,
                     ($val->sn_barang=='' && $val->sn_barang==null)?'-':$val->sn_barang,
+                    $val->nama_skpd,
                     $val->lokasi_histori,
                     $val->pemegang,
                     $val->user_penanggung,
@@ -1075,7 +1084,7 @@ class User3 extends Adm_Controller
         // $this->foot[] = base_url('assets/js/cetak_excel.js');
         // $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Mutasi Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7]);";
+        $script[] = "showDataTable('Data Mutasi Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
         // $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
         //                 pilihAset(this, event.type);
         //             }).iCheck({
@@ -1104,7 +1113,8 @@ class User3 extends Adm_Controller
         $select = array(
             'ast.*',
             "(SELECT kib.nama_kib FROM tbl_jenis_kib kib WHERE kib.id_jenis_kib = ast.id_jenis_kib) nama_kib",
-            "(SELECT MAX(hst.tgl_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2) tgl_histori",
+            "(SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = (SELECT hst.id_skpd FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2 ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1)) nama_skpd",
+            "(SELECT MAX(hst.tgl_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = ast.id_aset AND hst.id_aset_status = 2 ORDER BY hst.id_aset_histori DESC LIMIT 1) tgl_histori",
         );
         if ($selectJenis != '') {
             $where_plus = "AND ast.id_jenis_kib = '$selectJenis'";
@@ -1115,12 +1125,14 @@ class User3 extends Adm_Controller
 
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "nama_status != 'Mutasi'")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
             'dataMutasi'      => $dataMutasi,
             'dataJenisAset'   => $dataJenisAset,
             'selectJenis'     => $selectJenis,
-            'statusAset'      => $statusAset,
+            'statusAset'      => $statusAset,   
+            'dataSkpd'        => $dataSkpd,
         );
 
         $data = array(
@@ -1217,12 +1229,14 @@ class User3 extends Adm_Controller
 
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
         $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "nama_status != 'Usulan Hapus'")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
-            'dataHapus'      => $dataHapus,
+            'dataHapus'       => $dataHapus,
             'dataJenisAset'   => $dataJenisAset,
             'selectJenis'     => $selectJenis,
             'statusAset'      => $statusAset,
+            'dataSkpd'        => $dataSkpd,
         );
 
         $data = array(
@@ -1271,6 +1285,7 @@ class User3 extends Adm_Controller
                     'id_user'            => $this->id_user,
                     'tgl_histori'        => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_histori']))),
                     'lokasi_histori'     => $post['lokasi_histori'],
+                    'id_skpd'            => $post['id_skpd'],
                     'keperluan_histori'  => $post['keperluan_histori'],
                     'pemegang'           => $post['pemegang'],
                     'id_aset_status'     => $post['id_aset_status'],
@@ -1288,18 +1303,18 @@ class User3 extends Adm_Controller
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                // redirect(base_url() . 'User3/dataAset/'. $post['kib']);
+                // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
                 redirect($post['back']);
             }
             else {
                 $exec = $this->db->trans_commit();
                 if ($exec) {
                     alert_success('Data berhasil disimpan.');
-                    // redirect(base_url() . 'User3/dataAset/'. $post['kib']);
+                    // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
                     redirect($post['back']);
                 } else {
                     alert_failed('Data gagal disimpan.');
-                    // redirect(base_url() . 'User3/dataAset/'. $post['kib']);
+                    // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
                     redirect($post['back']);
                 }
             }

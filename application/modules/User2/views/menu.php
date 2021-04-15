@@ -29,10 +29,22 @@
 
                 <!-- =========================================================================== -->
 
-                <li class="nav-item <?= ($active == '9' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url('User2/dataBarangJasa') ?>" title="Barang Jasa"><i class="ft-box"></i>
+                <li class="dropdown nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Barang Jasa"><i class="ft-box"></i>
                         <span>Barang Jasa</span>
                     </a>
+                    <ul class="dropdown-menu arrow">
+                        <li class="<?= ($active == '9' ? 'active' : '') ?>">
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataBarangJasa') ?>" title="Histori Aset"><i class="la la-tablet"></i>
+                                <span>List Data</span>
+                            </a>
+                        </li>
+                        <li class="<?= ($active == '10' ? 'active' : '') ?>">
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/historiBarangJasa') ?>" title="Histori Aset"><i class="la la-history"></i>
+                                <span>Histori</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- =========================================================================== -->
@@ -62,9 +74,12 @@
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Aset"><i class="la la-puzzle-piece"></i>
                         <span>Aset</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" title="Data Aset"><i class="la la-tablet"></i><span>Data Aset</span></a>
+                    <ul class="dropdown-menu arrow">
+                        <li class="dropdown-submenu <?= ($active == '2' ? 'active' : '') ?>">
+                            <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Data Aset">
+                                <i class="la la-tablet"></i>
+                                <span>List Data</span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <?php foreach ($dataJenisKibAset as $val) { ?>
                                     <li class="<?= (isset($active_sub) ? ($active_sub == '2.'.$val->id_jenis_kib ? 'active' : '') : '') ?>">
@@ -75,12 +90,12 @@
                         </li>
                         <li class="<?= ($active == '3' ? 'active' : '') ?>">
                             <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/historiAset') ?>" title="Histori Aset"><i class="la la-history"></i>
-                                <span>Histori Aset</span>
+                                <span>Histori</span>
                             </a>
                         </li>
                         <li class="<?= ($active == '4' ? 'active' : '') ?>">
                             <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataMutasi') ?>" title="Mutasi Aset"><i class="ft-log-out"></i>
-                                <span>Mutasi Aset</span>
+                                <span>Mutasi</span>
                             </a>
                         </li>
                         <li class="<?= ($active == '5' ? 'active' : '') ?>">

@@ -77,7 +77,7 @@
                                                 <td align="center"><?= $no++ ?></td>
                                                 <td nowrap align="center">
                                                     <?php if ($this->id_user == $val->id_user) { ?>
-                                                    <a href="<?= base_url('User1/rincianPengadaan/'.encode($val->id_kontrak)) ?>"
+                                                    <a href="<?= base_url($this->controller.'/rincianPengadaan/'.encode($val->id_kontrak)) ?>"
                                                         type="button" class="btn btn-sm btn-primary"
                                                         title="Tambah Rincian"><i class="la la-plus font-small-3"></i></a>
                                                     <?php } else { ?>
@@ -86,7 +86,7 @@
 
                                                     <!-- <button type="button" onclick="hapusData(this)"
                                                         data-id="<?php //echo encode($val->id_kontrak); ?>"
-                                                        data-link="<?php //echo base_url('User1/deleteDataPengadaan'); ?>"
+                                                        data-link="<?php //echo base_url($this->controller.'/deleteDataPengadaan'); ?>"
                                                         data-csrfname="<?php //echo $this->security->get_csrf_token_name(); ?>"
                                                         data-csrfcode="<?php //echo $this->security->get_csrf_hash(); ?>"
                                                         class="btn btn-sm btn-danger" title="Hapus Data"><i
@@ -229,7 +229,7 @@
                             <th>Merk</th>
                             <th>Satuan</th>
                             <th>Harga (Rp)</th>
-                            <!-- <th>Jumlah</th> -->
+                            <th>Jumlah</th>
                             <th>Total (Rp)</th>
                         </tr>
                     </thead>
@@ -258,7 +258,7 @@ function clear_data() {
 function addModal() {
     clear_data();
     $('#modal_form #modal_title').html('Tambah Data Pengadaan');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanDataPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanDataPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
 
     $('#modal_form #kontrak').attr('required',true);
@@ -278,7 +278,7 @@ function editModal(data) {
 
     clear_data();
     $('#modal_form #modal_title').html('Update Data Pengadaan');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/updateDataPengadaan'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateDataPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
     $('#modal_form #id').val(id);
@@ -311,14 +311,14 @@ function rincianModal(data) {
                     "<td>"+merk[i]+"</td>"+
                     "<td align='center'>"+satuan[i]+"</td>"+
                     "<td align='right'>"+formatRupiah(harga[i].toString(), 'Rp. ')+"</td>"+
-                    // "<td align='center'>"+jml[i]+"</td>"+
+                    "<td align='center'>"+jml[i]+"</td>"+
                     "<td align='right'>"+formatRupiah((jml[i]*harga[i]).toString(), 'Rp. ')+"</td>"+
                 "</tr>";
         tot += jml[i]*harga[i];
     }
 
     var tfoot = "<tr>"+
-                    "<th colspan='4'>Total Harga (Rp)</th>"+
+                    "<th colspan='5'>Total Harga (Rp)</th>"+
                     "<th style='text-align: right; padding-inline: 16px;'>"+formatRupiah(tot.toString(), 'Rp. ')+"</th>"+
                 "</tr>";
 

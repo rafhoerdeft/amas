@@ -136,7 +136,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="nama_aset">Nama Barang Pengadaan :</label>
+                                                        <label for="nama_aset">Nama Aset :</label>
                                                         <input type="text" class="form-control" name="nama_aset" id="nama_aset" value="<?= (isset($dataAset))?$dataAset->nama_aset:'' ?>" required>
                                                     </div>
                                                     <!-- <div class="form-group">

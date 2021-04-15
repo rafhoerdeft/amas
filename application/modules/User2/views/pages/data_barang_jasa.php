@@ -15,52 +15,12 @@
       </div>
 
       <div class="content-header-right col-md-2 col-12 mb-2">
-        <!-- <div class="btn-group float-md-right"> -->
-          <button class="btn btn-success btn-block round dropdown-toggle dropdown-menu-right px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="la la-plus font-small-3"></i> Tambah Data
-          </button>
-          <ul class="dropdown-menu arrow">
-            <li><a class="dropdown-item" href="<?= base_url($this->controller.'/addDataAset/'.encode($id_jenis_kib).'/pengadaan') ?>"><span>Pengadaan</span></a></li>
-            <li><a class="dropdown-item" href="<?= base_url($this->controller.'/addDataAset/'.encode($id_jenis_kib).'/mutasi') ?>"><span>Mutasi SKPD</span></a></li>
-          </ul>
-        <!-- </div> -->
-      </div>
-
-      <!-- <div class="content-header-right col-md-2 col-12 mb-2">
-          <a href="<?php //echo base_url($this->controller.'/addDataAset/'.encode($id_jenis_kib)); ?>" class="btn btn-success btn-block round px-2" id="dropdownBreadcrumbButton" type="button">
-            <i class="la la-plus font-small-3"></i> Tambah Data
-          </a>
-      </div> -->
-
-      <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-              <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
-                  onclick="showModalEksekusi()" disabled>
-                  <i class="la la-check font-small-3"></i> Eksekusi Aset
-              </button>
-          <!-- </div> -->
-      </div>
-
-      <div class="content-header-right col-md-2 col-12 mb-2">
-          <!-- <div class="dropdown"> -->
-          <form action="<?= base_url($this->controller.'/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
-              <?= token_csrf() ?>
-              <input type="hidden" name="delete_all" id="delete_all">
-              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit"
-                   disabled>
-                  <i class="la la-print font-small-3"></i> Cetak Label
-              </button>
-          </form>
-          <!-- </div> -->
-      </div>
-
-      <div class="content-header-right col-md-2 col-12 mb-2">
-          <!-- <div class="dropdown"> -->
-              <!-- <input type="hidden" name="delete_all" id="delete_all"> -->
-              <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
-                  onclick="deleteAll()" disabled>
-                  <i class="la la-trash font-small-3"></i> Hapus Data
-              </button>
+            <input type="hidden" name="delete_all" id="delete_all">
+            <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                onclick="showModalEksekusi()" disabled>
+                <i class="la la-check font-small-3"></i> Eksekusi Aset
+            </button>
           <!-- </div> -->
       </div>
 
@@ -95,10 +55,32 @@
                     }
                   </style>
 
-                  <?= formSearch('data_aset') ?>
+                  <?= formSearch('data_barang_jasa') ?>
 
-                  <!-- Load table jenis KIB -->
-                  <?= $this->load->view('table_kib/'.$dataJenisKib->nama_tbl_kib) ?>
+                  <table id="data_barang_jasa" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
+                    <thead>
+                      <tr style="text-align: center;">
+                        <th>No</th>
+                        <th>
+                            <div class="skin skin-check-all">
+                                <input type="checkbox" name="plh_brg_all" id="check_all" value="0">
+                            </div>
+                        </th>
+                        <th>Kode</th>
+                        <th>Tgl Masuk</th>
+                        <th>Nama Barang</th>
+                        <th>Merk/Type</th>
+                        <th>Serial Number</th>
+                        <th>Satuan</th>
+                        <th>Harga (Rp)</th>
+                        <th>Jml</th>
+                        <th>Sisa</th>
+                        <th>Ambil</th>
+                      </tr>
+                    </thead>
+
+                  </table>
+                  
                   
                 </div>
               </div>
@@ -110,80 +92,6 @@
   </div>
 </div>
 
-<div class="modal animated bounceInUp text-left" id="modal_rincian" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel10" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div id="modal_header" class="modal-header bg-success">
-                <h4 class="modal-title white" id="modal_title">Rincian Aset</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <span id="info_histori"></span>
-                <hr>
-                <table id="tbl_rincian" class="table table-hover table-bordered table-striped table-responsive d-lg-table sizeFontSm">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Merk</th>
-                            <th>Serial Number</th>
-                            <th>Satuan</th>
-                            <th>Harga (Rp)</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="modal-footer">
-                <!-- <button type="button" id="btn_reset" class="btn btn-success waves-effect" onclick="tableToExcel('tbl_rincian', 'RincianBarangPengadaan', 'RincianBarangPengadaan.xls')">EXPORT (.XLS)</button> -->
-                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal animated bounceInUp text-left" id="modal_histori" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel10" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="max-width: 1000px;">
-        <div class="modal-content">
-            <div id="modal_header" class="modal-header bg-success">
-                <h4 class="modal-title white" id="modal_title"><i class="la la-history"></i> Histori Aset</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <span id="info_histori"></span>
-                <hr>
-                <table id="tbl_histori" class="table table-hover table-bordered table-striped table-responsive d-lg-table sizeFontSm">
-                    <thead>
-                        <tr>
-                            <th>Tgl Eksekusi</th>
-                            <th>SKPD</th>
-                            <th>Lokasi</th>
-                            <th>Keperluan</th>
-                            <th>Penanggung Jawab</th>
-                            <th>Pemegang</th>
-                            <th>Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="modal-footer">
-                <!-- <button type="button" id="btn_reset" class="btn btn-success waves-effect" onclick="tableToExcel('tbl_rincian', 'RincianBarangPengadaan', 'RincianBarangPengadaan.xls')">EXPORT (.XLS)</button> -->
-                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal animated bounceInDown text-left" id="modal_form" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -191,7 +99,7 @@
         
         <input type="hidden" name="id" id="id">
         <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
-        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">
+        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataBarangJasa') ?>">
         <input type="hidden" id="data_update_barang" name="data_update_barang">
 
         <?= token_csrf() ?>
@@ -320,13 +228,17 @@
         $('textarea[name="sn_barang"]').each(function(e){
             let ids     = $(this).attr('id');
             let id      = ids.split("_")[1];
+            let nama    = $('#nm_'+id).val();
             let merk    = $('#merk_'+id).val();
             let sn      = $('#sn_'+id).val();
+            let ambil   = $('#ambil_'+id).val();
             
             data_update_barang.push({
-                id_aset: id,
+                id_barang: id,
+                nama_barang: nama,
                 merk_barang: merk,
                 sn_barang: sn,
+                jml_ambil: ambil,
             });
         });
 
@@ -371,7 +283,6 @@
 
     function pilihAset(data, type) {
         let id = $(data).val();
-        let jenis = $(data).data().jenis;
         
         if (id == 0) {
             if(type=='ifChecked'){
@@ -384,40 +295,44 @@
             var value_id   = '';
 
             if(type=='ifChecked'){
-                if (jenis == 2) {
-                  //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
-                  //ambil value dalam input td SN
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.html();
-                  td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
+                var ambil = $('#ambil_'+id).attr('disabled', false);
+                //ambil isian dalam element td
+                var td = $(data).parent().parent().parent().parent().children();
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.html();
-                  td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
-                }
+                var td_nama = td.eq(4);
+                var val_td_nama = td_nama.html();
+                td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
+
+                var td_merk = td.eq(5);
+                var val_td_merk = td_merk.html();
+                td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
+
+                var td_sn = td.eq(6);
+                var val_td_sn = td_sn.html();
+                td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
                 if (select_id == '') {
                     value_id  = id;
-                    $('#btn_delete').attr('disabled',false);
                     $('#btn_eksekusi').attr('disabled',false);
-                    $('#btn_print_all').attr('disabled',false);
                 } else {
                     value_id += select_id + ';' + id;
                 }
             } else {
-                if (jenis == 2) {
-                  //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
+                var ambil = $('#ambil_'+id).attr('disabled', true);
+                //ambil isian dalam element td
+                var td = $(data).parent().parent().parent().parent().children();
 
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.children().val();
-                  td_sn.html(val_td_sn);
+                var td_nama = td.eq(4);
+                var val_td_nama = td_nama.children().val();
+                td_nama.html(val_td_nama);
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.children().val();
-                  td_merk.html(val_td_merk);
-                }
+                var td_merk = td.eq(5);
+                var val_td_merk = td_merk.children().val();
+                td_merk.html(val_td_merk);
+
+                var td_sn = td.eq(6);
+                var val_td_sn = td_sn.children().val();
+                td_sn.html(val_td_sn);
 
                 var arr = select_id.split(";");
                 var result = arr.filter(function(val){
@@ -426,9 +341,7 @@
                 value_id = result.join(';');
 
                 if (result.length == 0) {
-                    $('#btn_delete').attr('disabled',true);
                     $('#btn_eksekusi').attr('disabled',true);
-                    $('#btn_print_all').attr('disabled',true);
                 }
             }
             $('#delete_all').val(value_id);
@@ -444,74 +357,6 @@
     }
 </script>
 
-<script>
-  function rincianModal(data) {
-      var nama_aset   = $(data).data().namaaset;
-      var no_reg      = $(data).data().noreg;
-      var kode_aset   = $(data).data().kode;
-
-      var nama    = $(data).data().nama.split(';');
-      var merk    = $(data).data().merk.split(';');
-      var sn      = $(data).data().sn.split(';');
-      var satuan  = $(data).data().satuan.split(';');
-      var harga   = $(data).data().harga.toString().split(';');
-
-      var row = '';
-      for (let i = 0; i < nama.length; i++) {
-          row +=  "<tr>"+
-                      "<td>"+nama[i]+"</td>"+
-                      "<td>"+merk[i]+"</td>"+
-                      "<td>"+sn[i]+"</td>"+
-                      "<td>"+satuan[i]+"</td>"+
-                      "<td align='right'>"+formatRupiah(harga[i].toString(), 'Rp. ')+"</td>"+
-                  "</tr>";
-      }
-
-      $('#modal_rincian #info_histori').html(nama_aset + ' (' + kode_aset + ') - ' + no_reg);
-      $('#modal_rincian #tbl_rincian tbody').html(row);
-      
-
-      $('#modal_rincian').modal({
-          backdrop: 'static',
-          keyboard: false
-      });
-  }
-
-  function historiModal(data) {
-      var nama_aset   = $(data).data().namaaset;
-      var no_reg      = $(data).data().noreg;
-      var kode_aset   = $(data).data().kode;
-
-      var penanggung  = $(data).data().penanggung.split(';');
-      var pemegang    = $(data).data().pemegang.split(';');
-      var ket         = $(data).data().ket.split(';');
-      var keperluan   = $(data).data().keperluan.split(';');
-      var skpd        = $(data).data().skpd.split(';');
-      var lokasi      = $(data).data().lokasi.split(';');
-      var tgl         = $(data).data().tgl.split(';');
-
-      var row = '';
-      for (let i = 0; i < tgl.length; i++) {
-          row +=  "<tr>"+
-                      "<td align='center'>"+tgl[i]+"</td>"+
-                      "<td>"+skpd[i]+"</td>"+
-                      "<td>"+lokasi[i]+"</td>"+
-                      "<td>"+keperluan[i]+"</td>"+
-                      "<td>"+penanggung[i]+"</td>"+
-                      "<td>"+pemegang[i]+"</td>"+
-                      "<td>"+ket[i]+"</td>"+
-                  "</tr>";
-      }
-
-      $('#modal_histori #info_histori').html(nama_aset + ' (' + kode_aset + ') - ' + no_reg);
-      $('#modal_histori #tbl_histori tbody').html(row);
-
-      $('#modal_histori').modal({
-          backdrop: 'static',
-          keyboard: false
-      });
-  }
-</script>
 
 <script type="text/javascript">
     function changeRupe(data){

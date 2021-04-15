@@ -95,6 +95,8 @@
             </div>
 
             <div class="modal-body">
+                <span id="info_histori"></span>
+                <hr>
                 <table id="tbl_rincian" class="table table-hover table-bordered table-striped table-responsive d-lg-table sizeFontSm">
                     <thead>
                         <tr>
@@ -119,7 +121,7 @@
 
 <div class="modal animated bounceInUp text-left" id="modal_histori" tabindex="-1" role="dialog"
     aria-labelledby="myModalLabel10" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document" style="max-width: 1000px;">
         <div class="modal-content">
             <div id="modal_header" class="modal-header bg-success">
                 <h4 class="modal-title white" id="modal_title"><i class="la la-history"></i> Histori Aset</h4>
@@ -129,11 +131,13 @@
             </div>
 
             <div class="modal-body">
+                <span id="info_histori"></span>
+                <hr>
                 <table id="tbl_histori" class="table table-hover table-bordered table-striped table-responsive d-lg-table sizeFontSm">
                     <thead>
                         <tr>
                             <th>Tgl Eksekusi</th>
-                            <!-- <th>Status</th> -->
+                            <th>SKPD</th>
                             <th>Lokasi</th>
                             <th>Keperluan</th>
                             <th>Penanggung Jawab</th>
@@ -153,14 +157,14 @@
     </div>
 </div>
 
-<div class="modal animated bounceInDown text-left" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
+<div class="modal animated bounceInDown text-left" id="modal_form" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form name="form_input" id="form_input" method="post" action="">
         
         <input type="hidden" name="id" id="id">
         <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
-        <input type="hidden" name="back" id="back" value="<?= base_url('User3/dataAset/'.encode($id_jenis_kib)) ?>">
+        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">
         <input type="hidden" id="data_update_barang" name="data_update_barang">
 
         <?= token_csrf() ?>
@@ -202,10 +206,27 @@
           </div>
 
           <div id="not_hapus" style="display: none;">
+            
             <div class="form-group">
-              <h5>Lokasi
+              <h5>SKPD
                   <!-- <span class="required text-danger">*</span> -->
               </h5>
+              <div class="controls">
+                  <select id="id_skpd" name="id_skpd" class="form-control select2">
+                    <!-- <option value="">Pilih SKPD</option> -->
+                      <?php
+                      foreach ($dataSkpd as $val) {
+                      ?>
+                          <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                      <?php
+                      }
+                      ?>
+                  </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <h5>Lokasi/Ruang</h5>
               <div class="controls">
                   <textarea name="lokasi_histori" id="lokasi_histori" rows="2" class="form-control"></textarea>
               </div>
@@ -254,6 +275,7 @@
   </div>
 </div>
 
+
 <script>
   function clear_data() {
       var dataid = $('#delete_all').val();
@@ -262,6 +284,7 @@
       $('#modal_form #tgl_histori').datepicker("setDate", "<?= date('d/m/Y') ?>");
       $('#modal_form #tgl_histori').datepicker("refresh");
       $('#modal_form #lokasi_histori').val('');
+      $('#modal_form #id_skpd').val(1).change();
       $('#modal_form #keperluan_histori').val('');
       $('#modal_form #pemegang').val('');
       $('#modal_form #ket_histori').val('');
@@ -287,8 +310,7 @@
 
   function showModalEksekusi() {
     clear_data();
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User3/eksekusiAset'; ?>");
-
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiAset'; ?>");
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
 
@@ -403,6 +425,9 @@
 
 <script>
   function rincianModal(data) {
+      var nama_aset   = $(data).data().namaaset;
+      var no_reg      = $(data).data().noreg;
+      var kode_aset   = $(data).data().kode;
 
       var nama    = $(data).data().nama.split(';');
       var merk    = $(data).data().merk.split(';');
@@ -421,7 +446,9 @@
                   "</tr>";
       }
 
+      $('#modal_rincian #info_histori').html(nama_aset + ' (' + kode_aset + ') - ' + no_reg);
       $('#modal_rincian #tbl_rincian tbody').html(row);
+      
 
       $('#modal_rincian').modal({
           backdrop: 'static',
@@ -430,11 +457,15 @@
   }
 
   function historiModal(data) {
+      var nama_aset   = $(data).data().namaaset;
+      var no_reg      = $(data).data().noreg;
+      var kode_aset   = $(data).data().kode;
 
       var penanggung  = $(data).data().penanggung.split(';');
       var pemegang    = $(data).data().pemegang.split(';');
       var ket         = $(data).data().ket.split(';');
       var keperluan   = $(data).data().keperluan.split(';');
+      var skpd        = $(data).data().skpd.split(';');
       var lokasi      = $(data).data().lokasi.split(';');
       var tgl         = $(data).data().tgl.split(';');
 
@@ -442,6 +473,7 @@
       for (let i = 0; i < tgl.length; i++) {
           row +=  "<tr>"+
                       "<td align='center'>"+tgl[i]+"</td>"+
+                      "<td>"+skpd[i]+"</td>"+
                       "<td>"+lokasi[i]+"</td>"+
                       "<td>"+keperluan[i]+"</td>"+
                       "<td>"+penanggung[i]+"</td>"+
@@ -450,6 +482,7 @@
                   "</tr>";
       }
 
+      $('#modal_histori #info_histori').html(nama_aset + ' (' + kode_aset + ') - ' + no_reg);
       $('#modal_histori #tbl_histori tbody').html(row);
 
       $('#modal_histori').modal({

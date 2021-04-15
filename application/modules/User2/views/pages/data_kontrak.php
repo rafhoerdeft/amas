@@ -125,7 +125,7 @@
   </div>
 </div>
 
-<div class="modal animated bounceInDown text-left" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
+<div class="modal animated bounceInDown text-left" id="modal_form" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form name="form_input" id="form_input" method="post" action="">
