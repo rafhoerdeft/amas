@@ -370,8 +370,8 @@
     }
 
     function pilihAset(data, type) {
-        let id = $(data).val();
-        let jenis = $(data).data().jenis;
+        var id = $(data).val();
+        var jenis = $(data).data().jenis;
         
         if (id == 0) {
             if(type=='ifChecked'){

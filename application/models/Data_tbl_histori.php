@@ -24,7 +24,7 @@ class Data_tbl_histori extends CI_Model
 
     var $select_column_search = array();
 
-    function make_query($status, $jenis, $tgl_awal, $tgl_akhir) {
+    function make_query($status, $jenis, $skpd, $tgl_awal, $tgl_akhir) {
 
         $this->db->select($this->select_column);
         if ($status != '0') {
@@ -32,6 +32,9 @@ class Data_tbl_histori extends CI_Model
         }
         if ($jenis != '0') {
             $this->db->where('ast.id_jenis_kib', $jenis);
+        }
+        if ($skpd != '0') {
+            $this->db->where('hst.id_skpd', $skpd);
         }
         $this->db->where("hst.tgl_histori BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
         $this->db->join('tbl_aset ast', 'hst.id_aset = ast.id_aset', 'left');
@@ -87,22 +90,22 @@ class Data_tbl_histori extends CI_Model
         }
     }
 
-    function make_datatables($status, $jenis, $tgl_awal, $tgl_akhir)
+    function make_datatables($status, $jenis, $skpd, $tgl_awal, $tgl_akhir)
     {
-        $this->make_query($status, $jenis, $tgl_awal, $tgl_akhir);
+        $this->make_query($status, $jenis, $skpd, $tgl_awal, $tgl_akhir);
         if ($_POST["length"] != -1) {
             $this->db->limit($_POST['length'], $_POST['start']);
         }
         $query = $this->db->get();
         return $query->result();
     }
-    function get_filtered_data($status, $jenis, $tgl_awal, $tgl_akhir)
+    function get_filtered_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir)
     {
-        $this->make_query($status, $jenis, $tgl_awal, $tgl_akhir);
+        $this->make_query($status, $jenis, $skpd, $tgl_awal, $tgl_akhir);
         $query = $this->db->get();
         return $query->num_rows();
     }
-    function get_all_data($status, $jenis, $tgl_awal, $tgl_akhir)
+    function get_all_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir)
     {
         $this->db->select("*");
         if ($status != '0') {
@@ -110,6 +113,9 @@ class Data_tbl_histori extends CI_Model
         }
         if ($jenis != '0') {
             $this->db->where("hst.id_aset IN (SELECT ast.id_aset FROM tbl_aset ast WHERE ast.id_jenis_kib = '".$jenis."')");
+        }
+        if ($skpd != '0') {
+            $this->db->where('hst.id_skpd', $skpd);
         }
         $this->db->where("hst.tgl_histori BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
         $this->db->from($this->table);

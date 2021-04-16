@@ -900,10 +900,17 @@ class User3 extends Adm_Controller
     public function historiAset($id = '') {
         $this->load->helper('searchbar');
 
+        $skpd         = $_POST['id_skpd'];
         $status       = $_POST['status'];
         $jenis        = $_POST['jenis'];
         $tgl_awal     = $_POST['tgl_awal'];
         $tgl_akhir    = $_POST['tgl_akhir'];
+
+        if (isset($skpd) OR ($skpd != null AND $skpd != '' AND !empty($skpd))) {
+            $selectSkpd = $skpd;
+        } else {
+            $selectSkpd = '0';
+        }
 
         if (isset($status) OR ($status != null AND $status != '' AND !empty($status))) {
             $selectStatus = $status;
@@ -951,7 +958,7 @@ class User3 extends Adm_Controller
         $this->foot[] = base_url('assets/js/tbl_histori_aset.js');
         // ================================================================
         // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        $script[] = "showDataTable('" . base_url('User3/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/'  . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "showDataTable('" . base_url('User2/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
         $script[] = "$('.date-range').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -959,7 +966,7 @@ class User3 extends Adm_Controller
                         toggleActive: true,
                         orientation: 'bottom left'
                     });";
-        $script[] = '$(".select2").select2();';
+        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
@@ -970,14 +977,17 @@ class User3 extends Adm_Controller
 
         $dataStatusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
+            'selectSkpd'     => $selectSkpd,
             'selectStatus'   => $selectStatus,
             'selectJenis'    => $selectJenis,
             'selectTglAwal'  => $selectTglAwal,
             'selectTglAkhir' => $selectTglAkhir,
             'dataStatusAset' => $dataStatusAset,
             'dataJenisAset'  => $dataJenisAset,
+            'dataSkpd'       => $dataSkpd,
         );
 
         $data = array(
@@ -991,10 +1001,11 @@ class User3 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    public function getDataHistori($status='', $jenis='', $tgl_awal='', $tgl_akhir='') {
+    public function getDataHistori($status='', $jenis='', $skpd='', $tgl_awal='', $tgl_akhir='')
+    {
         if ($this->input->POST()) {
             $this->load->model("Data_tbl_histori", "DataTable");
-            $fetch_data = $this->DataTable->make_datatables($status, $jenis, $tgl_awal, $tgl_akhir);
+            $fetch_data = $this->DataTable->make_datatables($status, $jenis, $skpd, $tgl_awal, $tgl_akhir);
 
             $data = array();
             $i = $_POST['start'];
@@ -1033,8 +1044,8 @@ class User3 extends Adm_Controller
             }
             $output = array(
                 "draw"               =>     $_POST["draw"],
-                "recordsTotal"       =>     $this->DataTable->get_all_data($status, $jenis, $tgl_awal, $tgl_akhir),
-                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($status, $jenis, $tgl_awal, $tgl_akhir),
+                "recordsTotal"       =>     $this->DataTable->get_all_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir),
                 "data"               =>     $data
             );
             echo json_encode($output);

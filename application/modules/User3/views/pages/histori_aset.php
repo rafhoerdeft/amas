@@ -50,17 +50,17 @@
                   <form action="<?= base_url($this->controller.'/historiAset') ?>" class="row" method="POST">
                     <?= token_csrf() ?>
 
-                    <div class="col-lg-4" style="margin-bottom: 5px;">
+                    <div class="col-lg-3 sizeFontSm" style="margin-bottom: 5px;">
                       <div class="input-daterange input-group date-range">
-                        <input type="text" class="form-control" id="tgl_awal" name="tgl_awal" placeholder="DD/MM/YYYY" value="<?= $selectTglAwal ?>" />
+                        <input type="text" class="form-control sizeFontSm" id="tgl_awal" name="tgl_awal" placeholder="DD/MM/YYYY" value="<?= $selectTglAwal ?>" />
                         <div class="input-group-append">
-                            <span class="input-group-text bg-info b-0 text-white">SAMPAI</span>
+                            <span class="input-group-text bg-info b-0 text-white sizeFontSm">SAMPAI</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" />
+                        <input type="text" class="form-control sizeFontSm" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" />
                       </div>
                     </div>
 
-                    <div class="col-lg-2" style="margin-bottom: 5px;">
+                    <div class="col-lg-2 sizeFontSm" style="margin-bottom: 5px;">
                         <div class="controls">
                             <select id="status" name="status" class="form-control select2">
                                 <option value="0" selected>Semua Status</option>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3" style="margin-bottom: 5px;">
+                    <div class="col-lg-2 sizeFontSm" style="margin-bottom: 5px;">
                         <div class="controls">
                             <select id="jenis" name="jenis" class="form-control select2">
                                 <option value="0" selected>Semua Jenis</option>
@@ -88,6 +88,21 @@
                                 ?>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="col-lg-3 sizeFontSm" style="margin-bottom: 5px;">
+                      <div class="controls">
+                          <select id="id_skpd" name="id_skpd" class="form-control select2">
+                            <option value="0" selected>Pilih SKPD</option>
+                              <?php
+                              foreach ($dataSkpd as $val) {
+                              ?>
+                                  <option <?= ($selectSkpd == $val->id_skpd?'selected':'') ?> value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                              <?php
+                              }
+                              ?>
+                          </select>
+                      </div>
                     </div>
 
                     <div class="col-lg-2">

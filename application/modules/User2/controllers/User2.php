@@ -929,10 +929,17 @@ class User2 extends Adm_Controller
     public function historiAset($id = '') {
         $this->load->helper('searchbar');
 
+        $skpd         = $_POST['id_skpd'];
         $status       = $_POST['status'];
         $jenis        = $_POST['jenis'];
         $tgl_awal     = $_POST['tgl_awal'];
         $tgl_akhir    = $_POST['tgl_akhir'];
+
+        if (isset($skpd) OR ($skpd != null AND $skpd != '' AND !empty($skpd))) {
+            $selectSkpd = $skpd;
+        } else {
+            $selectSkpd = '0';
+        }
 
         if (isset($status) OR ($status != null AND $status != '' AND !empty($status))) {
             $selectStatus = $status;
@@ -980,7 +987,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/tbl_histori_aset.js');
         // ================================================================
         // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        $script[] = "showDataTable('" . base_url('User2/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/'  . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "showDataTable('" . base_url('User2/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
         $script[] = "$('.date-range').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -988,7 +995,7 @@ class User2 extends Adm_Controller
                         toggleActive: true,
                         orientation: 'bottom left'
                     });";
-        $script[] = '$(".select2").select2();';
+        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
         // ================================================================
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
@@ -999,14 +1006,17 @@ class User2 extends Adm_Controller
 
         $dataStatusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
         $dataJenisAset = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
 
         $content = array(
+            'selectSkpd'     => $selectSkpd,
             'selectStatus'   => $selectStatus,
             'selectJenis'    => $selectJenis,
             'selectTglAwal'  => $selectTglAwal,
             'selectTglAkhir' => $selectTglAkhir,
             'dataStatusAset' => $dataStatusAset,
             'dataJenisAset'  => $dataJenisAset,
+            'dataSkpd'       => $dataSkpd,
         );
 
         $data = array(
@@ -1020,11 +1030,11 @@ class User2 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    public function getDataHistori($status='', $jenis='', $tgl_awal='', $tgl_akhir='')
+    public function getDataHistori($status='', $jenis='', $skpd='', $tgl_awal='', $tgl_akhir='')
     {
         if ($this->input->POST()) {
             $this->load->model("Data_tbl_histori", "DataTable");
-            $fetch_data = $this->DataTable->make_datatables($status, $jenis, $tgl_awal, $tgl_akhir);
+            $fetch_data = $this->DataTable->make_datatables($status, $jenis, $skpd, $tgl_awal, $tgl_akhir);
 
             $data = array();
             $i = $_POST['start'];
@@ -1063,8 +1073,8 @@ class User2 extends Adm_Controller
             }
             $output = array(
                 "draw"               =>     $_POST["draw"],
-                "recordsTotal"       =>     $this->DataTable->get_all_data($status, $jenis, $tgl_awal, $tgl_akhir),
-                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($status, $jenis, $tgl_awal, $tgl_akhir),
+                "recordsTotal"       =>     $this->DataTable->get_all_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($status, $jenis, $skpd, $tgl_awal, $tgl_akhir),
                 "data"               =>     $data
             );
             echo json_encode($output);
@@ -1833,9 +1843,21 @@ class User2 extends Adm_Controller
 
         $select_rincian = array(
             '*',
-            "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            // "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            "CASE
+                WHEN kt.jenis_rekening = 'Modal' THEN 
+                    (SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';', COALESCE(hst.lokasi_histori, '')) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1)
+                ELSE 
+                (SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = bj.id_skpd), ';', COALESCE(bj.lokasi_bj_keluar, '')) FROM tbl_bj_keluar bj WHERE bj.id_barang = pd.id_barang ORDER BY bj.tgl_bj_keluar DESC, bj.id_bj_keluar DESC LIMIT 1) 
+            END as lokasi_aset",
         );
-        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        // $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        $dataRincian = $this->db->select($select_rincian)
+                                ->join('tbl_barang br', "pd.id_barang = br.id_barang", 'LEFT')
+                                ->join('tbl_kontrak kt', "pd.id_kontrak = kt.id_kontrak", 'LEFT')
+                                ->where("pd.id_kontrak = $id_kontrak")
+                                ->order_by('pd.id_pengadaan','DESC')
+                                ->get('tbl_pengadaan pd')->result();
 
         // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
 
@@ -1865,13 +1887,13 @@ class User2 extends Adm_Controller
             $this->db->trans_begin();
 
             if ($post['jenis_rekening'] == 'Modal') {
-                for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+                for ($i=0; $i < (int)str_replace('.', '', $post['jml_barang']); $i++) { 
                     $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
                     $data = array(
                         'kode_barang'     => $kodeBarang,
                         'nama_barang'     => $post['nama_barang'],   
                         'merk_barang'     => $post['merk_barang'],   
-                        'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                        'satuan_barang'   => $post['satuan_barang'],   
                         'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
                         'tgl_masuk'       => $post['tgl_kontrak'],   
                     );
@@ -1894,7 +1916,7 @@ class User2 extends Adm_Controller
                     'kode_barang'     => $kodeBarang,
                     'nama_barang'     => $post['nama_barang'],   
                     'merk_barang'     => $post['merk_barang'],   
-                    'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                    'satuan_barang'   => $post['satuan_barang'],   
                     'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
                     'tgl_masuk'       => $post['tgl_kontrak'],   
                 );
@@ -1906,7 +1928,7 @@ class User2 extends Adm_Controller
                 $data = array(
                     'id_kontrak'    => decode($post['id_kontrak']),   
                     'id_barang'     => $id_barang,   
-                    'jml_barang'    => (int)$post['jml_barang'],   
+                    'jml_barang'    => str_replace('.', '', $post['jml_barang']),   
                 );
     
                 $input = $this->MasterData->inputData($data,'tbl_pengadaan');
@@ -1956,7 +1978,7 @@ class User2 extends Adm_Controller
             $data = array(
                 // 'id_kontrak'    => decode($post['id_kontrak']),   
                 // 'id_barang'     => $id_barang,   
-                'jml_barang'    => $post['jml_barang'],   
+                'jml_barang'    => str_replace('.', '', $post['jml_barang']),   
             );
 
             $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
@@ -2180,7 +2202,7 @@ class User2 extends Adm_Controller
                 $i++;
 
                 $cekbox = "<div class='skin skin-check'>
-                                <input type='checkbox' name='plh_brg[]' value='".$val->id_barang."'>
+                                <input type='checkbox' id='plh_brg_".$val->id_barang."' name='plh_brg[]' value='".$val->id_barang."'>
                             </div>";
 
                 // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
@@ -2208,9 +2230,9 @@ class User2 extends Adm_Controller
                     $val->sn_barang,
                     $val->satuan_barang,
                     nominal($val->harga_barang),
-                    $val->jml_barang,
-                    $val->sisa,
-                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px;" disabled>',
+                    nominal($val->jml_barang),
+                    nominal($val->sisa),
+                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
                 );
 
                 $data[] = $columns;
@@ -2222,6 +2244,60 @@ class User2 extends Adm_Controller
                 "data"               =>     $data
             );
             echo json_encode($output);
+        }
+    }
+
+    // =====================================================================
+
+    // EKSEKUSI BARANG JASA ================================================
+
+    public function eksekusiBarangJasa() {
+        $post = $this->input->POST();
+
+        if ($post) {
+            $this->db->trans_begin();
+
+            if ($post['data_update_barang'] != null && $post['data_update_barang'] != '') {
+                $data_update_barang = json_decode(html_entity_decode($post['data_update_barang']), true);
+
+                foreach ($data_update_barang as $val) {
+                    $data = array(
+                        'nama_barang'   => $val['nama_barang'],
+                        'merk_barang'   => $val['merk_barang'],
+                        'sn_barang'     => $val['sn_barang'],
+                    );
+                    $update_barang = $this->MasterData->editData("id_barang = ".$val['id_barang'], $data, 'tbl_barang');
+
+                    $data_bj_keluar = array(
+                        'id_barang'            => $val['id_barang'],
+                        'id_user'              => $this->id_user,
+                        'tgl_bj_keluar'        => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_bj_keluar']))),
+                        'jml_bj_keluar'        => str_replace('.', '', $val['jml_ambil']),
+                        'id_skpd'              => $post['id_skpd'],
+                        'lokasi_bj_keluar'     => $post['lokasi_bj_keluar'],
+                        'keperluan_bj_keluar'  => $post['keperluan_bj_keluar'],
+                        'pemegang'             => $post['pemegang'],
+                        'ket_bj_keluar'        => $post['ket_bj_keluar'],
+                    );
+                    $input = $this->MasterData->inputData($data_bj_keluar,'tbl_bj_keluar');
+                }
+            }            
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                alert_failed('Data gagal disimpan.');
+                redirect($post['back']);
+            }
+            else {
+                $exec = $this->db->trans_commit();
+                if ($exec) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect($post['back']);
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect($post['back']);
+                }
+            }
         }
     }
 

@@ -12,7 +12,7 @@ class Data_tbl_barang_jasa extends CI_Model
         'brg.satuan_barang',
         'brg.harga_barang',
         'pd.jml_barang',
-        "(pd.jml_barang - (SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang)) as sisa",
+        "(pd.jml_barang - IFNULL((SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang), 0)) as sisa",
     );
 
     var $select_column_search = array();

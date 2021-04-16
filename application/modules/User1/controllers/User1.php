@@ -563,9 +563,21 @@ class User1 extends Adm_Controller
 
         $select_rincian = array(
             '*',
-            "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            // "(SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';' ,hst.lokasi_histori) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            "CASE
+                WHEN kt.jenis_rekening = 'Modal' THEN 
+                    (SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd), ';', COALESCE(hst.lokasi_histori, '')) FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1)
+                ELSE 
+                (SELECT CONCAT((SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = bj.id_skpd), ';', COALESCE(bj.lokasi_bj_keluar, '')) FROM tbl_bj_keluar bj WHERE bj.id_barang = pd.id_barang ORDER BY bj.tgl_bj_keluar DESC, bj.id_bj_keluar DESC LIMIT 1) 
+            END as lokasi_aset",
         );
-        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        // $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        $dataRincian = $this->db->select($select_rincian)
+                                ->join('tbl_barang br', "pd.id_barang = br.id_barang", 'LEFT')
+                                ->join('tbl_kontrak kt', "pd.id_kontrak = kt.id_kontrak", 'LEFT')
+                                ->where("pd.id_kontrak = $id_kontrak")
+                                ->order_by('pd.id_pengadaan','DESC')
+                                ->get('tbl_pengadaan pd')->result();
 
         // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
 
@@ -595,13 +607,13 @@ class User1 extends Adm_Controller
             $this->db->trans_begin();
 
             if ($post['jenis_rekening'] == 'Modal') {
-                for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+                for ($i=0; $i < (int)str_replace('.', '', $post['jml_barang']); $i++) { 
                     $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
                     $data = array(
                         'kode_barang'     => $kodeBarang,
                         'nama_barang'     => $post['nama_barang'],   
                         'merk_barang'     => $post['merk_barang'],   
-                        'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                        'satuan_barang'   => $post['satuan_barang'],   
                         'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
                         'tgl_masuk'       => $post['tgl_kontrak'],   
                     );
@@ -624,7 +636,7 @@ class User1 extends Adm_Controller
                     'kode_barang'     => $kodeBarang,
                     'nama_barang'     => $post['nama_barang'],   
                     'merk_barang'     => $post['merk_barang'],   
-                    'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                    'satuan_barang'   => $post['satuan_barang'],   
                     'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
                     'tgl_masuk'       => $post['tgl_kontrak'],   
                 );
@@ -636,7 +648,7 @@ class User1 extends Adm_Controller
                 $data = array(
                     'id_kontrak'    => decode($post['id_kontrak']),   
                     'id_barang'     => $id_barang,   
-                    'jml_barang'    => (int)$post['jml_barang'],   
+                    'jml_barang'    => str_replace('.', '', $post['jml_barang']),   
                 );
     
                 $input = $this->MasterData->inputData($data,'tbl_pengadaan');
@@ -686,7 +698,7 @@ class User1 extends Adm_Controller
             $data = array(
                 // 'id_kontrak'    => decode($post['id_kontrak']),   
                 // 'id_barang'     => $id_barang,   
-                'jml_barang'    => $post['jml_barang'],   
+                'jml_barang'    => str_replace('.', '', $post['jml_barang']),   
             );
 
             $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');

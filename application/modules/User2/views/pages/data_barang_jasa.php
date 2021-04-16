@@ -2,13 +2,13 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-4 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Data Aset - <?= $dataJenisKib->nama_kib ?></h3>
+      <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
+        <h3 class="content-header-title mb-0 d-inline-block">Barang Jasa</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-              <li class="breadcrumb-item active">Data Aset</li>
+              <li class="breadcrumb-item active">Barang Jasa</li>
             </ol>
           </div>
         </div>
@@ -16,10 +16,10 @@
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-            <input type="hidden" name="delete_all" id="delete_all">
+            <input type="hidden" name="data_selected" id="data_selected">
             <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                 onclick="showModalEksekusi()" disabled>
-                <i class="la la-check font-small-3"></i> Eksekusi Aset
+                <i class="la la-check font-small-3"></i> Eksekusi Barang
             </button>
           <!-- </div> -->
       </div>
@@ -80,8 +80,6 @@
                     </thead>
 
                   </table>
-                  
-                  
                 </div>
               </div>
             </div>
@@ -105,43 +103,25 @@
         <?= token_csrf() ?>
 
         <div id="modal_header" class="modal-header bg-info">
-          <h4 class="modal-title white" id="modal_title">Eksekusi Aset</h4>
+          <h4 class="modal-title white" id="modal_title">Eksekusi Barang Jasa</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
 
         <div class="modal-body">
-          <div class="form-group">
-              <h5>Jenis Eksekusi
-                  <span class="required text-danger">*</span>
-              </h5>
-              <div class="controls">
-                  <select id="id_aset_status" name="id_aset_status" class="form-control select2" onchange="changeExec(this)" required>
-                    <option value="">Pilih Jenis Eksekusi</option>
-                      <?php
-                      foreach ($statusAset as $val) {
-                      ?>
-                          <option value="<?= $val->id_aset_status ?>"><?= $val->nama_status ?></option>
-                      <?php
-                      }
-                      ?>
-                  </select>
-              </div>
-          </div>
 
           <div class="form-group">
               <h5>Tanggal
                   <span class="required text-danger">*</span>
               </h5>
               <div class="controls">
-                  <input type="text" class="form-control date-picker" id="tgl_histori" name="tgl_histori"
+                  <input type="text" class="form-control date-picker" id="tgl_bj_keluar" name="tgl_bj_keluar"
                       placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
               </div>
           </div>
 
-          <div id="not_hapus" style="display: none;">
-            
+          <div id="not_hapus">
             <div class="form-group">
               <h5>SKPD
                   <!-- <span class="required text-danger">*</span> -->
@@ -163,7 +143,7 @@
             <div class="form-group">
               <h5>Lokasi/Ruang</h5>
               <div class="controls">
-                  <textarea name="lokasi_histori" id="lokasi_histori" rows="2" class="form-control"></textarea>
+                  <textarea name="lokasi_bj_keluar" id="lokasi_bj_keluar" rows="2" class="form-control"></textarea>
               </div>
             </div>
 
@@ -172,7 +152,7 @@
                   <!-- <span class="required text-danger">*</span> -->
               </h5>
               <div class="controls">
-                  <textarea name="keperluan_histori" id="keperluan_histori" rows="2" class="form-control"></textarea>
+                  <textarea name="keperluan_bj_keluar" id="keperluan_bj_keluar" rows="2" class="form-control"></textarea>
               </div>
             </div>
 
@@ -191,7 +171,7 @@
                 <!-- <span class="required text-danger">*</span> -->
             </h5>
             <div class="controls">
-                <textarea name="ket_histori" id="ket_histori" rows="2" class="form-control"></textarea>
+                <textarea name="ket_bj_keluar" id="ket_bj_keluar" rows="2" class="form-control"></textarea>
             </div>
           </div>
 
@@ -212,19 +192,19 @@
 
 <script>
   function clear_data() {
-      var dataid = $('#delete_all').val();
+      var dataid = $('#data_selected').val();
       $('#modal_form #id').val(dataid);
-      $('#modal_form #id_aset_status').val('').change();
-      $('#modal_form #tgl_histori').datepicker("setDate", "<?= date('d/m/Y') ?>");
-      $('#modal_form #tgl_histori').datepicker("refresh");
-      $('#modal_form #lokasi_histori').val('');
+      $('#modal_form #tgl_bj_keluar').datepicker("setDate", "<?= date('d/m/Y') ?>");
+      $('#modal_form #tgl_bj_keluar').datepicker("refresh");
+      $('#modal_form #lokasi_bj_keluar').val('');
       $('#modal_form #id_skpd').val(1).change();
-      $('#modal_form #keperluan_histori').val('');
+      $('#modal_form #keperluan_bj_keluar').val('');
       $('#modal_form #pemegang').val('');
-      $('#modal_form #ket_histori').val('');
+      $('#modal_form #ket_bj_keluar').val('');
 
       if ($('textarea[name="sn_barang"]').length > 0) {
         var data_update_barang = [];
+        var data_ambil_barang = [];
         $('textarea[name="sn_barang"]').each(function(e){
             let ids     = $(this).attr('id');
             let id      = ids.split("_")[1];
@@ -240,33 +220,37 @@
                 sn_barang: sn,
                 jml_ambil: ambil,
             });
+
+            if (ambil != null && ambil != '' && ambil != '0') {
+                data_ambil_barang.push(ambil);
+            }
         });
 
-        $('#modal_form #data_update_barang').val(JSON.stringify(data_update_barang));
+        if (data_ambil_barang.length == data_update_barang.length) {
+            $('#modal_form #data_update_barang').val(JSON.stringify(data_update_barang));
+            return true;
+        } else {
+            return false;
+        }
       }
   }
 
   function showModalEksekusi() {
-    clear_data();
-    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiAset'; ?>");
+    var res = clear_data();
+    if (!res) {
+        alert('Input jumlah ambil barang harus diisi semua!');
+        return false;
+    } 
+
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiBarangJasa'; ?>");
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
 
-  function changeExec(data) {
-    var value = $(data).val();
-    var select = $(data).find('option:selected').text();
-    
-    if (select == 'Usulan Hapus' ||  value == '') {
-      $('#not_hapus').hide();
-    } else {
-      $('#not_hapus').show();
-    }
-  }
 </script>
 
 <script>
     function deleteAll() {
-        var dataid      = $('#delete_all').val();
+        var dataid      = $('#data_selected').val();
         var link        = "<?= base_url($this->controller.'/deleteAsetAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
@@ -282,7 +266,7 @@
     }
 
     function pilihAset(data, type) {
-        let id = $(data).val();
+        var id = $(data).val();
         
         if (id == 0) {
             if(type=='ifChecked'){
@@ -291,7 +275,7 @@
                 $('.skin-check input:checkbox').iCheck('uncheck');
             }
         } else {
-            var select_id  = $('#delete_all').val();
+            var select_id  = $('#data_selected').val();
             var value_id   = '';
 
             if(type=='ifChecked'){
@@ -344,17 +328,53 @@
                     $('#btn_eksekusi').attr('disabled',true);
                 }
             }
-            $('#delete_all').val(value_id);
+            $('#data_selected').val(value_id);
         }
     }
 
     function cekChangePage() {
-      var select_id  = $('#delete_all').val();
+      var select_id  = $('#data_selected').val();
       var arr = select_id.split(";");
       arr.forEach(function(value, index) {
         $('.skin-check input:checkbox[value="'+value+'"]').iCheck('check');
       });
     }
+
+    // Cek jml ambil <= SISA
+    function cekVal(data) {
+        var val = $(data).val();
+        if (val!='' && val!=null) {
+            var value = parseInt($(data).val().replace(/\./gi, ''));
+        } else {
+            var value = 0;
+        }
+        var sisa = parseInt($(data).data().sisa.toString().replace(/\./gi, ''));
+        
+        if (value > sisa) {
+            alert('Nilai jumlah ambil melebihi sisa barang!');
+            var nilaiJml = formatRupiah(sisa.toString());
+            $(data).val(nilaiJml);
+        } else {
+            var nilaiJml = formatRupiah(value.toString());
+            $(data).val(nilaiJml);
+        }
+    }
+
+    // Cek Checkbox on ROW
+    $(document).ready(function() {
+        $('#data_barang_jasa').on('click', 'tbody tr', function (e) {
+            var td = $(this).children();
+            var id = td.eq(1).find('input').val();
+            var checked = td.eq(1).find('input').parent().hasClass('checked');
+            if (checked) {
+                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+                    $('.skin-check #plh_brg_'+id).iCheck('uncheck');
+                }
+            } else {
+                $('.skin-check #plh_brg_'+id).iCheck('check');
+            }
+        });
+    });
 </script>
 
 
