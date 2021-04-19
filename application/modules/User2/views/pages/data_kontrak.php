@@ -53,13 +53,15 @@
                     }
                   </style>
 
-                  <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table" style="font-size: 8pt">
+                  <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive sizeFontSm">
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>
                         <th>Aksi</th>
                         <th>No. Kontrak</th>
                         <th>Tgl. Kontrak</th>
+                        <th>No. BA Serahterima</th>
+                        <th>Tgl. BA Serahterima</th>
                         <th>Nama Penyedia</th>
                         <th>Alamat Penyedia</th>
                         <th>Kota Penyedia</th>
@@ -67,7 +69,6 @@
                         <th>Nilai (Rp)</th>
                         <th>PPKom</th>
                         <th>Jenis Rekening</th>
-                        <!-- <th>Jns. Rekening</th> -->
                       </tr>
                     </thead>
 
@@ -79,7 +80,7 @@
                             <?php if ($this->id_user == $val->id_user) { ?>
                               <button type="button" onclick="hapusData(this)" 
                                 data-id="<?= encode($val->id_kontrak) ?>" 
-                                data-link="<?= base_url('User2/deleteDataKontrak') ?>" 
+                                data-link="<?= base_url($this->controller.'/deleteDataKontrak') ?>" 
                                 data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
                                 data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
                                 class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
@@ -87,12 +88,14 @@
                               <button type="button" 
                                 data-id="<?= encode($val->id_kontrak) ?>" 
                                 data-nokontrak="<?= $val->no_kontrak ?>" 
+                                data-noba="<?= $val->no_ba_serahterima ?>" 
                                 data-nosp2d="<?= $val->no_sp2d ?>" 
                                 data-nilai="<?= nominal($val->nilai_kontrak) ?>" 
                                 data-rekanan="<?= $val->id_rekanan ?>" 
                                 data-ppkom="<?= $val->id_user ?>" 
                                 data-rekening="<?= $val->jenis_rekening ?>" 
                                 data-tgl="<?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?>" 
+                                data-tglba="<?= date('d/m/Y', strtotime($val->tgl_ba_serahterima)) ?>" 
                                 onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
                             <?php } else { ?>
                                 <button type="button" disabled class="btn btn-sm btn-secondary" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
@@ -101,6 +104,8 @@
                           </td>
                           <td><?= $val->no_kontrak ?></td>
                           <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
+                          <td><?= $val->no_ba_serahterima ?></td>
+                          <td align="center"><?= date('d/m/Y', strtotime($val->tgl_ba_serahterima)) ?></td>
                           <td><?= $val->nama_rekanan ?></td>
                           <td><?= $val->alamat_rekanan ?></td>
                           <td align="center"><?= $val->kota_rekanan ?></td>
@@ -157,6 +162,25 @@
               </h5>
               <div class="controls">
                   <input type="text" class="form-control date-picker" id="tgl_kontrak" name="tgl_kontrak"
+                      placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <h5>Nomor BA Serahterima
+                <span class="required text-danger">*</span>
+            </h5>
+            <div class="controls">
+                <input type="text" id="no_ba_serahterima" name="no_ba_serahterima" class="form-control" placeholder="Isi nomor kontrak" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+              <h5>Tanggal BA Serahterima
+                  <span class="required text-danger">*</span>
+              </h5>
+              <div class="controls">
+                  <input type="text" class="form-control date-picker" id="tgl_ba_serahterima" name="tgl_ba_serahterima"
                       placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
               </div>
           </div>
@@ -248,6 +272,7 @@
   function clear_data() {
       $('#modal_form #id').val('');
       $('#modal_form #no_kontrak').val('');
+      $('#modal_form #no_ba_serahterima').val('');
       $('#modal_form #no_sp2d').val('');
       $('#modal_form #nilai_kontrak').val('');
       $('#modal_form #rekanan').val('').change();
@@ -255,12 +280,14 @@
       $('#modal_form #rekening').val('').change();
       $('#modal_form #tgl_kontrak').datepicker("setDate", "<?= date('d/m/Y') ?>");
       $('#modal_form #tgl_kontrak').datepicker("refresh");
+      $('#modal_form #tgl_ba_serahterima').datepicker("setDate", "<?= date('d/m/Y') ?>");
+      $('#modal_form #tgl_ba_serahterima').datepicker("refresh");
   }
 
   function addModal() {
       clear_data();
       $('#modal_form #modal_title').html('Tambah Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/simpanDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
@@ -268,20 +295,23 @@
   function editModal(data) {
       var id            = $(data).data().id;
       var no_kontrak    = $(data).data().nokontrak;
+      var no_ba         = $(data).data().noba;
       var no_sp2d       = $(data).data().nosp2d;
       var nilai         = $(data).data().nilai;
       var rekanan       = $(data).data().rekanan;
       var ppkom         = $(data).data().ppkom;
       var rekening      = $(data).data().rekening;
-      var tgl = $(data).data().tgl;
+      var tgl           = $(data).data().tgl;
+      var tgl_ba        = $(data).data().tglba;
 
       clear_data();
       $('#modal_form #modal_title').html('Update Data Kontrak');
-      $('#modal_form #form_input').attr('action', "<?= base_url().'User2/updateDataKontrak'; ?>");
+      $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateDataKontrak'; ?>");
       $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
       $('#modal_form #id').val(id);
       $('#modal_form #no_kontrak').val(no_kontrak);
+      $('#modal_form #no_ba_serahterima').val(no_ba);
       $('#modal_form #no_sp2d').val(no_sp2d);
       $('#modal_form #nilai_kontrak').val(nilai);
       $('#modal_form #rekanan').val(rekanan).change();
@@ -289,6 +319,8 @@
       $('#modal_form #rekening').val(rekening).change();
       $('#modal_form #tgl_kontrak').datepicker("setDate", tgl);
       $('#modal_form #tgl_kontrak').datepicker("refresh");
+      $('#modal_form #tgl_ba_serahterima').datepicker("setDate", tgl_ba);
+      $('#modal_form #tgl_ba_serahterima').datepicker("refresh");
       
       $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }

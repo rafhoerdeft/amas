@@ -384,9 +384,12 @@
             var value_id   = '';
 
             if(type=='ifChecked'){
+                var tr = $(data).parent().parent().parent().parent();
+                tr.toggleClass('row_cek');
+
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
+                  var td = tr.children();
                   //ambil value dalam input td SN
                   var td_sn = td.eq(8);
                   var val_td_sn = td_sn.html();
@@ -406,9 +409,12 @@
                     value_id += select_id + ';' + id;
                 }
             } else {
+                var tr = $(data).parent().parent().parent().parent();
+                tr.toggleClass();
+
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
+                  var td = tr.children();
 
                   var td_sn = td.eq(8);
                   var val_td_sn = td_sn.children().val();
@@ -439,9 +445,57 @@
       var select_id  = $('#delete_all').val();
       var arr = select_id.split(";");
       arr.forEach(function(value, index) {
-        $('.skin-check input:checkbox[value="'+value+'"]').iCheck('check');
+        var cekbox = $('.skin-check input:checkbox[value="'+value+'"]');
+        cekbox.iCheck('check');
+        cekbox.parent().parent().parent().toggleClass('row_cek');
       });
     }
+
+    // Cek Checkbox on ROW
+    $(document).ready(function() {
+
+      $('#data_aset').on('click', 'tbody tr', function (e) {
+          var td = $(this).children();
+          var cekbox = td.eq(1).find('input');
+          var checked = cekbox.parent().hasClass('checked');
+
+          if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+              if (checked) {
+                  cekbox.iCheck('uncheck');
+              } else {
+                var cek_disabled = cekbox.parent().hasClass('disabled');
+                  if (!cek_disabled) {
+                    cekbox.iCheck('check');
+                  }
+              }
+          }
+      });
+
+      // $('#data_aset_wrapper').on('click', 'ul li a', function () {
+      //   if ($('textarea[name="sn_barang"]').length > 0) {
+      //     var data_json = $('#modal_form #data_update_barang').val();
+      //     var data_update_barang = [];
+      //     if (data_json != '' && data_json != null && data_json != 'undefined') {
+      //       data_update_barang = JSON.parse(data_json);
+      //     } 
+      //     $('textarea[name="sn_barang"]').each(function(e){
+      //         let ids     = $(this).attr('id');
+      //         let id      = ids.split("_")[1];
+      //         let merk    = $('#merk_'+id).val();
+      //         let sn      = $('#sn_'+id).val();
+              
+      //         data_update_barang.push({
+      //             id_aset: id,
+      //             merk_barang: merk,
+      //             sn_barang: sn,
+      //         });
+      //     });
+
+      //     $('#modal_form #data_update_barang').val(JSON.stringify(data_update_barang));
+      //   }
+      // });
+
+    });
 </script>
 
 <script>

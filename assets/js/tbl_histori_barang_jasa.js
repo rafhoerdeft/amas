@@ -2,7 +2,7 @@ var protocol = window.location.protocol;
 var host = window.location.hostname;
 
 function showDataTable(link) {
-    $("#data_histori").DataTable({
+    $("#data_histori_barang_jasa").DataTable({
         "processing": true,
         "serverSide": true,
         "searching": true,
@@ -41,54 +41,42 @@ function showDataTable(link) {
             },
             {  
                 "targets":4,  
-                "width": "100"
+                "width": "70"
             },
             {  
                 "targets":5,  
-                "width": "150"
+                "width": "70"
             },
             {  
                 "targets":6,  
-                "width": "150"
+                "class":"text-center" 
             },
             {  
                 "targets":7,  
-                "class":"text-center" 
-            },
-            {  
-                "targets":8,  
-                "class":"text-center" 
-            },
-            // {  
-            //     "targets":6,  
-            //     "class":"text-center" 
-            // }, 
-            {  
-                "targets":9,  
-                "class":"text-center" 
+                "class":"text-right" 
             }, 
             {  
-                "targets":10,  
+                "targets":8,  
                 "width": "100"
             }, 
             {  
-                "targets":11,  
+                "targets":9,  
                 "width": "150"
             },
+            {  
+                "targets":10,  
+                "width": "80"
+            }, 
+            {  
+                "targets":11,  
+                "width": "80"
+            }, 
             {  
                 "targets":12,  
-                "width": "80"
-            }, 
-            {  
-                "targets":13,  
-                "width": "80"
-            }, 
-            {  
-                "targets":14,  
                 "width": "150"
             },
             {  
-                "targets":15,  
+                "targets":13,  
                 "width": "100"
             }
         ],  

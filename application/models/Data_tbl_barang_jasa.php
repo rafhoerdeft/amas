@@ -63,8 +63,10 @@ class Data_tbl_barang_jasa extends CI_Model
         }
         if (isset($_POST["order"])) {
             $this->db->order_by($order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+            $this->db->order_by('sisa', 'DESC');
         } else {
             $this->db->order_by('brg.tgl_masuk', 'DESC');
+            $this->db->order_by('sisa', 'DESC');
             $this->db->order_by('brg.id_barang', 'DESC');
         }
     }

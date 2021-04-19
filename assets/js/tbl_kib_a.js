@@ -10,7 +10,13 @@ function showDataTable(link) {
         "order":[],  
         "ajax":{  
             "url": link,  
-            "type": "POST"
+            "type": "POST",
+            "beforeSend": function () {
+                $(".loading-page").show();
+            },
+            "complete": function () {
+                $(".loading-page").hide();
+            },
         },  
         "columnDefs":[  
             {  

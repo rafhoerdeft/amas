@@ -14,7 +14,7 @@ class Data_tbl_histori extends CI_Model
         'satuan_aset',
         'merk_barang',
         'sn_barang',
-        "(SELECT sk.nama_skpd FROM tbl_skpd sk WHERE sk.id_skpd = hst.id_skpd) as nama_skpd",
+        "sk.nama_skpd",
         'lokasi_histori',
         'pemegang',
         'nama_user as user_penanggung',
@@ -43,6 +43,7 @@ class Data_tbl_histori extends CI_Model
         $this->db->join('tbl_aset_rincian rc', 'ast.id_aset = rc.id_aset AND rc.posisi = 1', 'left');
         $this->db->join('tbl_barang brg', 'rc.id_barang = brg.id_barang', 'left');
         $this->db->join('tbl_jenis_kib kib', 'ast.id_jenis_kib = kib.id_jenis_kib', 'left');
+        $this->db->join('tbl_skpd sk', 'hst.id_skpd = sk.id_skpd', 'left');
         $this->db->from($this->table);
 
         $order_column = array();

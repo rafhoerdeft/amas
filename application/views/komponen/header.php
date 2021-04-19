@@ -69,6 +69,15 @@
         }
 
     </style>
+
+    <style>
+        .row_cek{
+            background-color: #ffe175 !important;
+        }
+        .row_kosong{
+            background-color: #ffabab !important;
+        }
+    </style>
 </head>
 
 <body class="horizontal-layout horizontal-menu 2-columns menu-expanded" data-open="click" data-menu="horizontal-menu"

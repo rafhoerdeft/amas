@@ -10,7 +10,13 @@ function showDataTable(link) {
         "order":[],  
         "ajax":{  
             "url": link,  
-            "type": "POST"
+            "type": "POST",
+            "beforeSend": function () {
+                $(".loading-page").show();
+            },
+            "complete": function () {
+                $(".loading-page").hide();
+            },
         },  
         "columnDefs":[  
             {  
@@ -70,7 +76,15 @@ function showDataTable(link) {
             }
         ],  
         "pageLength": 10
-    }).on('draw.dt', function () {
+    }).on('draw.dt', function (row, data, index) {
+        $('tr td:nth-child(11)').each(function (){
+            var cek_sisa = $(this).text();
+            if (cek_sisa == '0') {
+                $(this).parent().addClass('row_kosong');
+                $(this).parent().children().eq(1).find('input').attr('disabled', true);
+            }
+        })
+        
         cekChangePage();
         activeIcheck();
     });

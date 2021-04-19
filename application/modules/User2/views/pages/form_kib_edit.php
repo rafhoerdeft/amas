@@ -114,11 +114,11 @@
                                                         </td>
                                                         <td align="center"><?= $val->no_kontrak ?></td>
                                                         <td align="center"><?= $val->kode_barang ?></td>
-                                                        <td><?= ($val->cek==1)?"<textarea id='nama_".$val->id_barang."' name='nama_barang' rows='1'>".$val->nama_barang."</textarea>":$val->nama_barang?></td>
-                                                        <td><?= ($val->cek==1)?"<textarea id='merk_".$val->id_barang."' name='merk_barang' rows='1'>".$val->merk_barang."</textarea>":$val->merk_barang?></td>
-                                                        <td><?= ($val->cek==1)?"<textarea id='sn_".$val->id_barang."' name='sn_barang' rows='1'>".$val->sn_barang."</textarea>":$val->sn_barang?></td>
-                                                        <td align="center"><?= ($val->cek==1)?"<input type='text' id='satuan_".$val->id_barang."' name='satuan_barang' value='".$val->satuan_barang."' style='width:80px;'>":$val->satuan_barang?></td>
-                                                        <td align="right"><?= nominal($val->harga_barang) ?></td>
+                                                        <td style="width: 150px;"><?= ($val->cek==1)?"<textarea id='nama_".$val->id_barang."' name='nama_barang' rows='1' style='width: 100%;'>".$val->nama_barang."</textarea>":$val->nama_barang?></td>
+                                                        <td><?= ($val->cek==1)?"<textarea id='merk_".$val->id_barang."' name='merk_barang' rows='1' style='width: 100%;'>".$val->merk_barang."</textarea>":$val->merk_barang?></td>
+                                                        <td><?= ($val->cek==1)?"<textarea id='sn_".$val->id_barang."' name='sn_barang' rows='1' style='width: 100%;'>".$val->sn_barang."</textarea>":$val->sn_barang?></td>
+                                                        <td align="center" style="width: 75px;"><?= ($val->cek==1)?"<input type='text' id='satuan_".$val->id_barang."' name='satuan_barang' value='".$val->satuan_barang."' style='width: 100%;'>":$val->satuan_barang?></td>
+                                                        <td align="right" style="width: 75px;" nowrap><?= nominal($val->harga_barang) ?></td>
                                                         <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
                                                         <!-- <td align="right">
                                                             <?php //echo nominal($val->harga_barang * $val->jml_barang); ?>
@@ -267,24 +267,24 @@
             var td_nama = td.eq(5);
             var val_td_nama = td_nama.html();
             // td_nama.html("<input type='text' name='nama_barang' value='"+val_td_nama+"'>");
-            td_nama.html("<textarea id='nama_"+id+"' name='nama_barang' rows='1'>"+val_td_nama+"</textarea>");
+            td_nama.html("<textarea id='nama_"+id+"' name='nama_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
 
             //ambil value dalam input td merk
             var td_merk = td.eq(6);
             var val_td_merk = td_merk.html();
             // td_merk.html("<input type='text' name='merk_barang' value='"+val_td_merk+"'>");
-            td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1'>"+val_td_merk+"</textarea>");
+            td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
 
             //ambil value dalam input td SN
             var td_sn = td.eq(7);
             var val_td_sn = td_sn.html();
             // td_sn.html("<input type='text' name='sn_barang' value='"+val_td_sn+"'>");
-            td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1'>"+val_td_sn+"</textarea>");
+            td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
             //ambil value dalam input td satuan
             var td_satuan = td.eq(8);
             var val_td_satuan = td_satuan.html();
-            td_satuan.html("<input type='text' id='satuan_"+id+"' name='satuan_barang' value='"+val_td_satuan+"' style='width:80px;'>");
+            td_satuan.html("<input type='text' id='satuan_"+id+"' name='satuan_barang' value='"+val_td_satuan+"' style='width: 100%;'>");
 
             value_hrg = (harga + val_harga);
 

@@ -3,12 +3,12 @@
     <div class="content-header row">
       
       <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Histori Aset</h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Histori Barang Jasa</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-              <li class="breadcrumb-item active">Histori Aset</li>
+              <li class="breadcrumb-item active">Histori Barang Jasa</li>
             </ol>
           </div>
         </div>
@@ -47,7 +47,7 @@
 
                 <div class="card-body">
 
-                  <form action="<?= base_url($this->controller.'/historiAset') ?>" class="row" method="POST">
+                  <form action="<?= base_url($this->controller.'/historiBarangJasa') ?>" class="row" method="POST">
                     <?= token_csrf() ?>
 
                     <div class="col-lg-3 sizeFontSm" style="margin-bottom: 5px;">
@@ -58,36 +58,6 @@
                         </div>
                         <input type="text" class="form-control sizeFontSm" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" />
                       </div>
-                    </div>
-
-                    <div class="col-lg-2 sizeFontSm" style="margin-bottom: 5px;">
-                        <div class="controls">
-                            <select id="status" name="status" class="form-control select2">
-                                <option value="0" selected>Semua Status</option>
-                                <?php
-                                foreach ($dataStatusAset as $sts) {
-                                ?>
-                                    <option <?= ($selectStatus == $sts->id_aset_status?'selected':'') ?> value="<?= $sts->id_aset_status ?>"><?= $sts->nama_status ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 sizeFontSm" style="margin-bottom: 5px;">
-                        <div class="controls">
-                            <select id="jenis" name="jenis" class="form-control select2">
-                                <option value="0" selected>Semua Jenis</option>
-                                <?php
-                                foreach ($dataJenisAset as $jns) {
-                                ?>
-                                    <option <?= ($selectJenis == $jns->id_jenis_kib?'selected':'') ?> value="<?= $jns->id_jenis_kib ?>"><?= $jns->nama_kib ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
                     </div>
 
                     <div class="col-lg-3 sizeFontSm" style="margin-bottom: 5px;">
@@ -121,22 +91,19 @@
                     }
                   </style>
 
-                  <?= formSearch('data_histori') ?>
+                  <?= formSearch('data_histori_barang_jasa') ?>
 
-                  <table id="data_histori" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
+                  <table id="data_histori_barang_jasa" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>
                         <th>Tgl Eksekusi</th>
-                        <th>Status</th>
-                        <th>Jenis Aset</th>
-                        <th>Nama Aset</th>
-                        <th>Kode Lama</th>
-                        <th>Kode Baru</th>
-                        <th>No. Reg</th>
-                        <th>Satuan</th>
+                        <th>Kode</th>
+                        <th>Nama Barang</th>
                         <th>Merk/Type</th>
                         <th>Serial Number</th>
+                        <th>Satuan</th>
+                        <th>Jml</th>
                         <th>SKPD</th>
                         <th>Lokasi</th>
                         <th>Pemegang</th>

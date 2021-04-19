@@ -1514,7 +1514,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Kontrak Rekanan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
+        $script[] = "showDataTable('Data Kontrak Rekanan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -1566,23 +1566,25 @@ class User2 extends Adm_Controller
         if ($post) {
 
             $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
+                'no_kontrak'          => $post['no_kontrak'],  
+                'no_ba_serahterima'   => $post['no_ba_serahterima'],  
+                'tgl_ba_serahterima'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_ba_serahterima']))),   
+                'no_sp2d'             => $post['no_sp2d'],  
+                'nilai_kontrak'       => str_replace('.', '', $post['nilai_kontrak']),  
+                'id_rekanan'          => $post['rekanan'],  
+                'id_user'             => $this->id_user,  
+                'jenis_rekening'      => $post['rekening'],
+                'tgl_kontrak'         => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
             );
 
             $input = $this->MasterData->inputData($data,'tbl_kontrak');
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             }
         }
     }
@@ -1595,23 +1597,25 @@ class User2 extends Adm_Controller
             $id = decode($post['id']);
 
             $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
+                'no_kontrak'          => $post['no_kontrak'],  
+                'no_ba_serahterima'   => $post['no_ba_serahterima'],  
+                'tgl_ba_serahterima'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_ba_serahterima']))), 
+                'no_sp2d'             => $post['no_sp2d'],  
+                'nilai_kontrak'       => str_replace('.', '', $post['nilai_kontrak']),  
+                'id_rekanan'          => $post['rekanan'],  
+                'id_user'             => $this->id_user,  
+                'jenis_rekening'      => $post['rekening'],
+                'tgl_kontrak'         => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
             );
 
             $input = $this->MasterData->editData("id_kontrak = $id", $data, 'tbl_kontrak');
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataKontrak');
+                redirect(base_url() . $this->controller.'/dataKontrak');
             }
         }
     }
@@ -1660,7 +1664,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/cetak_excel.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9]);";
+        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 3, 4, 5, 6, 7, 8, 9, 10, 11]);";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -1895,7 +1899,7 @@ class User2 extends Adm_Controller
                         'merk_barang'     => $post['merk_barang'],   
                         'satuan_barang'   => $post['satuan_barang'],   
                         'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                        'tgl_masuk'       => $post['tgl_kontrak'],   
+                        'tgl_masuk'       => $post['tgl_ba_serahterima'],   
                     );
         
                     $this->MasterData->inputData($data,'tbl_barang');
@@ -1918,7 +1922,7 @@ class User2 extends Adm_Controller
                     'merk_barang'     => $post['merk_barang'],   
                     'satuan_barang'   => $post['satuan_barang'],   
                     'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                    'tgl_masuk'       => $post['tgl_kontrak'],   
+                    'tgl_masuk'       => $post['tgl_ba_serahterima'],   
                 );
     
                 $this->MasterData->inputData($data,'tbl_barang');
@@ -1970,7 +1974,7 @@ class User2 extends Adm_Controller
                 'sn_barang'       => $post['sn_barang'],   
                 'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_kontrak'],   
+                'tgl_masuk'       => $post['tgl_ba_serahterima'],   
             );
 
             $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
@@ -2298,6 +2302,133 @@ class User2 extends Adm_Controller
                     redirect($post['back']);
                 }
             }
+        }
+    }
+
+    // =====================================================================
+
+     // HISTORI BARANG JASA ================================================
+
+    public function historiBarangJasa($id = '') {
+        $this->load->helper('searchbar');
+
+        $skpd         = $_POST['id_skpd'];
+        $tgl_awal     = $_POST['tgl_awal'];
+        $tgl_akhir    = $_POST['tgl_akhir'];
+
+        if (isset($skpd) OR ($skpd != null AND $skpd != '' AND !empty($skpd))) {
+            $selectSkpd = $skpd;
+        } else {
+            $selectSkpd = '0';
+        }
+
+        if ($tgl_awal != null AND $tgl_awal != '' AND !empty($tgl_awal)) {
+            $selectTglAwal = $tgl_awal;
+        } else {
+            $selectTglAwal = date('01/m/Y');
+        }
+
+        if ($tgl_akhir != null AND $tgl_akhir != '' AND !empty($tgl_akhir)) {
+            $selectTglAkhir = $tgl_akhir;
+        } else {
+            $selectTglAkhir = date('d/m/Y');
+        }
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/tbl_histori_barang_jasa.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
+        $script[] = "showDataTable('" . base_url('User2/getDataHistoriBarangJasa/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "$('.date-range').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '10';
+
+        // ================================================================
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
+
+        $content = array(
+            'selectSkpd'     => $selectSkpd,
+            'selectTglAwal'  => $selectTglAwal,
+            'selectTglAkhir' => $selectTglAkhir,
+            'dataSkpd'       => $dataSkpd,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/histori_barang_jasa',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function getDataHistoriBarangJasa($skpd='', $tgl_awal='', $tgl_akhir='')
+    {
+        if ($this->input->POST()) {
+            $this->load->model("Data_tbl_histori_barang_jasa", "DataTable");
+            $fetch_data = $this->DataTable->make_datatables($skpd, $tgl_awal, $tgl_akhir);
+
+            $data = array();
+            $i = $_POST['start'];
+            foreach ($fetch_data as $val) {
+                $i++;
+
+                $columns = array(
+                    $i,
+                    $val->tgl_bj_keluar,
+                    $val->kode_barang,
+                    $val->nama_barang,
+                    ($val->merk_barang=='' && $val->merk_barang==null)?'-':$val->merk_barang,
+                    ($val->sn_barang=='' && $val->sn_barang==null)?'-':$val->sn_barang,
+                    $val->satuan_barang,
+                    $val->jml_bj_keluar,
+                    $val->nama_skpd,
+                    $val->lokasi_bj_keluar,
+                    $val->pemegang,
+                    $val->user_penanggung,
+                    $val->keperluan_bj_keluar,
+                    ($val->ket_bj_keluar=='' && $val->ket_bj_keluar==null)?'-':$val->ket_bj_keluar,
+                );
+
+                $data[] = $columns;
+            }
+            $output = array(
+                "draw"               =>     $_POST["draw"],
+                "recordsTotal"       =>     $this->DataTable->get_all_data($skpd, $tgl_awal, $tgl_akhir),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($skpd, $tgl_awal, $tgl_akhir),
+                "data"               =>     $data
+            );
+            echo json_encode($output);
         }
     }
 

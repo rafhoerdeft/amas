@@ -30,17 +30,17 @@
                 <!-- =========================================================================== -->
 
                 <li class="dropdown nav-item">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Barang Jasa"><i class="ft-box"></i>
-                        <span>Barang Jasa</span>
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Non Aset"><i class="ft-box"></i>
+                        <span>Non Aset</span>
                     </a>
                     <ul class="dropdown-menu arrow">
                         <li class="<?= ($active == '9' ? 'active' : '') ?>">
-                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataBarangJasa') ?>" title="Histori Aset"><i class="la la-tablet"></i>
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/dataBarangJasa') ?>" title="Data Non Aset"><i class="la la-tablet"></i>
                                 <span>List Data</span>
                             </a>
                         </li>
                         <li class="<?= ($active == '10' ? 'active' : '') ?>">
-                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/historiBarangJasa') ?>" title="Histori Aset"><i class="la la-history"></i>
+                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url('User2/historiBarangJasa') ?>" title="Histori Non Aset"><i class="la la-history"></i>
                                 <span>Histori</span>
                             </a>
                         </li>

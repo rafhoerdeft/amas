@@ -463,10 +463,13 @@ $config['csrf_exclude_uris'] = array(
                                     'User2/getDataHistori/.*?/.*+',
                                     'User2/cetakLabelAset/.*+',
                                     'User2/getDataBarangJasa',
+                                    'User2/getDataHistoriBarangJasa/.*?/.*+',
                                     // =============================
                                     'User3/getDataAset/.*?/.*+',
                                     'User3/getDataHistori/.*?/.*+',
                                     'User3/cetakLabelAset/.*+',
+                                    'User3/getDataBarangJasa',
+                                    'User3/getDataHistoriBarangJasa/.*?/.*+',
                                 );
 
 /*

@@ -234,7 +234,7 @@ class User1 extends Adm_Controller
         $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Kontrak Rekanan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
+        $script[] = "showDataTable('Data Kontrak Rekanan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -286,13 +286,15 @@ class User1 extends Adm_Controller
         if ($post) {
 
             $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
+                'no_kontrak'          => $post['no_kontrak'],  
+                'no_ba_serahterima'   => $post['no_ba_serahterima'],  
+                'tgl_ba_serahterima'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_ba_serahterima']))),   
+                'no_sp2d'             => $post['no_sp2d'],  
+                'nilai_kontrak'       => str_replace('.', '', $post['nilai_kontrak']),  
+                'id_rekanan'          => $post['rekanan'],  
+                'id_user'             => $this->id_user,  
+                'jenis_rekening'      => $post['rekening'],
+                'tgl_kontrak'         => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
             );
 
             $input = $this->MasterData->inputData($data,'tbl_kontrak');
@@ -315,13 +317,15 @@ class User1 extends Adm_Controller
             $id = decode($post['id']);
 
             $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
+                'no_kontrak'          => $post['no_kontrak'],  
+                'no_ba_serahterima'   => $post['no_ba_serahterima'],  
+                'tgl_ba_serahterima'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_ba_serahterima']))), 
+                'no_sp2d'             => $post['no_sp2d'],  
+                'nilai_kontrak'       => str_replace('.', '', $post['nilai_kontrak']),  
+                'id_rekanan'          => $post['rekanan'],  
+                'id_user'             => $this->id_user,  
+                'jenis_rekening'      => $post['rekening'],
+                'tgl_kontrak'         => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
             );
 
             $input = $this->MasterData->editData("id_kontrak = $id", $data, 'tbl_kontrak');
@@ -380,7 +384,7 @@ class User1 extends Adm_Controller
         $this->foot[] = base_url('assets/js/cetak_excel.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9]);";
+        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 3, 4, 5, 6, 7, 8, 9, 10, 11]);";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -615,7 +619,7 @@ class User1 extends Adm_Controller
                         'merk_barang'     => $post['merk_barang'],   
                         'satuan_barang'   => $post['satuan_barang'],   
                         'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                        'tgl_masuk'       => $post['tgl_kontrak'],   
+                        'tgl_masuk'       => $post['tgl_ba_serahterima'],   
                     );
         
                     $this->MasterData->inputData($data,'tbl_barang');
@@ -638,7 +642,7 @@ class User1 extends Adm_Controller
                     'merk_barang'     => $post['merk_barang'],   
                     'satuan_barang'   => $post['satuan_barang'],   
                     'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                    'tgl_masuk'       => $post['tgl_kontrak'],   
+                    'tgl_masuk'       => $post['tgl_ba_serahterima'],   
                 );
     
                 $this->MasterData->inputData($data,'tbl_barang');
@@ -690,7 +694,7 @@ class User1 extends Adm_Controller
                 'sn_barang'       => $post['sn_barang'],   
                 'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_kontrak'],   
+                'tgl_masuk'       => $post['tgl_ba_serahterima'],   
             );
 
             $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');

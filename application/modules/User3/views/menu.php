@@ -40,6 +40,18 @@
                         <span>Histori Aset</span>
                     </a>
                 </li> -->
+                <!-- ================================================== -->
+                <li class="nav-item <?= ($active == '6' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataBarangJasa') ?>" title="Non Aset"><i class="la la-tablet"></i>
+                        <span>Non Aset</span>
+                    </a>
+                </li>
+                <li class="nav-item <?= ($active == '7' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?= base_url($this->controller.'/historiBarangJasa') ?>" title="Histori Non Aset"><i class="la la-history"></i>
+                        <span>Histori Non Aset</span>
+                    </a>
+                </li>
+                <!-- ========================================================== -->
             </ul>
         </div>
     </div>

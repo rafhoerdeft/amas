@@ -54,18 +54,19 @@
                                     }
                                     </style>
 
-                                    <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive d-xl-table"
-                                        style="font-size: small">
+                                    <table id="dataTable" class="table table-hover table-bordered table-striped table-responsive sizeFontSm">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>No</th>
                                                 <th>Aksi</th>
+                                                <th>Rincian</th>
                                                 <th>No. Kontrak</th>
+                                                <th>Tgl. Kontrak</th>
+                                                <th>No. BA Serahterima</th>
+                                                <th>Tgl. BA Serahterima</th>
                                                 <th>Nama Penyedia</th>
                                                 <th>PPKom</th>
-                                                <th>Tgl. Kontrak</th>
                                                 <th>Nilai Kontrak (Rp)</th>
-                                                <th>Rincian</th>
                                                 <th>Selisih (Rp)</th>
                                                 <th>Jns. Rekening</th>
                                             </tr>
@@ -101,11 +102,6 @@
                                                         title="Update Data"><i
                                                             class="la la-edit font-small-3"></i></button> -->
                                                 </td>
-                                                <td><?= $val->no_kontrak ?></td>
-                                                <td><?= $val->nama_rekanan ?></td>
-                                                <td><?= $val->nama_ppkom ?></td>
-                                                <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
-                                                <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
                                                 <td align="center">
                                                     <?= $val->jml_rincian==0?'Kosong':
                                                         '<button class="btn btn-sm btn-info" 
@@ -117,6 +113,13 @@
                                                             onclick="rincianModal(this)"
                                                             title="Detail Rincian Barang">Detail</button>' ?>
                                                 </td>
+                                                <td><?= $val->no_kontrak ?></td>
+                                                <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>
+                                                <td><?= $val->no_ba_serahterima ?></td>
+                                                <td align="center"><?= date('d/m/Y', strtotime($val->tgl_ba_serahterima)) ?></td>
+                                                <td><?= $val->nama_rekanan ?></td>
+                                                <td><?= $val->nama_ppkom ?></td>
+                                                <td align="right"><?= nominal($val->nilai_kontrak) ?></td>
                                                 <td align="right">
                                                     <?= ($val->harga_pengadaan==null ||  $val->harga_pengadaan=='')?'0':nominal($val->nilai_kontrak - array_sum(explode(';', $val->harga_pengadaan)))  ?>
                                                 </td>
