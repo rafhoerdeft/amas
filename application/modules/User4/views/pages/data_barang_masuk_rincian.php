@@ -3,15 +3,14 @@
         <div class="content-header row">
 
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">Rincian Pengadaan -
-                    (<?= $dataKontrak->no_kontrak ?>)</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">Rincian Barang -
+                    (<?= $dataNota->no_nota ?>)</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller.'/dataPengadaan') ?>">Data
-                                    Pengadaan</a></li>
-                            <li class="breadcrumb-item active">Rincian Pengadaan</li>
+                            <li class="breadcrumb-item"><a href="<?= base_url($this->controller.'/barangMasuk') ?>">Data Nota</a></li>
+                            <li class="breadcrumb-item active">Rincian Barang</li>
                         </ol>
                     </div>
                 </div>
@@ -82,11 +81,11 @@
                                                 <th>Nama Barang</th>
                                                 <th>Merk/Type</th>
                                                 <th>Serial Number</th>
-                                                <th>Lokasi</th>
+                                                <!-- <th>Lokasi</th> -->
                                                 <th>Satuan</th>
                                                 <th>Harga (Rp)</th>
-                                                <!-- <th>Jumlah</th> -->
-                                                <!-- <th>Total (Rp)</th> -->
+                                                <th>Jumlah</th>
+                                                <th>Total (Rp)</th>
                                             </tr>
                                         </thead>
 
@@ -102,14 +101,14 @@
                                                 <td nowrap align="center">
                                                     <button type="button" onclick="hapusData(this)"
                                                         data-id="<?= encode($val->id_barang) ?>"
-                                                        data-link="<?= base_url('User1/deleteRincianPengadaan') ?>"
+                                                        data-link="<?= base_url($this->controller.'/deleteRincianBarangMasuk') ?>"
                                                         data-csrfname="<?= $this->security->get_csrf_token_name(); ?>"
                                                         data-csrfcode="<?= $this->security->get_csrf_hash(); ?>"
                                                         class="btn btn-sm btn-danger" title="Hapus Data"><i
                                                             class="la la-trash-o font-small-3"></i></button>
 
                                                     <button type="button"
-                                                        data-id="<?= encode($val->id_pengadaan) ?>"
+                                                        data-id="<?= encode($val->id_so_rincian) ?>"
                                                         data-nama="<?= $val->nama_barang ?>"
                                                         data-merk="<?= $val->merk_barang ?>"
                                                         data-satuan="<?= $val->satuan_barang ?>"
@@ -124,18 +123,18 @@
                                                 <td><?= $val->nama_barang ?></td>
                                                 <td><?= $val->merk_barang ?></td>
                                                 <td align="center"><?= ($val->sn_barang!=null && $val->sn_barang!='')?$val->sn_barang:'-' ?></td>
-                                                <td><?= $val->lokasi_aset ?></td>
+                                                <!-- <td><?//= $val->lokasi_aset ?></td> -->
                                                 <td align="center"><?= $val->satuan_barang ?></td>
                                                 <td align="right"><?= nominal($val->harga_barang) ?></td>
-                                                <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
-                                                <!-- <td align="right"><?php //echo nominal($val->harga_barang * $val->jml_barang); ?></td> -->
+                                                <td align="center"><?= nominal($val->jml_barang); ?></td>
+                                                <td align="right"><?= nominal($val->harga_barang * $val->jml_barang); ?></td>
                                             </tr>
                                             <?php $tot_harga += $val->harga_barang * $val->jml_barang; } ?>
                                         </tbody>
 
                                         <tfoot>
                                             <tr>
-                                                <th colspan="9">Total Harga (Rp)</th>
+                                                <th colspan="10">Total Harga (Rp)</th>
                                                 <th style="text-align: right;"><?= nominal($tot_harga) ?></th>
                                             </tr>
                                         </tfoot>
@@ -158,8 +157,8 @@
             <form name="form_input" id="form_input" method="post" action="">
 
                 <input type="hidden" name="id" id="id">
-                <input type="hidden" name="id_kontrak" id="id_kontrak" value="<?= encode($dataKontrak->id_kontrak) ?>">
-                <input type="hidden" name="tgl_kontrak" id="tgl_kontrak" value="<?= $dataKontrak->tgl_kontrak ?>">
+                <input type="hidden" name="id_so" id="id_so" value="<?= encode($dataNota->id_so) ?>">
+                <input type="hidden" name="tgl_nota" id="tgl_nota" value="<?= $dataNota->tgl_nota ?>">
 
                 <?= token_csrf() ?>
 
@@ -261,12 +260,12 @@ function clear_data() {
 
 function addModal() {
     clear_data();
-    $('#modal_form #modal_title').html('Tambah Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/simpanRincianPengadaan'; ?>");
+    $('#modal_form #modal_title').html('Tambah Data Rincian Barang');
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanRincianBarangMasuk'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
 
-    $('#modal_form #sn_barang').parent().parent().hide();
-    $('#modal_form #jml_barang').parent().parent().show();
+    // $('#modal_form #sn_barang').parent().parent().hide();
+    // $('#modal_form #jml_barang').parent().parent().show();
 
     $('#modal_form').modal({
         backdrop: 'static',
@@ -284,8 +283,8 @@ function editModal(data) {
     var sn = $(data).data().sn;
 
     clear_data();
-    $('#modal_form #modal_title').html('Update Data Kontrak');
-    $('#modal_form #form_input').attr('action', "<?= base_url().'User1/updateRincianPengadaan'; ?>");
+    $('#modal_form #modal_title').html('Update Data Rincian Barang');
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateRincianBarangMasuk'; ?>");
     $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 
     $('#modal_form #id').val(id);
@@ -296,8 +295,8 @@ function editModal(data) {
     $('#modal_form #jml_barang').val(jml);
     $('#modal_form #sn_barang').val(sn);
     
-    $('#modal_form #sn_barang').parent().parent().show();
-    $('#modal_form #jml_barang').parent().parent().hide();
+    // $('#modal_form #sn_barang').parent().parent().show();
+    // $('#modal_form #jml_barang').parent().parent().hide();
 
     $('#modal_form').modal({
         backdrop: 'static',
@@ -309,7 +308,7 @@ function editModal(data) {
 <script>
     function deleteAll() {
         var dataid      = $('#delete_all').val();
-        var link        = "<?= base_url('User1/deleteAll') ?>";
+        var link        = "<?= base_url($this->controller.'/deleteAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
         var table       = "barang";

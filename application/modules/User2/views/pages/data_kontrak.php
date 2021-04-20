@@ -199,7 +199,7 @@
                 <span class="required text-danger">*</span>
             </h5>
             <div class="controls">
-                <input type="text" id="nilai_kontrak" name="nilai_kontrak" class="form-control" placeholder="Isi nomor kontrak" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" required>
+                <input type="text" id="nilai_kontrak" name="nilai_kontrak" class="form-control" placeholder="Isi nilai kontrak" onkeyup="changeRupe(this)" onkeypress="return inputAngka(event);" required>
             </div>
           </div>
 

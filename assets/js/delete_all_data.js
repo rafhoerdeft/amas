@@ -7,7 +7,7 @@ function hapusDataAll(data) {
 	
 	swal({
 		title: "Hapus Data",
-		text: "Apakah data ingin dihapus?",
+		text: "Apakah data yang dipilih ingin dihapus?",
 		icon: "warning",
 		showCancelButton: true,
 		buttons: {

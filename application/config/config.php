@@ -470,6 +470,9 @@ $config['csrf_exclude_uris'] = array(
                                     'User3/cetakLabelAset/.*+',
                                     'User3/getDataBarangJasa',
                                     'User3/getDataHistoriBarangJasa/.*?/.*+',
+                                    // ==============================
+                                    'User4/getDataBarangSo',
+                                    'User4/getDataHistoriBarangSo/.*?/.*+',
                                 );
 
 /*

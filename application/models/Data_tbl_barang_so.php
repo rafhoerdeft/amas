@@ -1,18 +1,19 @@
 <?php
-class Data_tbl_barang_jasa extends CI_Model
+class Data_tbl_barang_so extends CI_Model
 {
     var $table = "tbl_barang brg";
     var $select_column = array(
         'brg.id_barang',
+        'so.no_nota',
         'brg.kode_barang',
-        'DATE_FORMAT(brg.tgl_masuk, "%d-%m-%Y") as tgl_masuk',
+        'DATE_FORMAT(so.tgl_nota, "%d-%m-%Y") as tgl_masuk',
         'brg.nama_barang',
         'brg.merk_barang',
         'brg.sn_barang',
         'brg.satuan_barang',
-        'brg.harga_barang',
-        'pd.jml_barang',
-        "(pd.jml_barang - IFNULL((SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang), 0)) as sisa",
+        // 'brg.harga_barang',
+        'sr.jml_barang',
+        "(sr.jml_barang - IFNULL((SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang), 0)) as sisa",
     );
 
     var $select_column_search = array();
@@ -45,9 +46,9 @@ class Data_tbl_barang_jasa extends CI_Model
         $this->select_column[] = "(SELECT GROUP_CONCAT(bj.ket_bj_keluar ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as ket_histori";
 
         $this->db->select($this->select_column);
-        $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
-        $this->db->join('tbl_pengadaan pd', 'brg.id_barang = pd.id_barang');
-        $this->db->join('tbl_kontrak kt', 'kt.id_kontrak = pd.id_kontrak');
+        // $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
+        $this->db->join('tbl_so_rincian sr', 'brg.id_barang = sr.id_barang');
+        $this->db->join('tbl_so so', 'so.id_so = sr.id_so');
         $this->db->from($this->table);
         
         $i = 0;
@@ -76,7 +77,7 @@ class Data_tbl_barang_jasa extends CI_Model
             $this->db->order_by($order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
             $this->db->order_by('sisa', 'DESC');
-            $this->db->order_by('brg.tgl_masuk', 'DESC');
+            $this->db->order_by('so.tgl_nota', 'DESC');
             $this->db->order_by('brg.id_barang', 'DESC');
         }
     }
@@ -99,9 +100,9 @@ class Data_tbl_barang_jasa extends CI_Model
     function get_all_data()
     {
         $this->db->select("*");
-        $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
-        $this->db->join('tbl_pengadaan pd', 'brg.id_barang = pd.id_barang');
-        $this->db->join('tbl_kontrak kt', 'kt.id_kontrak = pd.id_kontrak');
+        // $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
+        $this->db->join('tbl_so_rincian sr', 'brg.id_barang = sr.id_barang');
+        $this->db->join('tbl_so so', 'so.id_so = sr.id_so');
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }

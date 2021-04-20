@@ -66,6 +66,7 @@
                                 <input type="checkbox" name="plh_brg_all" id="check_all" value="0">
                             </div>
                         </th>
+                        <th>Aksi</th>
                         <th>Kode</th>
                         <th>Tgl Masuk</th>
                         <th>Nama Barang</th>
@@ -88,6 +89,44 @@
       </section>
     </div>
   </div>
+</div>
+
+<div class="modal animated bounceInUp text-left" id="modal_histori" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel10" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 1000px;">
+        <div class="modal-content">
+            <div id="modal_header" class="modal-header bg-success">
+                <h4 class="modal-title white" id="modal_title"><i class="la la-history"></i> Histori Aset</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <span id="info_histori"></span>
+                <hr>
+                <table id="tbl_histori" class="table table-hover table-bordered table-striped table-responsive d-lg-table sizeFontSm">
+                    <thead>
+                        <tr>
+                            <th>Tgl Eksekusi</th>
+                            <th>SKPD</th>
+                            <th>Lokasi</th>
+                            <th>Keperluan</th>
+                            <th>Penanggung Jawab</th>
+                            <th>Pemegang</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <!-- <button type="button" id="btn_reset" class="btn btn-success waves-effect" onclick="tableToExcel('tbl_rincian', 'RincianBarangPengadaan', 'RincianBarangPengadaan.xls')">EXPORT (.XLS)</button> -->
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">KELUAR</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal animated bounceInDown text-left" id="modal_form" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
@@ -287,15 +326,15 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(4);
+                var td_nama = td.eq(5);
                 var val_td_nama = td_nama.html();
                 td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
 
-                var td_merk = td.eq(5);
+                var td_merk = td.eq(6);
                 var val_td_merk = td_merk.html();
                 td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
 
-                var td_sn = td.eq(6);
+                var td_sn = td.eq(7);
                 var val_td_sn = td_sn.html();
                 td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
@@ -314,15 +353,15 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(4);
+                var td_nama = td.eq(5);
                 var val_td_nama = td_nama.children().val();
                 td_nama.html(val_td_nama);
 
-                var td_merk = td.eq(5);
+                var td_merk = td.eq(6);
                 var val_td_merk = td_merk.children().val();
                 td_merk.html(val_td_merk);
 
-                var td_sn = td.eq(6);
+                var td_sn = td.eq(7);
                 var val_td_sn = td_sn.children().val();
                 td_sn.html(val_td_sn);
 
@@ -377,19 +416,56 @@
             var cekbox = td.eq(1).find('input');
             var checked = cekbox.parent().hasClass('checked');
             if (checked) {
-                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
                     cekbox.iCheck('uncheck');
                 }
             } else {
               var cek_disabled = cekbox.parent().hasClass('disabled');
                 if (!cek_disabled) {
-                  cekbox.iCheck('check');
+                  if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+                      cekbox.iCheck('check');
+                  }
                 }
             }
         });
     });
 </script>
 
+<script>
+  function historiModal(data) {
+      var nama_barang = $(data).data().nama;
+      var kode_barang = $(data).data().kode;
+
+      var penanggung  = $(data).data().penanggung.split(';');
+      var pemegang    = $(data).data().pemegang.split(';');
+      var ket         = $(data).data().ket.split(';');
+      var keperluan   = $(data).data().keperluan.split(';');
+      var skpd        = $(data).data().skpd.split(';');
+      var lokasi      = $(data).data().lokasi.split(';');
+      var tgl         = $(data).data().tgl.split(';');
+
+      var row = '';
+      for (let i = 0; i < tgl.length; i++) {
+          row +=  "<tr>"+
+                      "<td align='center'>"+tgl[i]+"</td>"+
+                      "<td>"+skpd[i]+"</td>"+
+                      "<td>"+lokasi[i]+"</td>"+
+                      "<td>"+keperluan[i]+"</td>"+
+                      "<td>"+penanggung[i]+"</td>"+
+                      "<td>"+pemegang[i]+"</td>"+
+                      "<td>"+ket[i]+"</td>"+
+                  "</tr>";
+      }
+
+      $('#modal_histori #info_histori').html(nama_barang + ' (' + kode_barang + ')');
+      $('#modal_histori #tbl_histori tbody').html(row);
+
+      $('#modal_histori').modal({
+          backdrop: 'static',
+          keyboard: false
+      });
+  }
+</script>
 
 <script type="text/javascript">
     function changeRupe(data){

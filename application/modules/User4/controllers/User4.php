@@ -5,8 +5,7 @@ error_reporting(null);
 class User4 extends Adm_Controller
 {
 
-    function __construct()
-    {
+    function __construct() {
         parent::__construct();
 
 		$this->secure->auth('Sim_asset_User4');
@@ -30,7 +29,6 @@ class User4 extends Adm_Controller
         );
 
         $this->controller = $this->router->fetch_class();
-
     } 
 
     public function index()
@@ -209,9 +207,9 @@ class User4 extends Adm_Controller
 
     // ======================================================================
 
-    // KONTRAK ==============================================================
+    // BARANG MASUK =========================================================
 
-    public function dataBarang() {
+    public function barangMasuk() {
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
@@ -219,6 +217,8 @@ class User4 extends Adm_Controller
         $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
         $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
         $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
         // ================================================================
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
@@ -228,151 +228,16 @@ class User4 extends Adm_Controller
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
         $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
         $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
-        $this->foot[] = base_url('assets/js/data_table.js');
-        $this->foot[] = base_url('assets/js/delete_data.js');
-        // ================================================================
-        $script[] = "showDataTable('Data Nota Barang', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        $script[] = "$('.date-picker').datepicker({
-                        autoclose: true,
-                        todayHighlight: true,
-                        format: 'dd/mm/yyyy',
-                        toggleActive: true,
-                        orientation: 'bottom left'
-                    });";
-        $script[] = '$(".select2").select2();';
-        // ================================================================
-        $header['css']      = $this->head;
-        $footer['js']       = $this->foot;
-        $footer['script']   = $script;
-        $menu['active']     = '2';
-
-        // ================================================================
-        $select = array(
-            '*',
-        );
-        $dataBarang = $this->MasterData->getWhereDataOrder($select, 'tbl_so so', "so.id_so > 0", "so.id_so", "DESC")->result();
-
-        // $dataRekanan = $this->MasterData->getWhereData('*', 'tbl_rekanan', "id_rekanan > 0")->result();
-
-        $content = array(
-            'dataBarang'   => $dataBarang,
-            // 'dataRekanan'   => $dataRekanan,
-        );
-
-        $data = array(
-            'header'    => $header,
-            'menu'      => $menu,
-            'konten'    => 'pages/data_barang',
-            'footer'    => $footer,
-            'cont'      => $content,
-        );
-
-        $this->load->view("view_master_admin", $data);
-    }
-
-    public function simpanDataBaramg() {
-        $post = html_escape($this->input->POST());
-
-        if ($post) {
-
-            $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))),   
-            );
-
-            $input = $this->MasterData->inputData($data,'tbl_kontrak');
-
-            if ($input) {
-                alert_success('Data berhasil disimpan.');
-                redirect(base_url() . $this->controller.'/dataKontrak');
-            } else {
-                alert_failed('Data gagal disimpan.');
-                redirect(base_url() . $this->controller.'/dataKontrak');
-            }
-        }
-    }
-
-    public function updateDataBaramg() {
-        $post = html_escape($this->input->POST());
-
-        if ($post) {
-
-            $id = decode($post['id']);
-
-            $data = array(
-                'no_kontrak'     => $post['no_kontrak'],  
-                'no_sp2d'        => $post['no_sp2d'],  
-                'nilai_kontrak'  => str_replace('.', '', $post['nilai_kontrak']),  
-                'id_rekanan'     => $post['rekanan'],  
-                'id_user'        => $this->id_user,  
-                'jenis_rekening' => $post['rekening'],
-                'tgl_kontrak'    => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_kontrak']))), 
-            );
-
-            $input = $this->MasterData->editData("id_kontrak = $id", $data, 'tbl_kontrak');
-
-            if ($input) {
-                alert_success('Data berhasil disimpan.');
-                redirect(base_url() . $this->controller.'/dataKontrak');
-            } else {
-                alert_failed('Data gagal disimpan.');
-                redirect(base_url() . $this->controller.'/dataKontrak');
-            }
-        }
-    }
-
-    public function deleteDataBaramg($value = '') {
-        if ($this->input->POST()) {
-            $id = decode($this->input->POST('id'));
-            $where = "id_kontrak = $id";
-            $delete = $this->MasterData->deleteData($where, 'tbl_kontrak');
-            if ($delete) {
-                alert_success('Data berhasil dihapus.');
-                echo 'Success';
-            } else {
-                alert_failed('Data gagal dihapus.');
-                echo 'Gagal';
-            }
-        } else {
-            redirect(base_url($this->controller));
-        }
-    }
-
-    // ======================================================================
-
-    // PENGADAAN ============================================================
-
-    public function dataPengadaan() {
-
-        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
-        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
-        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
-        // ================================================================
-        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
-        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
-        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
-        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
-        $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
-        $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
-        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        $this->foot[] = base_url('assets/js/icheck_config.js');
         $this->foot[] = base_url('assets/js/data_table.js');
         $this->foot[] = base_url('assets/js/cetak_excel.js');
         $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/delete_all_data.js');
         // ================================================================
-        $script[] = "showDataTable('Data Pengadaan', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8, 9]);";
+        $script[] = "showDataTable('Data Nota Masuk', '', '".date('dmY')."', [ 0, 4, 5, 6, 7, 8]);";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -385,43 +250,39 @@ class User4 extends Adm_Controller
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
         $footer['script']   = $script;
-        $menu['active']     = '4';
+        $menu['active']     = '3';
 
         // ================================================================
         $select = array(
-            'kt.*',
-            "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
-            "(SELECT rk.alamat_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) alamat_rekanan",
-            "(SELECT rk.kota_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) kota_rekanan",
-            "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
-            "(SELECT COUNT(pd.id_kontrak) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak) jml_rincian",
-            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) * pd.jml_barang SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) harga_pengadaan",
+            'so.*',
+            "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = so.id_rekanan) nama_rekanan",
+            "(SELECT rk.alamat_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = so.id_rekanan) alamat_rekanan",
+            "(SELECT rk.kota_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = so.id_rekanan) kota_rekanan",
+            "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = so.id_user) nama_kasir",
+            "(SELECT COUNT(rc.id_so) FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so) jml_rincian",
 
-            "(SELECT GROUP_CONCAT((SELECT br.nama_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) nm_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.merk_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) merk_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.satuan_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) sat_brg",
-            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) hrg_brg",
-            "(SELECT GROUP_CONCAT(pd.jml_barang SEPARATOR ';') FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak  GROUP BY pd.id_kontrak) jml_brg",
-            // "(SELECT SUM((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = pd.id_barang) * pd.jml_barang) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak) tot_harga",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) * rc.jml_barang SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so GROUP BY rc.id_so) harga_barang",
+
+            "(SELECT GROUP_CONCAT((SELECT br.nama_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so GROUP BY rc.id_so) nm_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.merk_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so GROUP BY rc.id_so) merk_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.satuan_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so GROUP BY rc.id_so) sat_brg",
+            "(SELECT GROUP_CONCAT((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so GROUP BY rc.id_so) hrg_brg",
+            "(SELECT GROUP_CONCAT(rc.jml_barang SEPARATOR ';') FROM tbl_so_rincian rc WHERE rc.id_so = so.id_so  GROUP BY rc.id_so) jml_brg",
+            // "(SELECT SUM((SELECT br.harga_barang FROM tbl_barang br WHERE br.id_barang = rc.id_barang) * rc.jml_barang) FROM tbl_so_rincian rc WHERE rc.id_so = kt.id_so GROUP BY rc.id_so) tot_harga",
         );
-        $dataPengadaan = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak > 0", "kt.id_kontrak", "DESC")->result();
+        $dataNota = $this->MasterData->getWhereDataOrder($select, 'tbl_so so', "so.id_user = $this->id_user", "so.id_so", "DESC")->result();
 
-        // $select = array(
-        //     '*',
-        //     "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
-        //     "(SELECT us.nama_user FROM tbl_user us WHERE us.id_user = kt.id_user) nama_ppkom",
-        // );
-        // $dataKontrak = $this->MasterData->getWhereDataOrder($select, 'tbl_kontrak kt', "kt.id_kontrak NOT IN (SELECT pd.id_kontrak FROM tbl_pengadaan pd)", "kt.id_kontrak", "DESC")->result();
+        $dataRekanan = $this->MasterData->getSelectData('*', 'tbl_rekanan')->result();
 
         $content = array(
-            'dataPengadaan'   => $dataPengadaan,
-            // 'dataKontrak'   => $dataKontrak,
+            'dataNota'   => $dataNota,
+            'dataRekanan'   => $dataRekanan,
         );
 
         $data = array(
             'header'    => $header,
             'menu'      => $menu,
-            'konten'    => 'pages/data_pengadaan',
+            'konten'    => 'pages/data_barang_masuk',
             'footer'    => $footer,
             'cont'      => $content,
         );
@@ -429,30 +290,32 @@ class User4 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    public function simpanDataPengadaan() {
+    public function simpanBarangMasuk() {
         $post = html_escape($this->input->POST());
 
         if ($post) {
 
             $data = array(
-                'id_kontrak'     => $post['kontrak'],  
-                'tgl_pengadaan'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_pengadaan']))),   
-                'jenis_rekening' => $post['rekening'],  
+                'no_nota'        => $post['no_nota'],  
+                'nilai_nota'     => str_replace('.', '', $post['nilai_nota']),  
+                'id_rekanan'     => $post['id_rekanan'],  
+                'id_user'        => $this->id_user,  
+                'tgl_nota'       => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_nota']))),   
             );
 
-            $input = $this->MasterData->inputData($data,'tbl_pengadaan');
+            $input = $this->MasterData->inputData($data,'tbl_so');
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . $this->controller.'/dataPengadaan');
+                redirect(base_url() . $this->controller.'/barangMasuk');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . $this->controller.'/dataPengadaan');
+                redirect(base_url() . $this->controller.'/barangMasuk');
             }
         }
     }
 
-    public function updateDataPengadaan() {
+    public function updateBarangMasuk() {
         $post = html_escape($this->input->POST());
 
         if ($post) {
@@ -460,28 +323,30 @@ class User4 extends Adm_Controller
             $id = decode($post['id']);
 
             $data = array(
-                // 'id_kontrak'     => $post['kontrak'],  
-                'tgl_pengadaan'  => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_pengadaan']))),  
-                'jenis_rekening' => $post['rekening'],  
+                'no_nota'        => $post['no_nota'],  
+                'nilai_nota'     => str_replace('.', '', $post['nilai_nota']),  
+                'id_rekanan'     => $post['id_rekanan'],  
+                'id_user'        => $this->id_user,  
+                'tgl_nota'       => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_nota']))),   
             );
 
-            $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
+            $input = $this->MasterData->editData("id_so = $id", $data, 'tbl_so');
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . $this->controller.'/dataPengadaan');
+                redirect(base_url() . $this->controller.'/barangMasuk');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . $this->controller.'/dataPengadaan');
+                redirect(base_url() . $this->controller.'/barangMasuk');
             }
         }
     }
 
-    public function deleteDataPengadaan($value = '') {
+    public function deleteBarangMasuk($value = '') {
         if ($this->input->POST()) {
             $id = decode($this->input->POST('id'));
-            $where = "id_pengadaan = $id";
-            $delete = $this->MasterData->deleteData($where, 'tbl_pengadaan');
+            $where = "id_so = $id";
+            $delete = $this->MasterData->deleteData($where, 'tbl_so');
             if ($delete) {
                 alert_success('Data berhasil dihapus.');
                 echo 'Success';
@@ -496,12 +361,12 @@ class User4 extends Adm_Controller
 
     // ======================================================================
 
-    // RINCIAN PENGADAAN ====================================================
+    // RINCIAN BARANG MASUK =================================================
 
-    public function rincianPengadaan($id = 0) {
+    public function rincianBarangMasuk($id = 0) {
         // $this->load->helper('kodeotomatis');
 
-        $id_kontrak = decode($id);
+        $id_so = decode($id);
 
         $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
         $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
@@ -528,7 +393,7 @@ class User4 extends Adm_Controller
         $this->foot[] = base_url('assets/js/delete_data.js');
         $this->foot[] = base_url('assets/js/delete_all_data.js');
         // ================================================================
-        $script[] = "showDataTable('Rincian Pengadaan', '', '".date('dmY')."', [ 0, 3, 4, 5, 6, 7, 8, 9]);";
+        $script[] = "showDataTable('Rincian Barang Masuk', '', '".date('dmY')."', [ 0, 3, 4, 5, 6, 7, 8, 9]);";
        
         // $script[] = "$('.date-picker').datepicker({
         //                 autoclose: true,
@@ -542,35 +407,35 @@ class User4 extends Adm_Controller
         $header['css']      = $this->head;
         $footer['js']       = $this->foot;
         $footer['script']   = $script;
-        $menu['active']     = '4';
+        $menu['active']     = '3';
 
         // ================================================================
 
         $select = array(
-            'kt.*',
-            "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = kt.id_rekanan) nama_rekanan",
+            'so.*',
+            "(SELECT rk.nama_rekanan FROM tbl_rekanan rk WHERE rk.id_rekanan = so.id_rekanan) nama_rekanan",
         );
         
-        $dataKontrak = $this->MasterData->getWhereData($select, 'tbl_kontrak kt', "kt.id_kontrak = $id_kontrak")->row();
+        $dataNota = $this->MasterData->getWhereData($select, 'tbl_so so', "so.id_so = $id_so")->row();
 
         $select_rincian = array(
             '*',
-            "(SELECT hst.lokasi_histori FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
+            // "(SELECT hst.lokasi_histori FROM tbl_aset_histori hst WHERE hst.id_aset = (SELECT rc.id_aset FROM tbl_aset_rincian rc WHERE rc.id_barang = br.id_barang) ORDER BY hst.tgl_histori DESC, hst.id_aset_histori DESC LIMIT 1) lokasi_aset",
         );
-        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_pengadaan pd', 'tbl_barang br', "pd.id_barang = br.id_barang", "LEFT", "pd.id_kontrak = $id_kontrak", "pd.id_pengadaan", "DESC")->result();
+        $dataRincian = $this->MasterData->selectJoinOrder($select_rincian, 'tbl_so_rincian rc', 'tbl_barang br', "rc.id_barang = br.id_barang", "LEFT", "rc.id_so = $id_so", "rc.id_so_rincian", "DESC")->result();
 
         // $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
 
         $content = array(
             'dataRincian'   => $dataRincian,
-            'dataKontrak'   => $dataKontrak,
+            'dataNota'      => $dataNota,
             // 'kodeBarang'    => $kodeBarang,
         );
 
         $data = array(
             'header'    => $header,
             'menu'      => $menu,
-            'konten'    => 'pages/data_pengadaan_rincian',
+            'konten'    => 'pages/data_barang_masuk_rincian',
             'footer'    => $footer,
             'cont'      => $content,
         );
@@ -578,7 +443,7 @@ class User4 extends Adm_Controller
         $this->load->view("view_master_admin", $data);
     }
 
-    public function simpanRincianPengadaan() {
+    public function simpanRincianBarangMasuk() {
         $this->load->helper('kodeotomatis');
         $post = html_escape($this->input->POST());
 
@@ -586,15 +451,16 @@ class User4 extends Adm_Controller
 
             $this->db->trans_begin();
 
-            for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
+            // for ($i=0; $i < (int)$post['jml_barang']; $i++) { 
                 $kodeBarang = kodeOtomatis('kode_barang', 'tbl_barang', "id_barang > 0", 'B', 5);
                 $data = array(
                     'kode_barang'     => $kodeBarang,
                     'nama_barang'     => $post['nama_barang'],   
-                    'merk_barang'     => $post['merk_barang'],   
-                    'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                    'merk_barang'     => $post['merk_barang'], 
+                    'sn_barang'       => $post['sn_barang'],    
+                    'satuan_barang'   => $post['satuan_barang'],   
                     'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                    'tgl_masuk'       => $post['tgl_kontrak'],   
+                    'tgl_masuk'       => $post['tgl_nota'],   
                 );
     
                 $this->MasterData->inputData($data,'tbl_barang');
@@ -602,35 +468,35 @@ class User4 extends Adm_Controller
                 $id_barang = $this->db->insert_id();
     
                 $data = array(
-                    'id_kontrak'    => decode($post['id_kontrak']),   
-                    'id_barang'     => $id_barang,   
-                    'jml_barang'    => 1,   
+                    'id_so'       => decode($post['id_so']),   
+                    'id_barang'   => $id_barang,   
+                    'jml_barang'  => str_replace('.', '', $post['jml_barang']),   
                 );
     
-                $input = $this->MasterData->inputData($data,'tbl_pengadaan');
-            }
+                $input = $this->MasterData->inputData($data,'tbl_so_rincian');
+            // }
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
                     }
             }
         }
     }
 
-    public function updateRincianPengadaan() {
+    public function updateRincianBarangMasuk() {
         $post = html_escape($this->input->POST());
 
         if ($post) {
@@ -638,48 +504,46 @@ class User4 extends Adm_Controller
             $this->db->trans_begin();
 
             $id = decode($post['id']);
-            $id_barang = $this->db->query("SELECT id_barang FROM tbl_pengadaan WHERE id_pengadaan = $id")->row()->id_barang;
+            $id_barang = $this->db->query("SELECT id_barang FROM tbl_so_rincian WHERE id_so_rincian = $id")->row()->id_barang;
 
             $data = array(
                 'nama_barang'     => $post['nama_barang'],   
                 'merk_barang'     => $post['merk_barang'],   
                 'sn_barang'       => $post['sn_barang'],   
-                'satuan_barang'   => str_replace('.', '', $post['satuan_barang']),   
+                'satuan_barang'   => $post['satuan_barang'],   
                 'harga_barang'    => str_replace('.', '', $post['harga_barang']),   
-                'tgl_masuk'       => $post['tgl_kontrak'],   
+                'tgl_masuk'       => $post['tgl_nota'],   
             );
 
             $input = $this->MasterData->editData("id_barang = $id_barang", $data, 'tbl_barang');
 
-            // $data = array(
-            //     'id_kontrak'    => decode($post['id_kontrak']),   
-            //     'id_barang'     => $id_barang,   
-            //     'jml_barang'    => 1,   
-            // );
+            $data = array(  
+                'jml_barang'    => $post['jml_barang'],   
+            );
 
-            // $input = $this->MasterData->editData("id_pengadaan = $id", $data, 'tbl_pengadaan');
+            $input = $this->MasterData->editData("id_so_rincian = $id", $data, 'tbl_so_rincian');
 
             if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                    redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
             }
             else
             {
                     $this->db->trans_commit();
                     if ($input) {
                         alert_success('Data berhasil disimpan.');
-                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
                     } else {
                         alert_failed('Data gagal disimpan.');
-                        redirect(base_url() . $this->controller.'/rincianPengadaan/'. $post['id_kontrak']);
+                        redirect(base_url() . $this->controller.'/rincianBarangMasuk/'. $post['id_so']);
                     }
             }
         }
     }
 
-    public function deleteRincianPengadaan($value = '') {
+    public function deleteRincianBarangMasuk($value = '') {
         if ($this->input->POST()) {
             $id = decode($this->input->POST('id'));
             $where = "id_barang = $id";
@@ -727,6 +591,340 @@ class User4 extends Adm_Controller
             }
         } else {
             redirect(base_url($this->controller));
+        }
+    }
+
+    // =====================================================================
+
+     // DATA BARANG STOK OPNAME ============================================
+
+    public function dataBarangSo() {
+
+        $this->load->helper('searchbar');
+
+        // ===============================================================================
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_all_data.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/tbl_barang_so.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataBarangSo') . "')";
+        $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
+                        pilihAset(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });}";
+        $script[] = "$('.skin-check-all input').on('ifChecked ifUnchecked', function(event){
+                        pilihAset(this, event.type);
+                    }).iCheck({
+                        checkboxClass: 'icheckbox_flat-green'
+                    });";
+        
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2();';
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '4';
+
+        // ================================================================
+
+        // $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
+
+        $content = array(
+            'dataSkpd'        => $dataSkpd,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/data_barang_so',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function getDataBarangSo() {
+        if ($this->input->POST()) {
+            $this->load->model("Data_tbl_barang_so", "DataTable");
+            $fetch_data = $this->DataTable->make_datatables();
+
+            $data = array();
+            $i = $_POST['start'];
+            foreach ($fetch_data as $val) {
+                $btn = '';
+                $i++;
+
+                $cekbox = "<div class='skin skin-check'>
+                                <input type='checkbox' id='plh_brg_".$val->id_barang."' name='plh_brg[]' value='".$val->id_barang."'>
+                            </div>";
+
+                $btn_histori = ' <button type="button" onclick="historiModal(this)"
+                                data-nama="'.$val->nama_barang.'"
+                                data-kode="'.$val->kode_barang.'"
+                                data-penanggung="'. $val->nama_penanggung .'"
+                                data-pemegang="'. $val->pemegang .'"
+                                data-ket="'. $val->ket_histori .'"
+                                data-keperluan="'. $val->keperluan_histori .'"
+                                data-lokasi="'. $val->lokasi_histori .'"
+                                data-skpd="'. $val->nama_skpd .'"
+                                data-tgl="'. $val->tgl_histori .'"
+                                style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
+
+                // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
+                // data-id="'. encode($val->id_aset) .'" 
+                // data-link="'. base_url($this->controller.'/deleteDataAset') .'" 
+                // data-csrfname="'. $this->security->get_csrf_token_name() .'" 
+                // data-csrfcode="'. $this->security->get_csrf_hash() .'" 
+                // style="margin-bottom: 3px;" class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
+                
+                // $btn_edit = ' <a href="' . base_url($this->controller.'/editDataAset/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+
+                // $btn_print = ' <a href="' . base_url($this->controller.'/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+
+                $btn .= $btn_histori;
+
+                $columns = array(
+                    $i,
+                    $cekbox,
+                    $btn,
+                    $val->no_nota,
+                    $val->kode_barang,
+                    $val->tgl_masuk,
+                    $val->nama_barang,
+                    $val->merk_barang,
+                    $val->sn_barang,
+                    $val->satuan_barang,
+                    // nominal($val->harga_barang),
+                    nominal($val->jml_barang),
+                    nominal($val->sisa),
+                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
+                );
+
+                $data[] = $columns;
+            }
+            $output = array(
+                "draw"               =>     $_POST["draw"],
+                "recordsTotal"       =>     $this->DataTable->get_all_data(),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data(),
+                "data"               =>     $data
+            );
+            echo json_encode($output);
+        }
+    }
+
+    // =====================================================================
+
+      // EKSEKUSI BARANG SO ================================================
+
+      public function eksekusiBarangSo() {
+        $post = $this->input->POST();
+
+        if ($post) {
+            $this->db->trans_begin();
+
+            if ($post['data_update_barang'] != null && $post['data_update_barang'] != '') {
+                $data_update_barang = json_decode(html_entity_decode($post['data_update_barang']), true);
+
+                foreach ($data_update_barang as $val) {
+                    // $data = array(
+                    //     'nama_barang'   => $val['nama_barang'],
+                    //     'merk_barang'   => $val['merk_barang'],
+                    //     'sn_barang'     => $val['sn_barang'],
+                    // );
+                    // $update_barang = $this->MasterData->editData("id_barang = ".$val['id_barang'], $data, 'tbl_barang');
+
+                    $data_bj_keluar = array(
+                        'id_barang'            => $val['id_barang'],
+                        'id_user'              => $this->id_user,
+                        'tgl_bj_keluar'        => date('Y-m-d', strtotime(str_replace('/', '-', $post['tgl_bj_keluar']))),
+                        'jml_bj_keluar'        => str_replace('.', '', $val['jml_ambil']),
+                        'id_skpd'              => $post['id_skpd'],
+                        'lokasi_bj_keluar'     => $post['lokasi_bj_keluar'],
+                        'keperluan_bj_keluar'  => $post['keperluan_bj_keluar'],
+                        'pemegang'             => $post['pemegang'],
+                        'ket_bj_keluar'        => $post['ket_bj_keluar'],
+                        'jenis_barang'         => 'stokopname',
+                    );
+                    $input = $this->MasterData->inputData($data_bj_keluar,'tbl_bj_keluar');
+                }
+            }            
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                alert_failed('Data gagal disimpan.');
+                redirect($post['back']);
+            }
+            else {
+                $exec = $this->db->trans_commit();
+                if ($exec) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect($post['back']);
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect($post['back']);
+                }
+            }
+        }
+    }
+
+    // =====================================================================
+
+     // HISTORI BARANG SO ==================================================
+
+    public function historiBarangSo($id = '') {
+        $this->load->helper('searchbar');
+
+        $skpd         = $_POST['id_skpd'];
+        $tgl_awal     = $_POST['tgl_awal'];
+        $tgl_akhir    = $_POST['tgl_akhir'];
+
+        if (isset($skpd) OR ($skpd != null AND $skpd != '' AND !empty($skpd))) {
+            $selectSkpd = $skpd;
+        } else {
+            $selectSkpd = '0';
+        }
+
+        if ($tgl_awal != null AND $tgl_awal != '' AND !empty($tgl_awal)) {
+            $selectTglAwal = $tgl_awal;
+        } else {
+            $selectTglAwal = date('01/m/Y');
+        }
+
+        if ($tgl_akhir != null AND $tgl_akhir != '' AND !empty($tgl_akhir)) {
+            $selectTglAkhir = $tgl_akhir;
+        } else {
+            $selectTglAkhir = date('d/m/Y');
+        }
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
+        // $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
+        // $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        $this->foot[] = base_url('assets/js/tbl_histori_barang_so.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataHistoriBarangSo/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "$('.date-range').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2({ dropdownCssClass: "sizeFontSm" });';
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '5';
+
+        // ================================================================
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
+
+        $content = array(
+            'selectSkpd'     => $selectSkpd,
+            'selectTglAwal'  => $selectTglAwal,
+            'selectTglAkhir' => $selectTglAkhir,
+            'dataSkpd'       => $dataSkpd,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/histori_barang_so',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function getDataHistoriBarangSo($skpd='', $tgl_awal='', $tgl_akhir='')
+    {
+        if ($this->input->POST()) {
+            $this->load->model("Data_tbl_histori_barang_so", "DataTable");
+            $fetch_data = $this->DataTable->make_datatables($skpd, $tgl_awal, $tgl_akhir);
+
+            $data = array();
+            $i = $_POST['start'];
+            foreach ($fetch_data as $val) {
+                $i++;
+
+                $columns = array(
+                    $i,
+                    $val->tgl_bj_keluar,
+                    $val->no_nota,
+                    $val->kode_barang,
+                    $val->nama_barang,
+                    ($val->merk_barang=='' && $val->merk_barang==null)?'-':$val->merk_barang,
+                    ($val->sn_barang=='' && $val->sn_barang==null)?'-':$val->sn_barang,
+                    $val->satuan_barang,
+                    $val->jml_bj_keluar,
+                    // $val->nama_skpd,
+                    $val->lokasi_bj_keluar,
+                    $val->pemegang,
+                    $val->user_penanggung,
+                    $val->keperluan_bj_keluar,
+                    ($val->ket_bj_keluar=='' && $val->ket_bj_keluar==null)?'-':$val->ket_bj_keluar,
+                );
+
+                $data[] = $columns;
+            }
+            $output = array(
+                "draw"               =>     $_POST["draw"],
+                "recordsTotal"       =>     $this->DataTable->get_all_data($skpd, $tgl_awal, $tgl_akhir),
+                "recordsFiltered"    =>     $this->DataTable->get_filtered_data($skpd, $tgl_awal, $tgl_akhir),
+                "data"               =>     $data
+            );
+            echo json_encode($output);
         }
     }
 

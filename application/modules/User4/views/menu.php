@@ -14,20 +14,25 @@
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '3' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url($this->controller.'/dataBarang') ?>" title="Data Barang"><i class="ft-box"></i>
-                        <span>Data Barang</span>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/barangMasuk') ?>" title="Barang Masuk"><i class="ft-log-in"></i>
+                        <span>Barang Masuk</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '4' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url($this->controller.'/barangKeluar') ?>" title="Barang Keluar"><i class="ft-log-out"></i>
-                        <span>Barang Keluar</span>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/dataBarangSo') ?>" title="Data Barang"><i class="ft-box"></i>
+                        <span>Data Barang</span>
                     </a>
                 </li>
                 <li class="nav-item <?= ($active == '5' ? 'active' : '') ?>">
-                    <a class="nav-link" href="<?= base_url($this->controller.'/laporan') ?>" title="Laporan"><i class="ft-file-text"></i>
-                        <span>Laporan</span>
+                    <a class="nav-link" href="<?= base_url($this->controller.'/historiBarangSo') ?>" title="Histori Barang Keluar"><i class="la la-history"></i>
+                        <span>Histori Barang</span>
                     </a>
                 </li>
+                <!-- <li class="nav-item <?//= ($active == '5' ? 'active' : '') ?>">
+                    <a class="nav-link" href="<?//= base_url($this->controller.'/laporan') ?>" title="Laporan"><i class="ft-file-text"></i>
+                        <span>Laporan</span>
+                    </a>
+                </li> -->
                 <!-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#"
                         data-toggle="dropdown"><i class="la la-television"></i><span>Templates</span></a>
                     <ul class="dropdown-menu">

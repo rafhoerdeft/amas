@@ -2209,6 +2209,18 @@ class User2 extends Adm_Controller
                                 <input type='checkbox' id='plh_brg_".$val->id_barang."' name='plh_brg[]' value='".$val->id_barang."'>
                             </div>";
 
+                $btn_histori = ' <button type="button" onclick="historiModal(this)"
+                                data-nama="'.$val->nama_barang.'"
+                                data-kode="'.$val->kode_barang.'"
+                                data-penanggung="'. $val->nama_penanggung .'"
+                                data-pemegang="'. $val->pemegang .'"
+                                data-ket="'. $val->ket_histori .'"
+                                data-keperluan="'. $val->keperluan_histori .'"
+                                data-lokasi="'. $val->lokasi_histori .'"
+                                data-skpd="'. $val->nama_skpd .'"
+                                data-tgl="'. $val->tgl_histori .'"
+                                style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
+
                 // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
                 // data-id="'. encode($val->id_aset) .'" 
                 // data-link="'. base_url('User2/deleteDataAset') .'" 
@@ -2220,13 +2232,12 @@ class User2 extends Adm_Controller
 
                 // $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
-                // $btn .= $btn_hapus;
-                // $btn .= $btn_edit;
+                $btn .= $btn_histori;
 
                 $columns = array(
                     $i,
                     $cekbox,
-                    // $btn,
+                    $btn,
                     $val->kode_barang,
                     $val->tgl_masuk,
                     $val->nama_barang,

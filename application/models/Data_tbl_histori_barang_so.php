@@ -1,10 +1,11 @@
 <?php
-class Data_tbl_histori_barang_jasa extends CI_Model
+class Data_tbl_histori_barang_so extends CI_Model
 {
     var $table = "tbl_bj_keluar bj";
     var $select_column = array(
         'id_bj_keluar',
         'DATE_FORMAT(bj.tgl_bj_keluar, "%d-%m-%Y") as tgl_bj_keluar',
+        'so.no_nota',
         'br.kode_barang',
         'br.nama_barang',
         'br.merk_barang',
@@ -28,10 +29,12 @@ class Data_tbl_histori_barang_jasa extends CI_Model
             $this->db->where('bj.id_skpd', $skpd);
         }
         $this->db->where("bj.tgl_bj_keluar BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
-        $this->db->where("bj.jenis_barang = 'barangjasa'");
+        $this->db->where("bj.jenis_barang = 'stokopname'");
         $this->db->join('tbl_barang br', 'bj.id_barang = br.id_barang', 'left');
         $this->db->join('tbl_user usr', 'bj.id_user = usr.id_user', 'left');
         $this->db->join('tbl_skpd sk', 'bj.id_skpd = sk.id_skpd', 'left');
+        $this->db->join('tbl_so_rincian sr', 'bj.id_barang = sr.id_barang', 'left');
+        $this->db->join('tbl_so so', 'sr.id_so = so.id_so', 'left');
         $this->db->from($this->table);
 
         $order_column = array();
@@ -101,7 +104,7 @@ class Data_tbl_histori_barang_jasa extends CI_Model
             $this->db->where('bj.id_skpd', $skpd);
         }
         $this->db->where("bj.tgl_bj_keluar BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
-        $this->db->where("bj.jenis_barang = 'barangjasa'");
+        $this->db->where("bj.jenis_barang = 'stokopname'");
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }

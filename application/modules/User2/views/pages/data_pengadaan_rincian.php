@@ -264,7 +264,7 @@ function clear_data() {
 
 function addModal() {
     clear_data();
-    $('#modal_form #modal_title').html('Tambah Data Kontrak');
+    $('#modal_form #modal_title').html('Tambah Data Rincian Barang');
     $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/simpanRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-info").addClass("bg-success");
 
@@ -288,7 +288,7 @@ function editModal(data) {
     var jns_rek = "<?= $dataKontrak->jenis_rekening ?>";
 
     clear_data();
-    $('#modal_form #modal_title').html('Update Data Kontrak');
+    $('#modal_form #modal_title').html('Update Data Rincian Barang');
     $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/updateRincianPengadaan'; ?>");
     $('#modal_form #modal_header').removeClass("bg-success").addClass("bg-info");
 

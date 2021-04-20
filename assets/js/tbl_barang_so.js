@@ -2,7 +2,7 @@ var protocol = window.location.protocol;
 var host = window.location.hostname;
 
 function showDataTable(link) {
-    $("#data_barang_jasa").DataTable({
+    $("#data_barang_so").DataTable({
         "processing": true,
         "serverSide": true,
         "searching": true,
@@ -39,21 +39,22 @@ function showDataTable(link) {
             }, 
             {  
                 "targets":3,  
-                "width": "25",
+                "width": "70",
                 "class":"text-center" 
             },
             {  
                 "targets":4,  
-                "width": "50",
+                "width": "25",
                 "class":"text-center" 
             },
             {  
                 "targets":5,  
-                "width": "100"
+                "width": "50",
+                "class":"text-center" 
             },
             {  
                 "targets":6,  
-                "width": "75"
+                "width": "100"
             },
             {  
                 "targets":7,  
@@ -61,13 +62,17 @@ function showDataTable(link) {
             },
             {  
                 "targets":8,  
-                "width": "50",
-                "class":"text-center" 
+                "width": "75"
             },
             {  
                 "targets":9,  
-                "class":"text-right" 
+                "width": "50",
+                "class":"text-center" 
             },
+            // {  
+            //     "targets":9,  
+            //     "class":"text-right" 
+            // },
             {  
                 "targets":10,  
                 "class":"text-right" 

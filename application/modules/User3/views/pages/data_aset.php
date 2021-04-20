@@ -358,9 +358,12 @@
             var value_id   = '';
 
             if(type=='ifChecked'){
+                var tr = $(data).parent().parent().parent().parent();
+                tr.toggleClass('row_cek');
+
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
+                  var td = tr.children();
                   //ambil value dalam input td SN
                   var td_sn = td.eq(8);
                   var val_td_sn = td_sn.html();
@@ -379,9 +382,12 @@
                     value_id += select_id + ';' + id;
                 }
             } else {
+                var tr = $(data).parent().parent().parent().parent();
+                tr.toggleClass();
+                
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = $(data).parent().parent().parent().parent().children();
+                  var td = tr.children();
 
                   var td_sn = td.eq(8);
                   var val_td_sn = td_sn.children().val();
@@ -421,6 +427,26 @@
         $('.skin-check input:checkbox[value="'+value+'"]').iCheck('check');
       });
     }
+
+    $(document).ready(function() {
+
+      $('#data_aset').on('click', 'tbody tr', function (e) {
+          var td = $(this).children();
+          var cekbox = td.eq(1).find('input');
+          var checked = cekbox.parent().hasClass('checked');
+
+          if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+              if (checked) {
+                  cekbox.iCheck('uncheck');
+              } else {
+                var cek_disabled = cekbox.parent().hasClass('disabled');
+                  if (!cek_disabled) {
+                    cekbox.iCheck('check');
+                  }
+              }
+          }
+      });
+    });
 </script>
 
 <script>

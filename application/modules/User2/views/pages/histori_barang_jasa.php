@@ -52,11 +52,11 @@
 
                     <div class="col-lg-3 sizeFontSm" style="margin-bottom: 5px;">
                       <div class="input-daterange input-group date-range">
-                        <input type="text" class="form-control sizeFontSm" id="tgl_awal" name="tgl_awal" placeholder="DD/MM/YYYY" value="<?= $selectTglAwal ?>" />
+                        <input type="text" class="form-control sizeFontSm" id="tgl_awal" name="tgl_awal" placeholder="DD/MM/YYYY" value="<?= $selectTglAwal ?>" required/>
                         <div class="input-group-append">
                             <span class="input-group-text bg-info b-0 text-white sizeFontSm">SAMPAI</span>
                         </div>
-                        <input type="text" class="form-control sizeFontSm" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" />
+                        <input type="text" class="form-control sizeFontSm" placeholder="DD/MM/YYYY" value="<?= $selectTglAkhir ?>" id="tgl_akhir" name="tgl_akhir" required/>
                       </div>
                     </div>
 
