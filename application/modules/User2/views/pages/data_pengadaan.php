@@ -77,13 +77,13 @@
                                             <tr>
                                                 <td align="center"><?= $no++ ?></td>
                                                 <td nowrap align="center">
-                                                    <?php if ($this->id_user == $val->id_user) { ?>
+                                                    <?php //if ($this->id_user == $val->id_user) { ?>
                                                     <a href="<?= base_url($this->controller.'/rincianPengadaan/'.encode($val->id_kontrak)) ?>"
                                                         type="button" class="btn btn-sm btn-primary"
                                                         title="Tambah Rincian"><i class="la la-plus font-small-3"></i></a>
-                                                    <?php } else { ?>
-                                                        <button type="button" disabled class="btn btn-sm btn-secondary" title="Tambah Rincian"><i class="la la-plus font-small-3"></i></button>
-                                                    <?php } ?>
+                                                    <?php //} else { ?>
+                                                        <!-- <button type="button" disabled class="btn btn-sm btn-secondary" title="Tambah Rincian"><i class="la la-plus font-small-3"></i></button> -->
+                                                    <?php //} ?>
 
                                                     <!-- <button type="button" onclick="hapusData(this)"
                                                         data-id="<?php //echo encode($val->id_kontrak); ?>"

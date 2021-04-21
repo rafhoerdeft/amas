@@ -39,33 +39,42 @@ function showDataTable(link) {
             }, 
             {  
                 "targets":3,  
-                "width": "70",
+                "orderable":false,  
                 "class":"text-center" 
             },
             {  
                 "targets":4,  
-                "width": "25",
-                "class":"text-center" 
+                "class":"text-right" 
             },
             {  
                 "targets":5,  
-                "width": "50",
+                "width": "70",
                 "class":"text-center" 
             },
             {  
                 "targets":6,  
-                "width": "100"
+                "width": "25",
+                "class":"text-center" 
             },
             {  
                 "targets":7,  
-                "width": "75"
+                "width": "50",
+                "class":"text-center" 
             },
             {  
                 "targets":8,  
-                "width": "75"
+                "width": "100"
             },
             {  
                 "targets":9,  
+                "width": "75"
+            },
+            {  
+                "targets":10,  
+                "width": "75"
+            },
+            {  
+                "targets":11,  
                 "width": "50",
                 "class":"text-center" 
             },
@@ -74,22 +83,13 @@ function showDataTable(link) {
             //     "class":"text-right" 
             // },
             {  
-                "targets":10,  
-                "class":"text-right" 
-            }, 
-            {  
-                "targets":11,  
-                "class":"text-right" 
-            },
-            {  
                 "targets":12,  
-                "orderable":false,  
-                "class":"text-center" 
+                "class":"text-right" 
             }
         ],  
         "pageLength": 10
     }).on('draw.dt', function (row, data, index) {
-        $('tr td:nth-child(12)').each(function (){
+        $('tr td:nth-child(5)').each(function (){
             var cek_sisa = $(this).text();
             if (cek_sisa == '0') {
                 $(this).parent().addClass('row_kosong');

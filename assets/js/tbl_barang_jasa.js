@@ -39,52 +39,52 @@ function showDataTable(link) {
             }, 
             {  
                 "targets":3,  
-                "width": "25",
+                "orderable":false,  
                 "class":"text-center" 
             },
             {  
                 "targets":4,  
-                "width": "50",
-                "class":"text-center" 
+                "class":"text-right" 
             },
             {  
                 "targets":5,  
-                "width": "100"
+                "width": "25",
+                "class":"text-center" 
             },
             {  
                 "targets":6,  
-                "width": "75"
-            },
-            {  
-                "targets":7,  
-                "width": "75"
-            },
-            {  
-                "targets":8,  
                 "width": "50",
                 "class":"text-center" 
             },
             {  
+                "targets":7,  
+                "width": "100"
+            },
+            {  
+                "targets":8,  
+                "width": "75"
+            },
+            {  
                 "targets":9,  
-                "class":"text-right" 
+                "width": "75"
             },
             {  
                 "targets":10,  
-                "class":"text-right" 
-            }, 
+                "width": "50",
+                "class":"text-center" 
+            },
             {  
                 "targets":11,  
                 "class":"text-right" 
             },
             {  
                 "targets":12,  
-                "orderable":false,  
-                "class":"text-center" 
+                "class":"text-right" 
             }
         ],  
         "pageLength": 10
     }).on('draw.dt', function (row, data, index) {
-        $('tr td:nth-child(12)').each(function (){
+        $('tr td:nth-child(5)').each(function (){
             var cek_sisa = $(this).text();
             if (cek_sisa == '0') {
                 $(this).parent().addClass('row_kosong');

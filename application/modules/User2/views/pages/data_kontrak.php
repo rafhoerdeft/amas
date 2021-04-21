@@ -77,7 +77,7 @@
                         <tr>
                           <td align="center"><?= $no++ ?></td>
                           <td nowrap align="center">
-                            <?php if ($this->id_user == $val->id_user) { ?>
+                            <?php //if ($this->id_user == $val->id_user) { ?>
                               <button type="button" onclick="hapusData(this)" 
                                 data-id="<?= encode($val->id_kontrak) ?>" 
                                 data-link="<?= base_url($this->controller.'/deleteDataKontrak') ?>" 
@@ -97,10 +97,10 @@
                                 data-tgl="<?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?>" 
                                 data-tglba="<?= date('d/m/Y', strtotime($val->tgl_ba_serahterima)) ?>" 
                                 onclick="editModal(this)" class="btn btn-sm btn-info" title="Update Data"><i class="la la-edit font-small-3"></i></button> 
-                            <?php } else { ?>
-                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
-                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Update Data"><i class="la la-edit font-small-3"></i></button>
-                            <?php } ?>
+                            <?php //} else { ?>
+                                <!-- <button type="button" disabled class="btn btn-sm btn-secondary" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
+                                <button type="button" disabled class="btn btn-sm btn-secondary" title="Update Data"><i class="la la-edit font-small-3"></i></button> -->
+                            <?php //} ?>
                           </td>
                           <td><?= $val->no_kontrak ?></td>
                           <td align="center"><?= date('d/m/Y', strtotime($val->tgl_kontrak)) ?></td>

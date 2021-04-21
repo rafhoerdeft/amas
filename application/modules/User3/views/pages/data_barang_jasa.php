@@ -67,6 +67,8 @@
                             </div>
                         </th>
                         <th>Aksi</th>
+                        <th>Ambil</th>
+                        <th>Sisa</th>
                         <th>Kode</th>
                         <th>Tgl Masuk</th>
                         <th>Nama Barang</th>
@@ -75,8 +77,7 @@
                         <th>Satuan</th>
                         <th>Harga (Rp)</th>
                         <th>Jml</th>
-                        <th>Sisa</th>
-                        <th>Ambil</th>
+                        
                       </tr>
                     </thead>
 
@@ -114,6 +115,7 @@
                             <th>Keperluan</th>
                             <th>Penanggung Jawab</th>
                             <th>Pemegang</th>
+                            <th>Jumlah</th>
                             <th>Keterangan</th>
                         </tr>
                     </thead>
@@ -326,15 +328,15 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(5);
+                var td_nama = td.eq(7);
                 var val_td_nama = td_nama.html();
                 td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
 
-                var td_merk = td.eq(6);
+                var td_merk = td.eq(8);
                 var val_td_merk = td_merk.html();
                 td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
 
-                var td_sn = td.eq(7);
+                var td_sn = td.eq(9);
                 var val_td_sn = td_sn.html();
                 td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
@@ -353,15 +355,15 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(5);
+                var td_nama = td.eq(7);
                 var val_td_nama = td_nama.children().val();
                 td_nama.html(val_td_nama);
 
-                var td_merk = td.eq(6);
+                var td_merk = td.eq(8);
                 var val_td_merk = td_merk.children().val();
                 td_merk.html(val_td_merk);
 
-                var td_sn = td.eq(7);
+                var td_sn = td.eq(9);
                 var val_td_sn = td_sn.children().val();
                 td_sn.html(val_td_sn);
 
@@ -443,6 +445,7 @@
       var skpd        = $(data).data().skpd.split(';');
       var lokasi      = $(data).data().lokasi.split(';');
       var tgl         = $(data).data().tgl.split(';');
+      var jml         = $(data).data().jml.toString().split(';');
 
       var row = '';
       for (let i = 0; i < tgl.length; i++) {
@@ -453,6 +456,7 @@
                       "<td>"+keperluan[i]+"</td>"+
                       "<td>"+penanggung[i]+"</td>"+
                       "<td>"+pemegang[i]+"</td>"+
+                      "<td align='right'>"+formatRupiah(jml[i])+"</td>"+
                       "<td>"+ket[i]+"</td>"+
                   "</tr>";
       }

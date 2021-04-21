@@ -4,6 +4,7 @@ class Data_tbl_barang_jasa extends CI_Model
     var $table = "tbl_barang brg";
     var $select_column = array(
         'brg.id_barang',
+        "(pd.jml_barang - IFNULL((SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang), 0)) as sisa",
         'brg.kode_barang',
         'DATE_FORMAT(brg.tgl_masuk, "%d-%m-%Y") as tgl_masuk',
         'brg.nama_barang',
@@ -12,7 +13,6 @@ class Data_tbl_barang_jasa extends CI_Model
         'brg.satuan_barang',
         'brg.harga_barang',
         'pd.jml_barang',
-        "(pd.jml_barang - IFNULL((SELECT SUM(bj.jml_bj_keluar) FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang GROUP BY bj.id_barang), 0)) as sisa",
     );
 
     var $select_column_search = array();
@@ -23,7 +23,7 @@ class Data_tbl_barang_jasa extends CI_Model
         foreach ($this->select_column as $val) {
             $select = explode(" as ", $val);
             
-            if ($select[0] != 'id_barang') {
+            if ($select[0] != 'brg.id_barang') {
                 if ($select[1] == null && $select[1] == '') {
                     $order_column[] = $select[0];
                     $this->select_column_search[] = $select[0];
@@ -31,6 +31,8 @@ class Data_tbl_barang_jasa extends CI_Model
                     $order_column[] = $select[1];
                 }
             } else {
+                $order_column[] = null;
+                $order_column[] = null;
                 $order_column[] = null;
                 $order_column[] = null;
             }
@@ -43,6 +45,7 @@ class Data_tbl_barang_jasa extends CI_Model
         $this->select_column[] = "(SELECT GROUP_CONCAT(DATE_FORMAT(bj.tgl_bj_keluar, '%d-%m-%Y') ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as tgl_histori";
         $this->select_column[] = "(SELECT GROUP_CONCAT(bj.keperluan_bj_keluar ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as keperluan_histori";
         $this->select_column[] = "(SELECT GROUP_CONCAT(bj.ket_bj_keluar ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as ket_histori";
+        $this->select_column[] = "(SELECT GROUP_CONCAT(bj.jml_bj_keluar ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as jml_histori";
 
         $this->db->select($this->select_column);
         $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
@@ -72,7 +75,7 @@ class Data_tbl_barang_jasa extends CI_Model
             $i++;
         }
         if (isset($_POST["order"])) {
-            $this->db->order_by('sisa', 'DESC');
+            // $this->db->order_by('sisa', 'DESC');
             $this->db->order_by($order_column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
             $this->db->order_by('sisa', 'DESC');

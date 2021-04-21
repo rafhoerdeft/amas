@@ -86,6 +86,23 @@ class User2 extends Adm_Controller
                               ->group_by('kib.id_jenis_kib')
                               ->GET('tbl_jenis_kib kib')->result();
 
+        $select = array(
+            "COUNT(br.id_barang) as jml_barang",
+        );
+
+        // $non_aset_bj = $this->db->SELECT($select)
+        //                       ->JOIN('tbl_pengadaan pd', "pd.id_barang = br.id_barang")
+        //                       ->JOIN('tbl_kontrak kt', "kt.id_kontrak = pd.id_kontrak")
+        //                       ->WHERE("kt.jenis_rekening = 'Barang Jasa'")
+        //                       ->GET('tbl_barang br')->result();
+
+        // $non_aset_so = $this->db->SELECT($select)
+        //                       ->JOIN('tbl_kontrak kt', "kt.id_kontrak = pd.id_kontrak")
+        //                       ->WHERE("kt.jenis_rekening = 'Barang Jasa'")
+        //                       ->GET('tbl_barang br')->result();
+
+        // var_dump($non_aset_bj);exit();
+
         $content = array(
             'this_month'    => $this_month,
             'last_6_month'  => $last_6_month,
@@ -119,7 +136,7 @@ class User2 extends Adm_Controller
         $cekKib = $kib->num_rows();
 
         if ($cekKib==0) {
-            redirect(base_url('User2/dataAset/'.encode(1)));
+            redirect(base_url($this->controller.'/dataAset/'.encode(1)));
         }
 
         $dataJenisKib = $kib->row();
@@ -152,7 +169,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
-        $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
         $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
                         pilihAset(this, event.type);
                     }).iCheck({
@@ -218,7 +235,7 @@ class User2 extends Adm_Controller
         $cekKib = $kib->num_rows();
 
         if ($cekKib==0) {
-            redirect(base_url('User2/dataAset/'.encode(1)));
+            redirect(base_url($this->controller.'/dataAset/'.encode(1)));
         }
 
         $dataJenisKib = $kib->row();
@@ -248,7 +265,7 @@ class User2 extends Adm_Controller
         // $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
-        // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        // $script[] = "showDataTable('" . base_url($this->controller.'/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -326,7 +343,7 @@ class User2 extends Adm_Controller
         $cekKib = $kib->num_rows();
 
         if ($cekKib==0) {
-            redirect(base_url('User2/dataAset/'.encode(1)));
+            redirect(base_url($this->controller.'/dataAset/'.encode(1)));
         }
 
         $dataJenisKib = $kib->row();
@@ -356,7 +373,7 @@ class User2 extends Adm_Controller
         // $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
-        // $script[] = "showDataTable('" . base_url('User2/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        // $script[] = "showDataTable('" . base_url($this->controller.'/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
         $script[] = "$('.date-picker').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -557,16 +574,16 @@ class User2 extends Adm_Controller
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
             }
             else {
                 $input = $this->db->trans_commit();
                 if ($input) {
                     alert_success('Data berhasil disimpan.');
-                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                    redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
                 } else {
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                    redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
                 }
             }
         }
@@ -684,16 +701,16 @@ class User2 extends Adm_Controller
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
             }
             else {
                 $input = $this->db->trans_commit();
                 if ($input) {
                     alert_success('Data berhasil disimpan.');
-                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                    redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
                 } else {
                     alert_failed('Data gagal disimpan.');
-                    redirect(base_url() . 'User2/dataAset/'. encode($post['kib']));
+                    redirect(base_url() . $this->controller.'/dataAset/'. encode($post['kib']));
                 }
             }
         }
@@ -730,7 +747,7 @@ class User2 extends Adm_Controller
             }
 
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -767,7 +784,7 @@ class User2 extends Adm_Controller
                 }
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -789,12 +806,12 @@ class User2 extends Adm_Controller
 
                 $btn_hapus = '<button type="button" onclick="hapusData(this)" 
                 data-id="'. encode($val->id_aset) .'" 
-                data-link="'. base_url('User2/deleteDataAset') .'" 
+                data-link="'. base_url($this->controller.'/deleteDataAset') .'" 
                 data-csrfname="'. $this->security->get_csrf_token_name() .'" 
                 data-csrfcode="'. $this->security->get_csrf_hash() .'" 
                 style="margin-bottom: 3px;" class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
                 
-                $btn_edit = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+                $btn_edit = ' <a href="' . base_url($this->controller.'/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
 
                 $btn_detail = ' <button type="button" onclick="rincianModal(this)"
                 data-namaaset="'.$val->nama_aset.'"
@@ -820,7 +837,7 @@ class User2 extends Adm_Controller
                 data-tgl="'. $val->tgl_histori .'"
                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
-                // $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+                // $btn_print = ' <a href="' . base_url($this->controller.'/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_hapus;
                 $btn .= $btn_edit;
@@ -987,7 +1004,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/tbl_histori_aset.js');
         // ================================================================
         // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        $script[] = "showDataTable('" . base_url('User2/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataHistori/' . $selectStatus . '/' . $selectJenis . '/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
         $script[] = "$('.date-range').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -1343,18 +1360,18 @@ class User2 extends Adm_Controller
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 alert_failed('Data gagal disimpan.');
-                // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
+                // redirect(base_url() . $this->controller.'/dataAset/'. $post['kib']);
                 redirect($post['back']);
             }
             else {
                 $exec = $this->db->trans_commit();
                 if ($exec) {
                     alert_success('Data berhasil disimpan.');
-                    // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
+                    // redirect(base_url() . $this->controller.'/dataAset/'. $post['kib']);
                     redirect($post['back']);
                 } else {
                     alert_failed('Data gagal disimpan.');
-                    // redirect(base_url() . 'User2/dataAset/'. $post['kib']);
+                    // redirect(base_url() . $this->controller.'/dataAset/'. $post['kib']);
                     redirect($post['back']);
                 }
             }
@@ -1438,10 +1455,10 @@ class User2 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             }
         }
     }
@@ -1463,10 +1480,10 @@ class User2 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataRekanan');
+                redirect(base_url() . $this->controller.'/dataRekanan');
             }
         }
     }
@@ -1484,7 +1501,7 @@ class User2 extends Adm_Controller
                 echo 'Gagal';
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -1633,7 +1650,7 @@ class User2 extends Adm_Controller
                 echo 'Gagal';
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -1736,10 +1753,10 @@ class User2 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             }
         }
     }
@@ -1761,10 +1778,10 @@ class User2 extends Adm_Controller
 
             if ($input) {
                 alert_success('Data berhasil disimpan.');
-                redirect(base_url() . 'User2/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             } else {
                 alert_failed('Data gagal disimpan.');
-                redirect(base_url() . 'User2/dataPengadaan');
+                redirect(base_url() . $this->controller.'/dataPengadaan');
             }
         }
     }
@@ -1782,7 +1799,7 @@ class User2 extends Adm_Controller
                 echo 'Gagal';
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -2020,7 +2037,7 @@ class User2 extends Adm_Controller
                 echo 'Gagal';
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -2054,7 +2071,7 @@ class User2 extends Adm_Controller
                     }
             }
         } else {
-            redirect(base_url('User2'));
+            redirect(base_url($this->controller));
         }
     }
 
@@ -2106,7 +2123,7 @@ class User2 extends Adm_Controller
                 $this->load->library('PhpExcelNew/PHPExcel');
                 $this->load->view('User3/print/label_aset', $data);
             } else {
-                redirect(base_url('User2'));
+                redirect(base_url($this->controller));
             }
         }
 
@@ -2148,7 +2165,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/tbl_barang_jasa.js');
         // ================================================================
         // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
-        $script[] = "showDataTable('" . base_url('User2/getDataBarangJasa') . "')";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataBarangJasa') . "')";
         $script[] = "function activeIcheck(){ $('.skin-check input').on('ifChecked ifUnchecked', function(event){
                         pilihAset(this, event.type);
                     }).iCheck({
@@ -2219,18 +2236,19 @@ class User2 extends Adm_Controller
                                 data-lokasi="'. $val->lokasi_histori .'"
                                 data-skpd="'. $val->nama_skpd .'"
                                 data-tgl="'. $val->tgl_histori .'"
+                                data-jml="'. $val->jml_histori .'"
                                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
                 // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
                 // data-id="'. encode($val->id_aset) .'" 
-                // data-link="'. base_url('User2/deleteDataAset') .'" 
+                // data-link="'. base_url($this->controller.'/deleteDataAset') .'" 
                 // data-csrfname="'. $this->security->get_csrf_token_name() .'" 
                 // data-csrfcode="'. $this->security->get_csrf_hash() .'" 
                 // style="margin-bottom: 3px;" class="btn btn-sm btn-danger" title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button> ';
                 
-                // $btn_edit = ' <a href="' . base_url('User2/editDataAset/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
+                // $btn_edit = ' <a href="' . base_url($this->controller.'/editDataAset/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-primary" title="Update Data"><i class="la la-edit font-small-3"></i></a> ';
 
-                // $btn_print = ' <a href="' . base_url('User2/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
+                // $btn_print = ' <a href="' . base_url($this->controller.'/editDataAset/'. $id . '/' . encode($val->id_aset)) . '" type="button" style="margin-bottom: 3px;" class="btn btn-sm btn-warning" title="Cetak Label"><i class="la la-print font-small-3"></i></a> ';
 
                 $btn .= $btn_histori;
 
@@ -2238,6 +2256,8 @@ class User2 extends Adm_Controller
                     $i,
                     $cekbox,
                     $btn,
+                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
+                    nominal($val->sisa),
                     $val->kode_barang,
                     $val->tgl_masuk,
                     $val->nama_barang,
@@ -2246,8 +2266,6 @@ class User2 extends Adm_Controller
                     $val->satuan_barang,
                     nominal($val->harga_barang),
                     nominal($val->jml_barang),
-                    nominal($val->sisa),
-                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
                 );
 
                 $data[] = $columns;
@@ -2367,7 +2385,7 @@ class User2 extends Adm_Controller
         $this->foot[] = base_url('assets/js/tbl_histori_barang_jasa.js');
         // ================================================================
         // $script[] = "showDataTable('Data Penempatan Aset', '', '".date('dmY')."', [ 0, 2, 3, 4, 5, 6, 7, 8]);";
-        $script[] = "showDataTable('" . base_url('User2/getDataHistoriBarangJasa/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
+        $script[] = "showDataTable('" . base_url($this->controller.'/getDataHistoriBarangJasa/' . $selectSkpd . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAwal))) . '/' . date('Y-m-d', strtotime(str_replace('/', '-', $selectTglAkhir)))) . "');";
         $script[] = "$('.date-range').datepicker({
                         autoclose: true,
                         todayHighlight: true,
@@ -2444,6 +2462,166 @@ class User2 extends Adm_Controller
     }
 
     // =====================================================================
+
+    // USER ================================================================
+
+    public function dataUser() {
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        // $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js";
+        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js";
+        $this->foot[] = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js";
+        $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js";
+        $this->foot[] = "https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        $this->foot[] = base_url('assets/js/data_table.js');
+        $this->foot[] = base_url('assets/js/delete_data.js');
+        // ================================================================
+        $script[] = "showDataTable('Data User Aset', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "$('.date-range').datepicker({
+        //                 autoclose: true,
+        //                 todayHighlight: true,
+        //                 format: 'dd/mm/yyyy',
+        //                 toggleActive: true,
+        //                 orientation: 'bottom left'
+        //             });";
+        $script[] = '$(".select2").select2();';
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '11';
+
+        // ================================================================
+        $select = array(
+            'us.*',
+            "(SELECT rl.nama_role FROM tbl_role rl WHERE rl.id_role = us.id_role) nama_role",
+        );
+        $dataUser = $this->MasterData->getWhereDataOrder($select, 'tbl_user us', "us.id_user > 0", "us.id_user", "DESC")->result();
+
+        $dataRole = $this->MasterData->getWhereData('*', 'tbl_role', "id_role > 0")->result();
+
+        $content = array(
+            'dataUser'   => $dataUser,
+            'dataRole'   => $dataRole,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/data_user',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
+    public function simpanDataUser() {
+        $post = html_escape($this->input->POST());
+
+        if ($post) {
+
+            $cek_user = $this->MasterData->getDataWhere('tbl_user', "username = '".$post['username']."'")->num_rows();
+
+            if ($cek_user == 0) {
+                $data = array(
+                    'nama_user'  => $post['nama_user'],  
+                    'jk_user'    => $post['jk_user'],  
+                    'no_hp'      => $post['no_hp'],                 
+                    'nip_user'   => $post['nip_user'],  
+                    'username'   => $post['username'],  
+                    'password'   => md5($post['password']),     
+                    'id_role'    => $post['id_role'],  
+                );
+
+                $input = $this->MasterData->inputData($data,'tbl_user');
+
+                if ($input) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url() . $this->controller.'/dataUser');
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . $this->controller.'/dataUser');
+                }
+            } else {
+                alert_failed('Data gagal disimpan. Username sudah tersedia.');
+                redirect(base_url() . $this->controller.'/dataUser');
+            }
+        } else {
+            redirect(base_url($this->controller));
+        }
+    }
+
+    public function updateDataUser() {
+        $post = html_escape($this->input->POST());
+
+        if ($post) {
+
+            $id = decode($post['id']);
+
+            $cek_user = $this->MasterData->getDataWhere('tbl_user', "username = '".$post['username']."' AND id_user != $id")->num_rows();
+
+            if ($cek_user == 0) {
+                $data = array(
+                    'nama_user'  => $post['nama_user'],  
+                    'jk_user'    => $post['jk_user'],  
+                    'no_hp'      => $post['no_hp'],                 
+                    'nip_user'   => $post['nip_user'],  
+                    'username'   => $post['username'],  
+                    'id_role'    => $post['id_role'],  
+                );
+
+                if ($post['password'] != null && $post['password'] != '') {
+                    $data['password'] = md5($post['password']);     
+                }
+
+                $input = $this->MasterData->editData("id_user = $id", $data, 'tbl_user');
+
+                if ($input) {
+                    alert_success('Data berhasil disimpan.');
+                    redirect(base_url() . $this->controller.'/dataUser');
+                } else {
+                    alert_failed('Data gagal disimpan.');
+                    redirect(base_url() . $this->controller.'/dataUser');
+                }
+            } else {
+                alert_failed('Data gagal disimpan. Username sudah tersedia.');
+                redirect(base_url() . $this->controller.'/dataUser');
+            }            
+        } else {
+            redirect(base_url($this->controller));
+        }
+    }
+
+    public function deleteDataUser($value = '') {
+        if ($this->input->POST()) {
+            $id = decode($this->input->POST('id'));
+            $where = "id_user = $id";
+            $delete = $this->MasterData->deleteData($where, 'tbl_user');
+            if ($delete) {
+                alert_success('Data berhasil dihapus.');
+                echo 'Success';
+            } else {
+                alert_failed('Data gagal dihapus.');
+                echo 'Gagal';
+            }
+        } else {
+            redirect(base_url($this->controller));
+        }
+    }
+
+    // ======================================================================
 
     // =====================================================================
 

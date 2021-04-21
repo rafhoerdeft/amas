@@ -3,12 +3,12 @@
     <div class="content-header row">
       
       <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Histori Barang Jasa</h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Histori Non Aset</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-              <li class="breadcrumb-item active">Histori Barang Jasa</li>
+              <li class="breadcrumb-item active">Histori Non Aset</li>
             </ol>
           </div>
         </div>

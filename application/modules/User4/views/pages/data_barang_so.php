@@ -67,6 +67,8 @@
                             </div>
                         </th>
                         <th>Aksi</th>
+                        <th>Ambil</th>
+                        <th>Sisa</th>
                         <th>No. Nota</th>
                         <th>Kode</th>
                         <th>Tgl. Masuk</th>
@@ -75,8 +77,6 @@
                         <th>Serial Number</th>
                         <th>Satuan</th>
                         <th>Jml</th>
-                        <th>Sisa</th>
-                        <th>Ambil</th>
                       </tr>
                     </thead>
 
@@ -114,6 +114,7 @@
                             <th>Keperluan</th>
                             <th>Penanggung Jawab</th>
                             <th>Pemegang</th>
+                            <th>Jumlah</th>
                             <th>Keterangan</th>
                         </tr>
                     </thead>
@@ -443,6 +444,7 @@
       var skpd        = $(data).data().skpd.split(';');
       var lokasi      = $(data).data().lokasi.split(';');
       var tgl         = $(data).data().tgl.split(';');
+      var jml         = $(data).data().jml.toString().split(';');
 
       var row = '';
       for (let i = 0; i < tgl.length; i++) {
@@ -453,6 +455,7 @@
                       "<td>"+keperluan[i]+"</td>"+
                       "<td>"+penanggung[i]+"</td>"+
                       "<td>"+pemegang[i]+"</td>"+
+                      "<td align='right'>"+formatRupiah(jml[i])+"</td>"+
                       "<td>"+ket[i]+"</td>"+
                   "</tr>";
       }

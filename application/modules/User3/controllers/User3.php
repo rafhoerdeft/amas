@@ -1493,6 +1493,7 @@ class User3 extends Adm_Controller
                                 data-lokasi="'. $val->lokasi_histori .'"
                                 data-skpd="'. $val->nama_skpd .'"
                                 data-tgl="'. $val->tgl_histori .'"
+                                data-jml="'. $val->jml_histori .'"
                                 style="margin-bottom: 3px;" class="btn btn-sm btn-success" title="Histori Aset"><i class="la la-history font-small-3"></i></button> ';
 
                 // $btn_hapus = '<button type="button" onclick="hapusData(this)" 
@@ -1512,6 +1513,8 @@ class User3 extends Adm_Controller
                     $i,
                     $cekbox,
                     $btn,
+                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
+                    nominal($val->sisa),
                     $val->kode_barang,
                     $val->tgl_masuk,
                     $val->nama_barang,
@@ -1520,8 +1523,6 @@ class User3 extends Adm_Controller
                     $val->satuan_barang,
                     nominal($val->harga_barang),
                     nominal($val->jml_barang),
-                    nominal($val->sisa),
-                    '<input type="text" id="ambil_'.$val->id_barang.'" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="'.$val->sisa.'" onkeyup="cekVal(this)" disabled>',
                 );
 
                 $data[] = $columns;
