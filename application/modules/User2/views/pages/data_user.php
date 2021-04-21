@@ -89,7 +89,7 @@
                           <td align="center"><?= $val->nip_user ?></td>
                           <td align="center"><?= $val->no_hp ?></td>
                           <td><?= $val->username ?></td>
-                          <td><?= $val->nama_role ?></td>
+                          <td><span class="badge bg-<?= $val->color ?> badge-pill w-100"><?= $val->nama_role ?></span></td>
                         </tr>
                       <?php } ?>
                     </tbody>

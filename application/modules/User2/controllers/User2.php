@@ -2506,6 +2506,7 @@ class User2 extends Adm_Controller
         $select = array(
             'us.*',
             "(SELECT rl.nama_role FROM tbl_role rl WHERE rl.id_role = us.id_role) nama_role",
+            "(SELECT rl.color FROM tbl_role rl WHERE rl.id_role = us.id_role) color",
         );
         $dataUser = $this->MasterData->getWhereDataOrder($select, 'tbl_user us', "us.id_user > 0", "us.id_user", "DESC")->result();
 
