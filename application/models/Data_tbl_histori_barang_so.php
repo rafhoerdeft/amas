@@ -22,11 +22,14 @@ class Data_tbl_histori_barang_so extends CI_Model
 
     var $select_column_search = array();
 
-    function make_query($skpd, $tgl_awal, $tgl_akhir) {
+    function make_query($skpd, $tgl_awal, $tgl_akhir, $notAdm = true) {
 
         $this->db->select($this->select_column);
         if ($skpd != '0') {
             $this->db->where('bj.id_skpd', $skpd);
+        }
+        if ($notAdm) {
+            $this->db->where("so.id_user = '".$this->id_user."'");
         }
         $this->db->where("bj.tgl_bj_keluar BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
         $this->db->where("bj.jenis_barang = 'stokopname'");
@@ -82,29 +85,34 @@ class Data_tbl_histori_barang_so extends CI_Model
         }
     }
 
-    function make_datatables($skpd, $tgl_awal, $tgl_akhir)
+    function make_datatables($skpd, $tgl_awal, $tgl_akhir, $notAdm = true)
     {
-        $this->make_query($skpd, $tgl_awal, $tgl_akhir);
+        $this->make_query($skpd, $tgl_awal, $tgl_akhir, $notAdm);
         if ($_POST["length"] != -1) {
             $this->db->limit($_POST['length'], $_POST['start']);
         }
         $query = $this->db->get();
         return $query->result();
     }
-    function get_filtered_data($skpd, $tgl_awal, $tgl_akhir)
+    function get_filtered_data($skpd, $tgl_awal, $tgl_akhir, $notAdm = true)
     {
-        $this->make_query($skpd, $tgl_awal, $tgl_akhir);
+        $this->make_query($skpd, $tgl_awal, $tgl_akhir, $notAdm);
         $query = $this->db->get();
         return $query->num_rows();
     }
-    function get_all_data($skpd, $tgl_awal, $tgl_akhir)
+    function get_all_data($skpd, $tgl_awal, $tgl_akhir, $notAdm = true)
     {
         $this->db->select("*");
         if ($skpd != '0') {
             $this->db->where('bj.id_skpd', $skpd);
         }
+        if ($notAdm) {
+            $this->db->where("so.id_user = '".$this->id_user."'");
+        }
         $this->db->where("bj.tgl_bj_keluar BETWEEN '".$tgl_awal."' AND '".$tgl_akhir."'");
         $this->db->where("bj.jenis_barang = 'stokopname'");
+        $this->db->join('tbl_so_rincian sr', 'bj.id_barang = sr.id_barang', 'left');
+        $this->db->join('tbl_so so', 'sr.id_so = so.id_so', 'left');
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }

@@ -18,7 +18,7 @@ class Data_tbl_barang_so extends CI_Model
 
     var $select_column_search = array();
 
-    function make_query() {
+    function make_query($notAdm = true) {
 
         $order_column = array();
         foreach ($this->select_column as $val) {
@@ -49,7 +49,9 @@ class Data_tbl_barang_so extends CI_Model
         $this->select_column[] = "(SELECT GROUP_CONCAT(bj.jml_bj_keluar ORDER BY bj.tgl_bj_keluar DESC SEPARATOR ';') FROM tbl_bj_keluar bj WHERE bj.id_barang = brg.id_barang) as jml_histori";
 
         $this->db->select($this->select_column);
-        // $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
+        if ($notAdm) {
+            $this->db->where("so.id_user = '".$this->id_user."'");
+        }
         $this->db->join('tbl_so_rincian sr', 'brg.id_barang = sr.id_barang');
         $this->db->join('tbl_so so', 'so.id_so = sr.id_so');
         $this->db->from($this->table);
@@ -85,25 +87,27 @@ class Data_tbl_barang_so extends CI_Model
         }
     }
 
-    function make_datatables()
+    function make_datatables($notAdm = true)
     {
-        $this->make_query();
+        $this->make_query($notAdm);
         if ($_POST["length"] != -1) {
             $this->db->limit($_POST['length'], $_POST['start']);
         }
         $query = $this->db->get();
         return $query->result();
     }
-    function get_filtered_data()
+    function get_filtered_data($notAdm = true)
     {
-        $this->make_query();
+        $this->make_query($notAdm);
         $query = $this->db->get();
         return $query->num_rows();
     }
-    function get_all_data()
+    function get_all_data($notAdm = true)
     {
         $this->db->select("*");
-        // $this->db->where("kt.jenis_rekening = 'Barang Jasa'");
+        if ($notAdm) {
+            $this->db->where("so.id_user = '".$this->id_user."'");
+        }
         $this->db->join('tbl_so_rincian sr', 'brg.id_barang = sr.id_barang');
         $this->db->join('tbl_so so', 'so.id_so = sr.id_so');
         $this->db->from($this->table);

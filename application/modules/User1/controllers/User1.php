@@ -58,7 +58,7 @@ class User1 extends Adm_Controller
         $footer['js'] = $this->foot;
         $menu['active'] = '1';
 
-        // JUMLAH LAPORAN MASUK
+        // JUMLAH PENGADAAN MASUK
 		$select = "IFNULL(SUM((SELECT SUM(pd.jml_barang) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak)), 0) jml_pengadaan";
         $table = 'tbl_kontrak kt';
         $where = "MONTH(tgl_kontrak) = MONTH(now()) AND YEAR(tgl_kontrak) = YEAR(now())";

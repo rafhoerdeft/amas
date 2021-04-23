@@ -40,15 +40,31 @@
                         <span>Non Aset</span>
                     </a>
                     <ul class="dropdown-menu arrow">
-                        <li class="<?= ($active == '9' ? 'active' : '') ?>">
-                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url($this->controller.'/dataBarangJasa') ?>" title="Data Non Aset"><i class="la la-tablet"></i>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Data Non Aset"><i class="la la-tablet"></i>
                                 <span>List Data</span>
                             </a>
+                            <ul class="dropdown-menu">
+                                <li class="<?= ($active == '9' ? 'active' : '') ?>">
+                                    <a class="dropdown-item" href="<?= base_url($this->controller.'/dataBarangJasa') ?>" data-toggle="dropdown"><span>Barang Jasa</span></a>
+                                </li>
+                                <li class="<?= ($active == '10' ? 'active' : '') ?>">
+                                    <a class="dropdown-item" href="<?= base_url($this->controller.'/dataBarangSo') ?>" data-toggle="dropdown"><span>Stok Opname</span></a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="<?= ($active == '10' ? 'active' : '') ?>">
-                            <a class="dropdown-item" data-toggle="dropdown" href="<?= base_url($this->controller.'/historiBarangJasa') ?>" title="Histori Non Aset"><i class="la la-history"></i>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Histori Non Aset"><i class="la la-history"></i>
                                 <span>Histori</span>
                             </a>
+                            <ul class="dropdown-menu">
+                                <li class="<?= ($active == '12' ? 'active' : '') ?>">
+                                    <a class="dropdown-item" href="<?= base_url($this->controller.'/historiBarangJasa') ?>" data-toggle="dropdown"><span>Barang Jasa</span></a>
+                                </li>
+                                <li class="<?= ($active == '13' ? 'active' : '') ?>">
+                                    <a class="dropdown-item" href="<?= base_url($this->controller.'/historiBarangSo') ?>" data-toggle="dropdown"><span>Stok Opname</span></a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

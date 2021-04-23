@@ -3,12 +3,12 @@
     <div class="content-header row">
       
       <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Barang Jasa</h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Stok Opname</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
-              <li class="breadcrumb-item active">Barang Jasa</li>
+              <li class="breadcrumb-item active">Stok Opname</li>
             </ol>
           </div>
         </div>
@@ -55,9 +55,9 @@
                     }
                   </style>
 
-                  <?= formSearch('data_barang_jasa') ?>
+                  <?= formSearch('data_barang_so') ?>
 
-                  <table id="data_barang_jasa" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
+                  <table id="data_barang_so" class="table table-hover table-bordered table-striped" style="font-size: 8pt">
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>
@@ -69,15 +69,14 @@
                         <th>Aksi</th>
                         <th>Ambil</th>
                         <th>Sisa</th>
+                        <th>No. Nota</th>
                         <th>Kode</th>
-                        <th>Tgl Masuk</th>
+                        <th>Tgl. Masuk</th>
                         <th>Nama Barang</th>
                         <th>Merk/Type</th>
                         <th>Serial Number</th>
                         <th>Satuan</th>
-                        <th>Harga (Rp)</th>
                         <th>Jml</th>
-                        
                       </tr>
                     </thead>
 
@@ -97,7 +96,7 @@
     <div class="modal-dialog" role="document" style="max-width: 1000px;">
         <div class="modal-content">
             <div id="modal_header" class="modal-header bg-success">
-                <h4 class="modal-title white" id="modal_title"><i class="la la-history"></i> Histori Aset</h4>
+                <h4 class="modal-title white" id="modal_title"><i class="la la-history"></i> Histori Barang</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -138,7 +137,7 @@
         
         <input type="hidden" name="id" id="id">
         <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
-        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataBarangJasa') ?>">
+        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataBarangSo') ?>">
         <input type="hidden" id="data_update_barang" name="data_update_barang">
 
         <?= token_csrf() ?>
@@ -163,7 +162,7 @@
           </div>
 
           <div id="not_hapus">
-            <div class="form-group">
+            <div class="form-group d-none">
               <h5>SKPD
                   <!-- <span class="required text-danger">*</span> -->
               </h5>
@@ -238,27 +237,27 @@
       $('#modal_form #tgl_bj_keluar').datepicker("setDate", "<?= date('d/m/Y') ?>");
       $('#modal_form #tgl_bj_keluar').datepicker("refresh");
       $('#modal_form #lokasi_bj_keluar').val('');
-      $('#modal_form #id_skpd').val(1).change();
+      $('#modal_form #id_skpd').val(23).change();
       $('#modal_form #keperluan_bj_keluar').val('');
       $('#modal_form #pemegang').val('');
       $('#modal_form #ket_bj_keluar').val('');
 
-      if ($('textarea[name="sn_barang"]').length > 0) {
+      if ($('input[name="ambil_barang"]:enabled').length > 0) {
         var data_update_barang = [];
         var data_ambil_barang = [];
-        $('textarea[name="sn_barang"]').each(function(e){
+        $('input[name="ambil_barang"]:enabled').each(function(e){
             let ids     = $(this).attr('id');
             let id      = ids.split("_")[1];
-            let nama    = $('#nm_'+id).val();
-            let merk    = $('#merk_'+id).val();
-            let sn      = $('#sn_'+id).val();
+            // let nama    = $('#nm_'+id).val();
+            // let merk    = $('#merk_'+id).val();
+            // let sn      = $('#sn_'+id).val();
             let ambil   = $('#ambil_'+id).val();
             
             data_update_barang.push({
                 id_barang: id,
-                nama_barang: nama,
-                merk_barang: merk,
-                sn_barang: sn,
+                // nama_barang: nama,
+                // merk_barang: merk,
+                // sn_barang: sn,
                 jml_ambil: ambil,
             });
 
@@ -283,7 +282,7 @@
         return false;
     } 
 
-    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiBarangJasa'; ?>");
+    $('#modal_form #form_input').attr('action', "<?= base_url().$this->controller.'/eksekusiBarangSo'; ?>");
     $('#modal_form').modal({backdrop: 'static', keyboard: false}); 
   }
 
@@ -328,17 +327,17 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(7);
-                var val_td_nama = td_nama.html();
-                td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
+                // var td_nama = td.eq(6);
+                // var val_td_nama = td_nama.html();
+                // td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
 
-                var td_merk = td.eq(8);
-                var val_td_merk = td_merk.html();
-                td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
+                // var td_merk = td.eq(7);
+                // var val_td_merk = td_merk.html();
+                // td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
 
-                var td_sn = td.eq(9);
-                var val_td_sn = td_sn.html();
-                td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
+                // var td_sn = td.eq(8);
+                // var val_td_sn = td_sn.html();
+                // td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
                 if (select_id == '') {
                     value_id  = id;
@@ -355,17 +354,17 @@
                 //ambil isian dalam element td
                 var td = tr.children();
 
-                var td_nama = td.eq(7);
-                var val_td_nama = td_nama.children().val();
-                td_nama.html(val_td_nama);
+                // var td_nama = td.eq(6);
+                // var val_td_nama = td_nama.children().val();
+                // td_nama.html(val_td_nama);
 
-                var td_merk = td.eq(8);
-                var val_td_merk = td_merk.children().val();
-                td_merk.html(val_td_merk);
+                // var td_merk = td.eq(7);
+                // var val_td_merk = td_merk.children().val();
+                // td_merk.html(val_td_merk);
 
-                var td_sn = td.eq(9);
-                var val_td_sn = td_sn.children().val();
-                td_sn.html(val_td_sn);
+                // var td_sn = td.eq(8);
+                // var val_td_sn = td_sn.children().val();
+                // td_sn.html(val_td_sn);
 
                 var arr = select_id.split(";");
                 var result = arr.filter(function(val){
@@ -413,7 +412,7 @@
 
     // Cek Checkbox on ROW
     $(document).ready(function() {
-        $('#data_barang_jasa').on('click', 'tbody tr', function (e) {
+        $('#data_barang_so').on('click', 'tbody tr', function (e) {
             var td = $(this).children();
             var cekbox = td.eq(1).find('input');
             var checked = cekbox.parent().hasClass('checked');

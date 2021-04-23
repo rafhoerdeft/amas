@@ -55,15 +55,15 @@ class User4 extends Adm_Controller
         $footer['js'] = $this->foot;
         $menu['active'] = '1';
 
-        // JUMLAH LAPORAN MASUK
-		$select = "IFNULL(SUM((SELECT SUM(pd.jml_barang) FROM tbl_pengadaan pd WHERE pd.id_kontrak = kt.id_kontrak GROUP BY pd.id_kontrak)), 0) jml_pengadaan";
-        $table = 'tbl_kontrak kt';
-        $where = "MONTH(tgl_kontrak) = MONTH(now()) AND YEAR(tgl_kontrak) = YEAR(now())";
-		$this_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
-		$where = "tgl_kontrak > DATE_SUB(now(), INTERVAL 6 MONTH)";
-        $last_6_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
-        $where = "YEAR(tgl_kontrak) = YEAR(now())";
-        $this_year = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_pengadaan;
+        // JUMLAH BARANG MASUK
+		$select = "IFNULL(SUM((SELECT SUM(sr.jml_barang) FROM tbl_so_rincian sr WHERE sr.id_so = so.id_so GROUP BY sr.id_so)), 0) jml_barang";
+        $table = 'tbl_so so';
+        $where = "MONTH(tgl_nota) = MONTH(now()) AND YEAR(tgl_nota) = YEAR(now())";
+		$this_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_barang;
+		$where = "tgl_nota > DATE_SUB(now(), INTERVAL 6 MONTH)";
+        $last_6_month = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_barang;
+        $where = "YEAR(tgl_nota) = YEAR(now())";
+        $this_year = $this->MasterData->getWhereData($select,$table,$where)->row()->jml_barang;
 
         $content = array(
             'this_month'    => $this_month,
@@ -596,7 +596,7 @@ class User4 extends Adm_Controller
 
     // =====================================================================
 
-     // DATA BARANG STOK OPNAME ============================================
+    // DATA BARANG STOK OPNAME ============================================
 
     public function dataBarangSo() {
 

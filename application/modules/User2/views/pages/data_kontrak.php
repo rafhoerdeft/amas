@@ -221,22 +221,22 @@
               </div>
           </div>
 
-          <div class="form-group d-none">
+          <div class="form-group">
               <h5>PPKom
                   <span class="required text-danger">*</span>
               </h5>
               <div class="controls">
-                  <input type="text" id="ppkom" name="ppkom" class="form-control" value="<?= $this->nama_user ?>" readonly required>
-                  <!-- <select id="ppkom" name="ppkom" class="form-control select2" required>
-                      <option value="">Pilih PPKom</option>
+                  <!-- <input type="text" id="ppkom" name="ppkom" class="form-control" value="<?//= $this->nama_user ?>" readonly required> -->
+                  <select id="ppkom" name="ppkom" class="form-control select2" required>
+                      <option value="" selected>Pilih PPKom</option>
                       <?php
-                      //foreach ($dataPpkom as $val) {
+                      foreach ($dataPpkom as $val) {
                       ?>
-                          <option value="<?php //echo $val->id_user; ?>"><?php //echo $val->nama_user; ?></option>
+                          <option value="<?php echo $val->id_user; ?>"><?php echo $val->nama_user; ?></option>
                       <?php
-                      //}
+                      }
                       ?>
-                  </select> -->
+                  </select>
               </div>
           </div>
 
@@ -276,7 +276,7 @@
       $('#modal_form #no_sp2d').val('');
       $('#modal_form #nilai_kontrak').val('');
       $('#modal_form #rekanan').val('').change();
-      // $('#modal_form #ppkom').val('').change();
+      $('#modal_form #ppkom').val('').change();
       $('#modal_form #rekening').val('').change();
       $('#modal_form #tgl_kontrak').datepicker("setDate", "<?= date('d/m/Y') ?>");
       $('#modal_form #tgl_kontrak').datepicker("refresh");
@@ -315,7 +315,7 @@
       $('#modal_form #no_sp2d').val(no_sp2d);
       $('#modal_form #nilai_kontrak').val(nilai);
       $('#modal_form #rekanan').val(rekanan).change();
-      // $('#modal_form #ppkom').val(ppkom).change();
+      $('#modal_form #ppkom').val(ppkom).change();
       $('#modal_form #rekening').val(rekening).change();
       $('#modal_form #tgl_kontrak').datepicker("setDate", tgl);
       $('#modal_form #tgl_kontrak').datepicker("refresh");

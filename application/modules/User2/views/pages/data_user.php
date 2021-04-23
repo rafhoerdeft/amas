@@ -72,7 +72,12 @@
                         <tr>
                           <td align="center"><?= $no++ ?></td>
                           <td nowrap align="center">
-                            <button type="button" onclick="hapusData(this)" data-id="<?= encode($val->id_user) ?>" data-link="<?= base_url($this->controller.'/deleteDataUser') ?>" data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" class="btn btn-sm btn-danger"  title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
+                            <button type="button" onclick="hapusData(this)" 
+                            data-id="<?= encode($val->id_user) ?>" 
+                            data-link="<?= base_url($this->controller.'/deleteDataUser') ?>" 
+                            data-csrfname="<?= $this->security->get_csrf_token_name(); ?>" 
+                            data-csrfcode="<?= $this->security->get_csrf_hash(); ?>" 
+                            class="btn btn-sm btn-danger"  title="Hapus Data"><i class="la la-trash-o font-small-3"></i></button>
 
                             <button type="button" 
                             data-id="<?= encode($val->id_user) ?>" 

@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="Diskominfo Kab. Magelang">
-	<title>Login Admin</title>
+	<title>Login AMAS</title>
 	<!-- Favicon icon -->
 	<link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>assets/img/logo/logo_kab_sm.png">
 
@@ -106,6 +106,13 @@
 									margin-top: 16px;
 									right: 15px;
 								}
+
+								#img_captcha img{
+									/* border-radius: 100px; */
+									border: 1px solid #a6445d !important;
+									width: 100%;
+									height: 50px;
+								}
 							</style>
 
 							<div class="wrap-input100 validate-input m-b-10" data-validate="Password is required">
@@ -115,6 +122,14 @@
 								<span class="symbol-input100">
 									<i class="fa fa-lock"></i>
 								</span>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 m-b-10" id="img_captcha"><?= $img_captcha; ?></div>
+								<div class="validate-input m-b-10 col-md-6" data-validate="Captcha is required">
+									<input class="input100 text-center" type="text" id="captcha" name="captcha" placeholder="Captcha" maxlength="4" style="padding: 10px; font-size: 16pt !important;">
+									<span class="focus-input100"></span>
+								</div>
 							</div>
 
 							<div class="container-login100-form-btn p-t-10">
