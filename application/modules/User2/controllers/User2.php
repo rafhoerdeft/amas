@@ -1311,6 +1311,139 @@ class User2 extends Adm_Controller
 
     // EKSEKUSI ASET =======================================================
 
+    public function formEksekusiAset($id = '') {
+
+        $post = $this->input->post();
+        if ($post) {
+            $data_id = explode(';', $post['delete_all']);
+            $this->session->set_userdata('data_id', $data_id);
+        } else {
+            if ($this->session->userdata('data_id') != null) {
+                $data_id = $this->session->userdata('data_id');
+            } else {
+                redirect(base_url($this->controller.'/dataAset/'.$id));
+            }
+        }
+
+        $id_jenis_kib = decode($id);
+
+        $kib = $this->MasterData->getWhereData('*', 'tbl_jenis_kib', "id_jenis_kib = $id_jenis_kib");
+
+        $cekKib = $kib->num_rows();
+
+        if ($cekKib==0) {
+            redirect(base_url($this->controller.'/dataAset/'.encode(1)));
+        }
+
+        $dataJenisKib = $kib->row();
+
+        // ===============================================================================
+
+        $this->head[] = assets_url . "app-assets/css/plugins/animate/animate.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/forms/selects/select2.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/tables/datatable/datatables.min.css";
+        $this->head[] = assets_url . "app-assets/css/plugins/forms/wizard.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css";
+        $this->head[] = assets_url . "app-assets/vendors/bootstrap-datepicker/style-datepicker.css";
+        $this->head[] = assets_url . "app-assets/vendors/css/extensions/sweetalert.css";
+        // $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/icheck.css";
+        // $this->head[] = assets_url . "app-assets/vendors/css/forms/icheck/custom.css";
+        // ================================================================
+        $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/datatables.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js";
+        // $this->foot[] = assets_url . "app-assets/vendors/js/forms/icheck/icheck.min.js";
+        // $this->foot[] = assets_url . "app-assets/js/scripts/forms/wizard-steps.js";
+        $this->foot[] = assets_url . "app-assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/forms/select/select2.full.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/jquery.steps.min.js";
+        $this->foot[] = assets_url . "app-assets/vendors/js/extensions/sweetalert.min.js";
+        // $this->foot[] = base_url('assets/js/data_table.js');
+        // $this->foot[] = base_url('assets/js/delete_data.js');
+        // $this->foot[] = base_url('assets/js/'.$dataJenisKib->nama_tbl_kib.'.js');
+        // ================================================================
+        // $script[] = "showDataTable('Data Aset Diskominfo', '', '".date('dmY')."', [ 0, 2, 3, 4]);";
+        // $script[] = "showDataTable('" . base_url($this->controller.'/getDataAset/' . $dataJenisKib->nama_tbl_kib . '/' . encode($id_jenis_kib)) . "')";
+        
+        $script[] = '$(".tab-steps").steps({
+                        headerTag: "h6",
+                        bodyTag: "fieldset",
+                        transitionEffect: "fade",
+                        titleTemplate: "<span class=step>#index#</span> #title#",
+                        labels: {
+                            finish: "Simpan",
+                            next: "Lanjut",
+                            previous: "Sebelumnya",
+                            loading: "Loading..." 
+                        },
+                        onFinished: function (event, currentIndex) {
+                            formSubmit(this);
+                        }
+                    });';
+        $script[] = "$('.date-picker').datepicker({
+                        autoclose: true,
+                        todayHighlight: true,
+                        format: 'dd/mm/yyyy',
+                        toggleActive: true,
+                        orientation: 'bottom left'
+                    });";
+        $script[] = '$(".select2").select2();';
+        // $script[] = "$('.skin-check input').on('ifChecked ifUnchecked', function(event){
+        //                 pilihAset(this, event.type);
+        //             }).iCheck({
+        //                 checkboxClass: 'icheckbox_flat-green'
+        //             });";
+        // $script[] = "$('.skin-radio input').on('ifChecked ifUnchecked', function(event){
+        //                 asetUtama(this, event.type);
+        //             }).iCheck({
+        //                 radioClass: 'iradio_square-red'
+        //             });";
+        $script[] = '$("#dataTable").DataTable();';
+       
+        // ================================================================
+        $header['css']      = $this->head;
+        $footer['js']       = $this->foot;
+        $footer['script']   = $script;
+        $menu['active']     = '2';
+        $menu['active_sub']     = '2.'.$id_jenis_kib;
+
+        // ================================================================
+
+        $select = array('ast.*');
+        if ($id_jenis_kib == 2) {
+            $select[] = "(SELECT brg.sn_barang FROM tbl_barang brg WHERE brg.id_barang = (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset AND ar.posisi = 1)) as sn_aset";
+            $select[] = 'merk_type';
+        }
+
+        $select[] = 'asal_usul';
+        $select[] = "(SELECT SUM(br.harga_barang) FROM tbl_barang br WHERE br.id_barang IN (SELECT ar.id_barang FROM tbl_aset_rincian ar WHERE ar.id_aset = ast.id_aset)) as harga_aset";
+ 
+        $dataAset = $this->db->SELECT($select)
+                             ->WHERE_IN('ast.id_aset', $data_id)
+                             ->JOIN($dataJenisKib->nama_tbl_kib.' kib', 'ast.id_kib = kib.id_kib', 'left')
+                             ->GET('tbl_aset ast')->result();
+        
+        $statusAset = $this->MasterData->getWhereData('*', 'tbl_aset_status', "id_aset_status > 0")->result();
+        $dataSkpd = $this->MasterData->getWhereData('*', 'tbl_skpd', "id_skpd > 0")->result();
+
+        $content = array(
+            'id_jenis_kib'   => $id_jenis_kib,
+            'dataJenisKib'   => $dataJenisKib,
+            'dataAset'       => $dataAset,
+            'statusAset'     => $statusAset,
+            'dataSkpd'       => $dataSkpd,
+        );
+
+        $data = array(
+            'header'    => $header,
+            'menu'      => $menu,
+            'konten'    => 'pages/form_eksekusi_aset',
+            'footer'    => $footer,
+            'cont'      => $content,
+        );
+
+        $this->load->view("view_master_admin", $data);
+    }
+
     public function eksekusiAset() {
         $post = $this->input->POST();
 

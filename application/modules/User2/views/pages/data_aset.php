@@ -17,9 +17,9 @@
       <div class="content-header-right col-md-2 col-12 mb-2">
         <!-- <div class="btn-group float-md-right"> -->
           <button class="btn btn-success btn-block round dropdown-toggle dropdown-menu-right px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="la la-plus font-small-3"></i> Tambah Data
+            <i class="la la-plus font-small-3" style="padding-block: 0.35em;"></i> <span>Tambah Data</span>
           </button>
-          <ul class="dropdown-menu arrow">
+          <ul class="dropdown-menu arrow col-10">
             <li><a class="dropdown-item" href="<?= base_url($this->controller.'/addDataAset/'.encode($id_jenis_kib).'/pengadaan') ?>"><span>Pengadaan</span></a></li>
             <li><a class="dropdown-item" href="<?= base_url($this->controller.'/addDataAset/'.encode($id_jenis_kib).'/mutasi') ?>"><span>Mutasi SKPD</span></a></li>
           </ul>
@@ -31,13 +31,23 @@
             <i class="la la-plus font-small-3"></i> Tambah Data
           </a>
       </div> -->
-
+      
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-              <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+              <!-- <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                   onclick="showModalEksekusi()" disabled>
-                  <i class="la la-check font-small-3"></i> Eksekusi Aset
-              </button>
+                  <i class="la la-check font-small-3"></i> Eksekusi Aset 
+                  <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+              </button> -->
+
+              <form action="<?= base_url($this->controller.'/formEksekusiAset/'.encode($id_jenis_kib)) ?>" method="POST" >
+                  <?= token_csrf() ?>
+                  <input type="hidden" name="delete_all">
+                  <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" type="submit" disabled>
+                      <i class="la la-check font-small-3"></i> Eksekusi Aset 
+                      <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+                  </button>
+              </form>
           <!-- </div> -->
       </div>
 
@@ -46,9 +56,9 @@
           <form action="<?= base_url($this->controller.'/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
               <?= token_csrf() ?>
               <input type="hidden" name="delete_all" id="delete_all">
-              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit"
-                   disabled>
-                  <i class="la la-print font-small-3"></i> Cetak Label
+              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit" disabled>
+                  <i class="la la-print font-small-3"></i> Cetak Label 
+                  <span class="badge badge-pill badge-glow badge-success" style="float: right">0</span>
               </button>
           </form>
           <!-- </div> -->
@@ -59,7 +69,8 @@
               <!-- <input type="hidden" name="delete_all" id="delete_all"> -->
               <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                   onclick="deleteAll()" disabled>
-                  <i class="la la-trash font-small-3"></i> Hapus Data
+                  <i class="la la-trash font-small-3"></i> Hapus Data 
+                  <span class="badge badge-pill badge-glow badge-warning" style="float: right">0</span>
               </button>
           <!-- </div> -->
       </div>
@@ -372,6 +383,7 @@
     function pilihAset(data, type) {
         var id = $(data).val();
         var jenis = $(data).data().jenis;
+        var count_select = 0;
         
         if (id == 0) {
             if(type=='ifChecked'){
@@ -389,15 +401,16 @@
 
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = tr.children();
+                  // var td = tr.children();
+                  
                   //ambil value dalam input td SN
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.html();
-                  td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
+                  // var td_sn = td.eq(8);
+                  // var val_td_sn = td_sn.html();
+                  // td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.html();
-                  td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
+                  // var td_merk = td.eq(9);
+                  // var val_td_merk = td_merk.html();
+                  // td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
                 }
 
                 if (select_id == '') {
@@ -414,15 +427,15 @@
 
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = tr.children();
+                  // var td = tr.children();
 
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.children().val();
-                  td_sn.html(val_td_sn);
+                  // var td_sn = td.eq(8);
+                  // var val_td_sn = td_sn.children().val();
+                  // td_sn.html(val_td_sn);
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.children().val();
-                  td_merk.html(val_td_merk);
+                  // var td_merk = td.eq(9);
+                  // var val_td_merk = td_merk.children().val();
+                  // td_merk.html(val_td_merk);
                 }
 
                 var arr = select_id.split(";");
@@ -437,7 +450,17 @@
                     $('#btn_print_all').attr('disabled',true);
                 }
             }
-            $('#delete_all').val(value_id);
+            
+            // $('#delete_all').val(value_id);
+            $("input[name=delete_all]").val(value_id);
+
+            if (value_id != '' && value_id != null) {
+                count_select = value_id.split(";").length;
+            } else {
+                count_select = 0;
+            }
+            
+            $('.content-header .badge').html(count_select);
         }
     }
 

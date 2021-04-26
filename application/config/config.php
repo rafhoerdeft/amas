@@ -466,6 +466,7 @@ $config['csrf_exclude_uris'] = array(
                                     'User2/getDataHistoriBarangJasa/.*?/.*+',
                                     'User2/getDataBarangSo',
                                     'User2/getDataHistoriBarangSo/.*?/.*+',
+                                    'User2/formEksekusiAset/.*+',
                                     // =============================
                                     'User3/getDataAset/.*?/.*+',
                                     'User3/getDataHistori/.*?/.*+',

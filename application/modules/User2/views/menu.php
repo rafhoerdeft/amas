@@ -35,12 +35,12 @@
 
                 <!-- =========================================================================== -->
 
-                <li class="dropdown nav-item">
+                <li class="dropdown nav-item" data-menu="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" title="Non Aset"><i class="ft-box"></i>
                         <span>Non Aset</span>
                     </a>
                     <ul class="dropdown-menu arrow">
-                        <li class="dropdown-submenu">
+                        <li class="dropdown-submenu" data-menu="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Data Non Aset"><i class="la la-tablet"></i>
                                 <span>List Data</span>
                             </a>
@@ -53,7 +53,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="dropdown-submenu">
+                        <li class="dropdown-submenu" data-menu="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Histori Non Aset"><i class="la la-history"></i>
                                 <span>Histori</span>
                             </a>
@@ -97,7 +97,7 @@
                         <span>Aset</span>
                     </a>
                     <ul class="dropdown-menu arrow">
-                        <li class="dropdown-submenu <?= ($active == '2' ? 'active' : '') ?>">
+                        <li class="dropdown-submenu <?= ($active == '2' ? 'active' : '') ?>" data-menu="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" title="Data Aset">
                                 <i class="la la-tablet"></i>
                                 <span>List Data</span>
