@@ -223,11 +223,11 @@
                   <select id="id_aset_status" name="id_aset_status" class="form-control select2" onchange="changeExec(this)" required>
                     <option value="">Pilih Jenis Eksekusi</option>
                       <?php
-                      foreach ($statusAset as $val) {
+                      // foreach ($statusAset as $val) {
                       ?>
-                          <option value="<?= $val->id_aset_status ?>"><?= $val->nama_status ?></option>
+                          <!-- <option value="<?//= $val->id_aset_status ?>"><?//= $val->nama_status ?></option> -->
                       <?php
-                      }
+                      // }
                       ?>
                   </select>
               </div>
@@ -253,11 +253,11 @@
                   <select id="id_skpd" name="id_skpd" class="form-control select2">
                     <!-- <option value="">Pilih SKPD</option> -->
                       <?php
-                      foreach ($dataSkpd as $val) {
+                      // foreach ($dataSkpd as $val) {
                       ?>
-                          <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                          <!-- <option value="<?//= $val->id_skpd ?>"><?//= $val->nama_skpd ?></option> -->
                       <?php
-                      }
+                      // }
                       ?>
                   </select>
               </div>

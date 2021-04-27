@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-9 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Barang Jasa</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
@@ -14,13 +14,22 @@
         </div>
       </div>
 
-      <div class="content-header-right col-md-2 col-12 mb-2">
+      <div class="content-header-right col-md-3 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-            <input type="hidden" name="data_selected" id="data_selected">
-            <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+            <!-- <input type="hidden" name="data_selected" id="data_selected"> -->
+            <!-- <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                 onclick="showModalEksekusi()" disabled>
                 <i class="la la-check font-small-3"></i> Eksekusi Barang
-            </button>
+            </button> -->
+
+            <form action="<?= base_url($this->controller.'/formEksekusiBarangJasa') ?>" method="POST" >
+                <?= token_csrf() ?>
+                <input type="hidden" name="data_selected" id="data_selected">
+                <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" type="submit" disabled>
+                    <i class="la la-check font-small-3"></i> Eksekusi Barang 
+                    <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+                </button>
+            </form>
           <!-- </div> -->
       </div>
 
@@ -67,8 +76,7 @@
                             </div>
                         </th>
                         <th>Aksi</th>
-                        <th>Ambil</th>
-                        <th>Sisa</th>
+                        <!-- <th>Ambil</th> -->
                         <th>Kode</th>
                         <th>Tgl Masuk</th>
                         <th>Nama Barang</th>
@@ -77,7 +85,7 @@
                         <th>Satuan</th>
                         <th>Harga (Rp)</th>
                         <th>Jml</th>
-                        
+                        <th>Sisa</th>
                       </tr>
                     </thead>
 
@@ -137,7 +145,6 @@
       <form name="form_input" id="form_input" method="post" action="">
         
         <input type="hidden" name="id" id="id">
-        <!-- <input type="hidden" name="kib" id="kib" value="<?php //echo encode($id_jenis_kib); ?>"> -->
         <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataBarangJasa') ?>">
         <input type="hidden" id="data_update_barang" name="data_update_barang">
 
@@ -171,11 +178,11 @@
                   <select id="id_skpd" name="id_skpd" class="form-control select2">
                     <!-- <option value="">Pilih SKPD</option> -->
                       <?php
-                      foreach ($dataSkpd as $val) {
+                      // foreach ($dataSkpd as $val) {
                       ?>
-                          <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                          <!-- <option value="<?//= $val->id_skpd ?>"><?//= $val->nama_skpd ?></option> -->
                       <?php
-                      }
+                      // }
                       ?>
                   </select>
               </div>
@@ -308,6 +315,7 @@
 
     function pilihAset(data, type) {
         var id = $(data).val();
+        var tr = $(data).parent().parent().parent().parent();
         
         if (id == 0) {
             if(type=='ifChecked'){
@@ -321,24 +329,22 @@
 
             if(type=='ifChecked'){
                 var ambil = $('#ambil_'+id).attr('disabled', false);
-
-                var tr = $(data).parent().parent().parent().parent();
                 tr.toggleClass('row_cek');
 
                 //ambil isian dalam element td
-                var td = tr.children();
+                // var td = tr.children();
 
-                var td_nama = td.eq(7);
-                var val_td_nama = td_nama.html();
-                td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
+                // var td_nama = td.eq(7);
+                // var val_td_nama = td_nama.html();
+                // td_nama.html("<textarea id='nm_"+id+"' name='nm_barang' rows='1' style='width: 100%;'>"+val_td_nama+"</textarea>");
 
-                var td_merk = td.eq(8);
-                var val_td_merk = td_merk.html();
-                td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
+                // var td_merk = td.eq(8);
+                // var val_td_merk = td_merk.html();
+                // td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='1' style='width: 100%;'>"+val_td_merk+"</textarea>");
 
-                var td_sn = td.eq(9);
-                var val_td_sn = td_sn.html();
-                td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
+                // var td_sn = td.eq(9);
+                // var val_td_sn = td_sn.html();
+                // td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
                 if (select_id == '') {
                     value_id  = id;
@@ -348,24 +354,22 @@
                 }
             } else {
                 var ambil = $('#ambil_'+id).attr('disabled', true);
-
-                var tr = $(data).parent().parent().parent().parent();
                 tr.toggleClass();
 
                 //ambil isian dalam element td
-                var td = tr.children();
+                // var td = tr.children();
 
-                var td_nama = td.eq(7);
-                var val_td_nama = td_nama.children().val();
-                td_nama.html(val_td_nama);
+                // var td_nama = td.eq(7);
+                // var val_td_nama = td_nama.children().val();
+                // td_nama.html(val_td_nama);
 
-                var td_merk = td.eq(8);
-                var val_td_merk = td_merk.children().val();
-                td_merk.html(val_td_merk);
+                // var td_merk = td.eq(8);
+                // var val_td_merk = td_merk.children().val();
+                // td_merk.html(val_td_merk);
 
-                var td_sn = td.eq(9);
-                var val_td_sn = td_sn.children().val();
-                td_sn.html(val_td_sn);
+                // var td_sn = td.eq(9);
+                // var val_td_sn = td_sn.children().val();
+                // td_sn.html(val_td_sn);
 
                 var arr = select_id.split(";");
                 var result = arr.filter(function(val){
@@ -378,6 +382,14 @@
                 }
             }
             $('#data_selected').val(value_id);
+
+            if (value_id != '' && value_id != null) {
+                count_select = value_id.split(";").length;
+            } else {
+                count_select = 0;
+            }
+            
+            $('.content-header .badge').html(count_select);
         }
     }
 

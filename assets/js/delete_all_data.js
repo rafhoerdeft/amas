@@ -50,6 +50,7 @@ function hapusDataAll(data) {
 
 function pilihBarang(data, type) {
 	let id = $(data).val();
+	var tr = $(data).parent().parent().parent().parent();
 	
 	if (id == 0) {
 		if(type=='ifChecked'){
@@ -62,6 +63,8 @@ function pilihBarang(data, type) {
 		var value_id   = '';
 
 		if(type=='ifChecked'){
+			tr.toggleClass('row_cek');
+
 			if (select_id == '') {
 				value_id  = id;
 				$('#btn_delete').attr('disabled',false);
@@ -69,6 +72,8 @@ function pilihBarang(data, type) {
 				value_id += select_id + ';' + id;
 			}
 		} else {
+			tr.toggleClass();
+			
 			var arr = select_id.split(";");
 			var result = arr.filter(function(val){
 				return val != id; 
@@ -79,6 +84,15 @@ function pilihBarang(data, type) {
 				$('#btn_delete').attr('disabled',true);
 			}
 		}
-		$('#delete_all').val(value_id);
+		// $('#delete_all').val(value_id);
+		$("input[name=delete_all]").val(value_id);
+
+		if (value_id != '' && value_id != null) {
+			count_select = value_id.split(";").length;
+		} else {
+			count_select = 0;
+		}
+		
+		$('.content-header .badge').html(count_select);
 	}
 }

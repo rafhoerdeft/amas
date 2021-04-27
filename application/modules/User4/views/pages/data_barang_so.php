@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-9 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Data Barang</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
@@ -14,14 +14,23 @@
         </div>
       </div>
 
-      <div class="content-header-right col-md-2 col-12 mb-2">
+      <div class="content-header-right col-md-3 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-            <input type="hidden" name="data_selected" id="data_selected">
+            <!-- <input type="hidden" name="data_selected" id="data_selected">
             <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                 onclick="showModalEksekusi()" disabled>
                 <i class="la la-check font-small-3"></i> Eksekusi Barang
-            </button>
+            </button> -->
           <!-- </div> -->
+
+          <form action="<?= base_url($this->controller.'/formEksekusiBarangSo') ?>" method="POST" >
+              <?= token_csrf() ?>
+              <input type="hidden" name="data_selected" id="data_selected">
+              <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" type="submit" disabled>
+                  <i class="la la-check font-small-3"></i> Eksekusi Barang 
+                  <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+              </button>
+          </form>
       </div>
 
     </div>
@@ -67,8 +76,7 @@
                             </div>
                         </th>
                         <th>Aksi</th>
-                        <th>Ambil</th>
-                        <th>Sisa</th>
+                        <!-- <th>Ambil</th> -->
                         <th>No. Nota</th>
                         <th>Kode</th>
                         <th>Tgl. Masuk</th>
@@ -76,7 +84,9 @@
                         <th>Merk/Type</th>
                         <th>Serial Number</th>
                         <th>Satuan</th>
+                        <th>Harga (Rp)</th>
                         <th>Jml</th>
+                        <th>Sisa</th>
                       </tr>
                     </thead>
 
@@ -377,6 +387,14 @@
                 }
             }
             $('#data_selected').val(value_id);
+
+            if (value_id != '' && value_id != null) {
+                count_select = value_id.split(";").length;
+            } else {
+                count_select = 0;
+            }
+            
+            $('.content-header .badge').html(count_select);
         }
     }
 

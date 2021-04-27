@@ -6,6 +6,19 @@ function showDataTable(title, msg, date_print, col_print) {
             "sLengthMenu": "_MENU_"
         },
         "dom": "lBfrtip",
+        "order":[],
+        "columnDefs":[  
+            {  
+                "targets":0,  
+                "orderable":false,  
+                "class":"text-center" 
+            }, 
+            {  
+                "targets":1,  
+                "orderable":false,  
+                "class":"text-center" 
+            }
+        ],
         "buttons": [
             {
                 "extend": "excel",

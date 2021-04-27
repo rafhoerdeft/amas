@@ -3,14 +3,14 @@
         <div class="content-header row">
 
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">Eksekusi Aset - <?= $dataJenisKib->nama_kib ?></h3>
+                <h3 class="content-header-title mb-0 d-inline-block">Eksekusi Barang</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?= base_url($this->controller) ?>">Home</a></li>
                             <li class="breadcrumb-item"><a
-                                    href="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">Data Aset</a></li>
-                            <li class="breadcrumb-item active">Eksekusi Aset</li>
+                                    href="<?= base_url($this->controller.'/dataBarangSo') ?>">Data Barang</a></li>
+                            <li class="breadcrumb-item active">Eksekusi Barang</li>
                         </ol>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
 
             <div class="content-header-right col-md-4 col-12 mb-2">
                 <div class="dropdown float-md-right">
-                    <a type="button" href="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>" class="btn btn-warning btn-block round px-2" id="dropdownBreadcrumbButton" >
+                    <a type="button" href="<?= base_url($this->controller.'/dataBarangSo') ?>" class="btn btn-warning btn-block round px-2" id="dropdownBreadcrumbButton" >
                         <i class="la la-arrow-left font-small-3"></i> Kembali
                     </a>
                 </div>
@@ -59,10 +59,10 @@
                                     }
                                     </style>
 
-                                    <form id="form_eksekusi" action="<?= base_url().$this->controller.'/eksekusiAset' ?>" method="POST" class="tab-steps wizard-circle">
+                                    <form id="form_eksekusi" action="<?= base_url().$this->controller.'/eksekusiBarangSo' ?>" method="POST" class="tab-steps wizard-circle">
                                         <?= token_csrf() ?>
                                         <input type="hidden" name="id" id="id">
-                                        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataAset/'.encode($id_jenis_kib)) ?>">
+                                        <input type="hidden" name="back" id="back" value="<?= base_url($this->controller.'/dataBarangSo') ?>">
                                         <input type="hidden" id="data_update_barang" name="data_update_barang">
                                         
                                         <!-- Step 1 -->
@@ -74,50 +74,43 @@
                                                     <tr style="text-align: center;">
                                                         <th>No</th>
                                                         <th>Aksi</th>
-                                                        <th>Nama Aset</th>
+                                                        <th>Ambil</th>
+                                                        <th>Sisa</th>
                                                         <th>Kode</th>
-                                                        <!-- <th>Kode Lama</th> -->
-                                                        <th>No. Reg</th>
+                                                        <!-- <th>Tgl Masuk</th> -->
+                                                        <th>Nama Barang</th>
+                                                        <th>Merk/Type</th>
+                                                        <th>Serial Number</th>
                                                         <th>Satuan</th>
-                                                        <?php if ($id_jenis_kib == 2) { ?>
-                                                            <th>Serial Number</th>
-                                                            <th>Merk/Type</th>
-                                                        <?php } ?>
-                                                        <th>Asal-Usul</th>
-                                                        <th>Harga</th>
+                                                        <th>Harga (Rp)</th>
+                                                        <th>Jml</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    <?php $no=0; $tot_harga = 0; foreach ($dataAset as $val) { $no++;?>
+                                                    <?php $no=0; $tot_harga = 0; foreach ($dataBarang as $val) { $no++;?>
                                                     <tr>
-                                                        <td align="center"><?= $no ?><input type="hidden" name="numb" value="<?= $val->id_aset ?>"></td>
-                                                        <td nowrap align="center" style="width: 30px;">
-                                                            <button type="button" class="btn btn-danger btn-sm btn-block" onclick="hapusRow(this)">
+                                                        <td align="center">
+                                                            <?= $no ?>
+                                                            <input type="hidden" name="numb" value="<?= $val->id_barang ?>">
+                                                        </td>
+                                                        <td nowrap align="center" style="width: 50px;">
+                                                            <button type="button" class="btn btn-danger btn-sm btn-block" onclick="hapusRow(this)" title="Hapus">
                                                                 <i class="la la-trash font-small-3"></i>
                                                             </button>
                                                         </td>
-                                                        <td style="width: 150px;"><?= $val->nama_aset ?></td>
-                                                        <td style="width: 200px;"><?= $val->kode_baru_aset ?></td>
-                                                        <!-- <td><?//= $val->kode_lama_aset ?></td> -->
-                                                        <td align="center"><?= $val->no_reg ?></td>
-                                                        <td align="center"><?= $val->satuan_aset ?></td>
-
-                                                        <?php if ($id_jenis_kib == 2) { ?>
-                                                            <td style="width: 175px;">
-                                                                <textarea id="sn_<?= $val->id_aset ?>" name="sn_barang" rows='1' style="width: 100%;"><?= $val->sn_aset ?></textarea>
-                                                            </td>
-                                                            <td style="width: 175px;">
-                                                                <textarea id="merk_<?= $val->id_aset ?>" name="merk_barang" rows='2' style="width: 100%;"><?= $val->merk_type ?></textarea>    
-                                                            </td>
-                                                        <?php } ?>
-                                                        
-                                                        <td><?= $val->asal_usul ?></td>
-                                                        <td align="right" style="width: 75px;" nowrap><?= nominal($val->harga_aset) ?></td>
-                                                        <!-- <td align="center"><?php //echo nominal($val->jml_barang); ?></td> -->
-                                                        <!-- <td align="right">
-                                                            <?php //echo nominal($val->harga_barang * $val->jml_barang); ?>
-                                                        </td> -->
+                                                        <td style="width: 70px;">
+                                                            <input type="text" id="ambil_<?= $val->id_barang ?>" name="ambil_barang" style="width: 70px; text-align: center;" onkeypress="return inputAngka(event);" data-sisa="<?= $val->sisa ?>" onkeyup="cekVal(this)">
+                                                        </td>                                                        
+                                                        <td align="right" style="width: 75px;"><?= nominal($val->sisa) ?></td>
+                                                        <td style="width: 75px;"><?= $val->kode_barang ?></td>
+                                                        <!-- <td align="center"><?//= $val->tgl_masuk ?></td> -->
+                                                        <td style="width: 175px;"><?= $val->nama_barang ?></td>
+                                                        <td style="width: 175px;"><?= $val->merk_barang ?></td>
+                                                        <td style="width: 175px;"><?= $val->sn_barang ?></td>
+                                                        <td><?= $val->satuan_barang ?></td>
+                                                        <td align="right" style="width: 75px;" nowrap><?= nominal($val->harga_barang) ?></td>
+                                                        <td align="right" style="width: 75px;" nowrap><?= nominal($val->jml_barang) ?></td>
                                                     </tr>
                                                     <?php } ?>
                                                 </tbody>
@@ -131,57 +124,38 @@
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <h5>Jenis Eksekusi
-                                                            <span class="required text-danger">*</span>
-                                                        </h5>
-                                                        <div class="controls">
-                                                            <select id="id_aset_status" name="id_aset_status" class="form-control select2" onchange="changeExec(this)" required>
-                                                                <option value="" selected>Pilih Jenis Eksekusi</option>
-                                                                <?php
-                                                                foreach ($statusAset as $val) {
-                                                                ?>
-                                                                    <option value="<?= $val->id_aset_status ?>"><?= $val->nama_status ?></option>
-                                                                <?php
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
                                                         <h5>Tanggal
                                                             <span class="required text-danger">*</span>
                                                         </h5>
                                                         <div class="controls">
-                                                            <input type="text" class="form-control date-picker" id="tgl_histori" name="tgl_histori"
+                                                            <input type="text" class="form-control date-picker" id="tgl_bj_keluar" name="tgl_bj_keluar"
                                                                 placeholder="DD/MM/YYYY" value="<?= date('d/m/Y') ?>" required>
                                                         </div>
                                                     </div>
 
-                                                    <div id="not_hapus" style="display: none;">
-                                                        
-                                                        <div class="form-group">
-                                                        <h5>SKPD
-                                                            <!-- <span class="required text-danger">*</span> -->
-                                                        </h5>
-                                                        <div class="controls">
-                                                            <select id="id_skpd" name="id_skpd" class="form-control select2">
-                                                                <!-- <option value="">Pilih SKPD</option> -->
-                                                                <?php
-                                                                foreach ($dataSkpd as $val) {
-                                                                ?>
-                                                                    <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
-                                                                <?php
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
+                                                    <div id="not_hapus">
+                                                        <div class="form-group d-none">
+                                                            <h5>SKPD
+                                                                <!-- <span class="required text-danger">*</span> -->
+                                                            </h5>
+                                                            <div class="controls">
+                                                                <select id="id_skpd" name="id_skpd" class="form-control select2">
+                                                                    <!-- <option value="">Pilih SKPD</option> -->
+                                                                    <?php
+                                                                    foreach ($dataSkpd as $val) {
+                                                                    ?>
+                                                                        <option <?= $val->id_skpd==23?'selected':'' ?> value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                         <h5>Lokasi/Ruang</h5>
                                                         <div class="controls">
-                                                            <textarea name="lokasi_histori" id="lokasi_histori" rows="2" class="form-control"></textarea>
+                                                            <textarea name="lokasi_bj_keluar" id="lokasi_bj_keluar" rows="2" class="form-control" required></textarea>
                                                         </div>
                                                         </div>
 
@@ -190,7 +164,7 @@
                                                             <!-- <span class="required text-danger">*</span> -->
                                                         </h5>
                                                         <div class="controls">
-                                                            <textarea name="keperluan_histori" id="keperluan_histori" rows="2" class="form-control"></textarea>
+                                                            <textarea name="keperluan_bj_keluar" id="keperluan_bj_keluar" rows="2" class="form-control" required></textarea>
                                                         </div>
                                                         </div>
 
@@ -199,7 +173,7 @@
                                                             <!-- <span class="required text-danger">*</span> -->
                                                         </h5>
                                                         <div class="controls">
-                                                            <input type="text" name="pemegang" id="pemegang" class="form-control">
+                                                            <input type="text" name="pemegang" id="pemegang" class="form-control" required>
                                                         </div>
                                                         </div>
                                                     </div>
@@ -209,7 +183,7 @@
                                                             <!-- <span class="required text-danger">*</span> -->
                                                         </h5>
                                                         <div class="controls">
-                                                            <textarea name="ket_histori" id="ket_histori" rows="2" class="form-control"></textarea>
+                                                            <textarea name="ket_bj_keluar" id="ket_bj_keluar" rows="2" class="form-control"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -231,17 +205,6 @@
 </div>
 
 <script>
-    function changeExec(data) {
-        var value = $(data).val();
-        var select = $(data).find('option:selected').text();
-        
-        if (select == 'Usulan Hapus' ||  value == '') {
-        $('#not_hapus').hide();
-        } else {
-        $('#not_hapus').show();
-        }
-    }
-
     function formSubmit(data) {
         var form = $(data);
 
@@ -251,27 +214,41 @@
                 data_id.push($(this).val());
             });
 
-            if ($('textarea[name="sn_barang"]').length > 0) {
+            if ($('input[name="ambil_barang"]:enabled').length > 0) {
                 var data_update_barang = [];
-                $('textarea[name="sn_barang"]').each(function(e){
+                var data_ambil_barang = [];
+                $('input[name="ambil_barang"]:enabled').each(function(e){
                     let ids     = $(this).attr('id');
                     let id      = ids.split("_")[1];
-                    let merk    = $('#merk_'+id).val();
-                    let sn      = $('#sn_'+id).val();
+                    // let nama    = $('#nm_'+id).val();
+                    // let merk    = $('#merk_'+id).val();
+                    // let sn      = $('#sn_'+id).val();
+                    let ambil   = $('#ambil_'+id).val();
                     
                     data_update_barang.push({
-                        id_aset: id,
-                        merk_barang: merk,
-                        sn_barang: sn,
+                        id_barang: id,
+                        // nama_barang: nama,
+                        // merk_barang: merk,
+                        // sn_barang: sn,
+                        jml_ambil: ambil,
                     });
+
+                    if (ambil != null && ambil != '' && ambil != '0') {
+                        data_ambil_barang.push(ambil);
+                    }
                 });
 
-                $('#form_eksekusi #data_update_barang').val(JSON.stringify(data_update_barang));
+                if (data_ambil_barang.length == data_update_barang.length) {
+                    $('#form_eksekusi #data_update_barang').val(JSON.stringify(data_update_barang));
+                } else {
+                    alert('Input jumlah ambil barang harus diisi semua!');
+                    return false;
+                }
             } 
 
             $('#form_eksekusi #id').val(data_id.join(';'));
-        }else {
-            alert('Harus pilih minimal 1 aset!');
+        } else {
+            alert('Harus pilih minimal 1 barang!');
             return false;
         }
                                 
@@ -316,30 +293,47 @@
         });
     }
 
-
+    function cekVal(data) {
+        var val = $(data).val();
+        if (val!='' && val!=null) {
+            var value = parseInt($(data).val().replace(/\./gi, ''));
+        } else {
+            var value = 0;
+        }
+        var sisa = parseInt($(data).data().sisa.toString().replace(/\./gi, ''));
+        
+        if (value > sisa) {
+            alert('Nilai jumlah ambil melebihi sisa barang!');
+            var nilaiJml = formatRupiah(sisa.toString());
+            $(data).val(nilaiJml);
+        } else {
+            var nilaiJml = formatRupiah(value.toString());
+            $(data).val(nilaiJml);
+        }
+    }
 </script>
 
 <script>
-function changeRupe(data) {
-    var val = formatRupiah($(data).val(), 'Rp. ');
-    $(data).val(val);
-}
-
-/* Fungsi formatRupiah */
-function formatRupiah(angka, prefix) {
-    var number_string = angka.replace(/[^,\d]/g, '').toString(),
-        split = number_string.split(','),
-        sisa = split[0].length % 3,
-        rupiah = split[0].substr(0, sisa),
-        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-    // tambahkan titik jika yang di input sudah menjadi angka ribuan
-    if (ribuan) {
-        separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+    function changeRupe(data) {
+        var val = formatRupiah($(data).val(), 'Rp. ');
+        $(data).val(val);
     }
 
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
-}
+    /* Fungsi formatRupiah */
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+    }
 </script>

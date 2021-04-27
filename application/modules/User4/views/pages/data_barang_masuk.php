@@ -24,11 +24,12 @@
             </div>
 
             <div class="content-header-right col-md-2 col-12 mb-2">
-                <!-- <div class="dropdown float-md-right"> -->
+                <!-- <div class="dropdown"> -->
                     <input type="hidden" name="delete_all" id="delete_all">
                     <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="deleteAll()" disabled>
-                        <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
+                        <i class="la la-trash font-small-3"></i> Hapus Data 
+                        <span class="badge badge-pill badge-glow badge-warning" style="float: right">0</span>
                     </button>
                 <!-- </div> -->
             </div>
@@ -367,29 +368,49 @@ function rincianModal(data) {
         hapusDataAll(data);
     }
 
+    $(document).ready(function() {
+        $('.table').on('click', 'tbody tr', function (e) {
+            var td = $(this).children();
+            var cekbox = td.eq(1).find('input');
+            var checked = cekbox.parent().hasClass('checked');
+            if (checked) {
+                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+                    cekbox.iCheck('uncheck');
+                }
+            } else {
+              var cek_disabled = cekbox.parent().hasClass('disabled');
+                if (!cek_disabled) {
+                  if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+                      cekbox.iCheck('check');
+                  }
+                }
+            }
+        });
+    });
+
 </script>
 
 <script type="text/javascript">
-function changeRupe(data) {
-    var val = formatRupiah($(data).val(), 'Rp. ');
-    $(data).val(val);
-}
-
-/* Fungsi formatRupiah */
-function formatRupiah(angka, prefix) {
-    var number_string = angka.replace(/[^,\d]/g, '').toString(),
-        split = number_string.split(','),
-        sisa = split[0].length % 3,
-        rupiah = split[0].substr(0, sisa),
-        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-    // tambahkan titik jika yang di input sudah menjadi angka ribuan
-    if (ribuan) {
-        separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+    function changeRupe(data) {
+        var val = formatRupiah($(data).val(), 'Rp. ');
+        $(data).val(val);
     }
 
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
-}
+    /* Fungsi formatRupiah */
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+    }
 </script>

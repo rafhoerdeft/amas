@@ -31,7 +31,8 @@
                     <input type="hidden" name="delete_all" id="delete_all">
                     <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
                         onclick="deleteAll()" disabled>
-                        <i class="la la-trash font-small-3"></i> Hapus Data Terpilih
+                        <i class="la la-trash font-small-3"></i> Hapus Data 
+                        <span class="badge badge-pill badge-glow badge-warning" style="float: right">0</span>
                     </button>
                 <!-- </div> -->
             </div>
@@ -328,6 +329,28 @@ function editModal(data) {
         };
         hapusDataAll(data);
     }
+
+    // Cek Checkbox on ROW
+    $(document).ready(function() {
+
+        $('.table').on('click', 'tbody tr', function (e) {
+            var td = $(this).children();
+            var cekbox = td.eq(1).find('input');
+            var checked = cekbox.parent().hasClass('checked');
+
+            if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+                if (checked) {
+                    cekbox.iCheck('uncheck');
+                } else {
+                    var cek_disabled = cekbox.parent().hasClass('disabled');
+                    if (!cek_disabled) {
+                        cekbox.iCheck('check');
+                    }
+                }
+            }
+        });
+
+    });
 
 </script>
 

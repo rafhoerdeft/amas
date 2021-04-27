@@ -467,15 +467,19 @@ $config['csrf_exclude_uris'] = array(
                                     'User2/getDataBarangSo',
                                     'User2/getDataHistoriBarangSo/.*?/.*+',
                                     'User2/formEksekusiAset/.*+',
+                                    'User2/formEksekusiBarangJasa',
                                     // =============================
                                     'User3/getDataAset/.*?/.*+',
                                     'User3/getDataHistori/.*?/.*+',
                                     'User3/cetakLabelAset/.*+',
                                     'User3/getDataBarangJasa',
                                     'User3/getDataHistoriBarangJasa/.*?/.*+',
+                                    'User3/formEksekusiAset/.*+',
+                                    'User3/formEksekusiBarangJasa',
                                     // ==============================
                                     'User4/getDataBarangSo',
                                     'User4/getDataHistoriBarangSo/.*?/.*+',
+                                    'User4/formEksekusiBarangSo',
                                 );
 
 /*

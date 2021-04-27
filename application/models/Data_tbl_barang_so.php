@@ -12,7 +12,7 @@ class Data_tbl_barang_so extends CI_Model
         'brg.merk_barang',
         'brg.sn_barang',
         'brg.satuan_barang',
-        // 'brg.harga_barang',
+        'brg.harga_barang',
         'sr.jml_barang',
     );
 

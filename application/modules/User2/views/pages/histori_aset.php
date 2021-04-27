@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-header row">
       
-      <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+      <div class="content-header-left col-md-10 col-12 mb-2 breadcrumb-new">
         <h3 class="content-header-title mb-0 d-inline-block">Histori Aset</h3>
         <div class="row breadcrumbs-top d-inline-block">
           <div class="breadcrumb-wrapper col-12">
@@ -21,6 +21,17 @@
           </button>
         </div>
       </div> -->
+
+      <div class="content-header-right col-md-2 col-12 mb-2">
+          <!-- <div class="dropdown"> -->
+              <input type="hidden" name="delete_all" id="delete_all">
+              <button id="btn_delete" class="btn btn-danger btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                  onclick="deleteAll()" disabled>
+                  <i class="la la-trash font-small-3"></i> Hapus Data 
+                  <span class="badge badge-pill badge-glow badge-warning" style="float: right">0</span>
+              </button>
+          <!-- </div> -->
+      </div>
 
     </div>
     <div class="content-body">
@@ -43,9 +54,10 @@
               
               <div class="card-content collapse show">
                 
-                <?= show_alert() ?>
 
                 <div class="card-body">
+                  
+                  <?= show_alert() ?>
 
                   <form action="<?= base_url($this->controller.'/historiAset') ?>" class="row" method="POST">
                     <?= token_csrf() ?>
@@ -127,6 +139,11 @@
                     <thead>
                       <tr style="text-align: center;">
                         <th>No</th>
+                        <th>
+                            <div class="skin skin-check-all">
+                                <input type="checkbox" name="plh_ast_all" id="check_all" value="0">
+                            </div>
+                        </th>
                         <th>Tgl Eksekusi</th>
                         <th>Status</th>
                         <th>Jenis Aset</th>
@@ -156,6 +173,54 @@
     </div>
   </div>
 </div>
+
+<script>
+    function deleteAll() {
+        var dataid      = $('#delete_all').val();
+        var link        = "<?= base_url($this->controller.'/deleteAll') ?>";
+        var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
+        var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
+        var table       = "aset_histori";
+        var data = {
+            dataid:dataid,
+            link:link,
+            table:table,
+            csrfname:csrfname,
+            csrfcode:csrfcode,
+        };
+        hapusDataAll(data);
+    }
+
+    function cekChangePage() {
+      var select_id  = $('#delete_all').val();
+      var arr = select_id.split(";");
+      arr.forEach(function(value, index) {
+        var cekbox = $('.skin-check input:checkbox[value="'+value+'"]');
+        cekbox.iCheck('check');
+        cekbox.parent().parent().parent().toggleClass('row_cek');
+      });
+    }
+
+    // Cek Checkbox on ROW
+    $(document).ready(function() {
+        $('.table').on('click', 'tbody tr', function (e) {
+            var td = $(this).children();
+            var cekbox = td.eq(1).find('input');
+            var checked = cekbox.parent().hasClass('checked');
+
+            if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'I') {
+                if (checked) {
+                    cekbox.iCheck('uncheck');
+                } else {
+                  var cek_disabled = cekbox.parent().hasClass('disabled');
+                    if (!cek_disabled) {
+                      cekbox.iCheck('check');
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <script type="text/javascript">
 

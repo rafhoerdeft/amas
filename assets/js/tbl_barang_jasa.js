@@ -37,48 +37,52 @@ function showDataTable(link) {
                 "orderable":false,  
                 "class":"text-center" 
             }, 
+            // {  
+            //     "targets":3,  
+            //     "orderable":false,  
+            //     "class":"text-center" 
+            // },
+            // {  
+            //     "targets":3,  
+            //     "class":"text-right" 
+            // },
             {  
                 "targets":3,  
-                "orderable":false,  
-                "class":"text-center" 
-            },
-            {  
-                "targets":4,  
-                "class":"text-right" 
-            },
-            {  
-                "targets":5,  
                 "width": "25",
                 "class":"text-center" 
             },
             {  
-                "targets":6,  
+                "targets":4,  
                 "width": "50",
                 "class":"text-center" 
             },
             {  
-                "targets":7,  
+                "targets":5,  
                 "width": "100"
             },
             {  
+                "targets":6,  
+                "width": "75"
+            },
+            {  
+                "targets":7,  
+                "width": "75"
+            },
+            {  
                 "targets":8,  
-                "width": "75"
-            },
-            {  
-                "targets":9,  
-                "width": "75"
-            },
-            {  
-                "targets":10,  
                 "width": "50",
                 "class":"text-center" 
             },
             {  
-                "targets":11,  
+                "targets":9,  
                 "class":"text-right" 
             },
             {  
-                "targets":12,  
+                "targets":10,  
+                "class":"text-right" 
+            },
+            {  
+                "targets":11,  
                 "class":"text-right" 
             }
         ],  

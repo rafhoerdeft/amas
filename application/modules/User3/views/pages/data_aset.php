@@ -16,26 +16,36 @@
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-          <form action="<?= base_url('User3/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
-              <?= token_csrf() ?>
-              <input type="hidden" name="delete_all" id="delete_all">
-              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit"
-                   disabled>
-                  <i class="la la-print font-small-3"></i> Cetak Label
-              </button>
-          </form>
+              <!-- <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" id="dropdownBreadcrumbButton" type="button"
+                  onclick="showModalEksekusi()" disabled>
+                  <i class="la la-check font-small-3"></i> Eksekusi Aset 
+                  <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+              </button> -->
+
+              <form action="<?= base_url($this->controller.'/formEksekusiAset/'.encode($id_jenis_kib)) ?>" method="POST" >
+                  <?= token_csrf() ?>
+                  <input type="hidden" name="delete_all">
+                  <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" type="submit" disabled>
+                      <i class="la la-check font-small-3"></i> Eksekusi Aset 
+                      <span class="badge badge-pill badge-glow badge-danger" style="float: right">0</span>
+                  </button>
+              </form>
           <!-- </div> -->
       </div>
 
       <div class="content-header-right col-md-2 col-12 mb-2">
           <!-- <div class="dropdown"> -->
-              <!-- <input type="hidden" name="delete_all" id="delete_all"> -->
-              <button id="btn_eksekusi" class="btn btn-info btn-block round px-2" type="button"
-                  onclick="showModalEksekusi()" disabled>
-                  <i class="la la-check font-small-3"></i> Eksekusi Aset
+          <form action="<?= base_url($this->controller.'/cetakLabelAset/'.encode($id_jenis_kib)) ?>" method="POST" >
+              <?= token_csrf() ?>
+              <input type="hidden" name="delete_all" id="delete_all">
+              <button id="btn_print_all" class="btn btn-warning btn-block round px-2 text-white" type="submit" disabled>
+                  <i class="la la-print font-small-3"></i> Cetak Label 
+                  <span class="badge badge-pill badge-glow badge-success" style="float: right">0</span>
               </button>
+          </form>
           <!-- </div> -->
       </div>
+
 
     </div>
     <div class="content-body">
@@ -185,11 +195,11 @@
                   <select id="id_aset_status" name="id_aset_status" class="form-control select2" onchange="changeExec(this)" required>
                     <option value="">Pilih Jenis Eksekusi</option>
                       <?php
-                      foreach ($statusAset as $val) {
+                      // foreach ($statusAset as $val) {
                       ?>
-                          <option value="<?= $val->id_aset_status ?>"><?= $val->nama_status ?></option>
+                          <!-- <option value="<?//= $val->id_aset_status ?>"><?//= $val->nama_status ?></option> -->
                       <?php
-                      }
+                      // }
                       ?>
                   </select>
               </div>
@@ -215,11 +225,11 @@
                   <select id="id_skpd" name="id_skpd" class="form-control select2">
                     <!-- <option value="">Pilih SKPD</option> -->
                       <?php
-                      foreach ($dataSkpd as $val) {
+                      // foreach ($dataSkpd as $val) {
                       ?>
-                          <option value="<?= $val->id_skpd ?>"><?= $val->nama_skpd ?></option>
+                          <!-- <option value="<?//= $val->id_skpd ?>"><?//= $val->nama_skpd ?></option> -->
                       <?php
-                      }
+                      // }
                       ?>
                   </select>
               </div>
@@ -275,7 +285,6 @@
   </div>
 </div>
 
-
 <script>
   function clear_data() {
       var dataid = $('#delete_all').val();
@@ -329,7 +338,7 @@
 <script>
     function deleteAll() {
         var dataid      = $('#delete_all').val();
-        var link        = "<?= base_url('User3/deleteAsetAll') ?>";
+        var link        = "<?= base_url($this->controller.'/deleteAsetAll') ?>";
         var csrfname    = "<?= $this->security->get_csrf_token_name(); ?>";
         var csrfcode    = "<?= $this->security->get_csrf_hash(); ?>"
         var table       = "aset";
@@ -344,8 +353,9 @@
     }
 
     function pilihAset(data, type) {
-        let id = $(data).val();
-        let jenis = $(data).data().jenis;
+        var id = $(data).val();
+        var jenis = $(data).data().jenis;
+        var count_select = 0;
         
         if (id == 0) {
             if(type=='ifChecked'){
@@ -363,39 +373,41 @@
 
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = tr.children();
+                  // var td = tr.children();
+                  
                   //ambil value dalam input td SN
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.html();
-                  td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
+                  // var td_sn = td.eq(8);
+                  // var val_td_sn = td_sn.html();
+                  // td_sn.html("<textarea id='sn_"+id+"' name='sn_barang' rows='1' style='width: 100%;'>"+val_td_sn+"</textarea>");
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.html();
-                  td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
+                  // var td_merk = td.eq(9);
+                  // var val_td_merk = td_merk.html();
+                  // td_merk.html("<textarea id='merk_"+id+"' name='merk_barang' rows='2' style='width: 100%;'>"+val_td_merk+"</textarea>");
                 }
-                
+
                 if (select_id == '') {
                     value_id  = id;
-                    $('#btn_print_all').attr('disabled',false);
+                    $('#btn_delete').attr('disabled',false);
                     $('#btn_eksekusi').attr('disabled',false);
+                    $('#btn_print_all').attr('disabled',false);
                 } else {
                     value_id += select_id + ';' + id;
                 }
             } else {
                 var tr = $(data).parent().parent().parent().parent();
                 tr.toggleClass();
-                
+
                 if (jenis == 2) {
                   //ambil isian dalam element td
-                  var td = tr.children();
+                  // var td = tr.children();
 
-                  var td_sn = td.eq(8);
-                  var val_td_sn = td_sn.children().val();
-                  td_sn.html(val_td_sn);
+                  // var td_sn = td.eq(8);
+                  // var val_td_sn = td_sn.children().val();
+                  // td_sn.html(val_td_sn);
 
-                  var td_merk = td.eq(9);
-                  var val_td_merk = td_merk.children().val();
-                  td_merk.html(val_td_merk);
+                  // var td_merk = td.eq(9);
+                  // var val_td_merk = td_merk.children().val();
+                  // td_merk.html(val_td_merk);
                 }
 
                 var arr = select_id.split(";");
@@ -405,29 +417,36 @@
                 value_id = result.join(';');
 
                 if (result.length == 0) {
-                    $('#btn_print_all').attr('disabled',true);
+                    $('#btn_delete').attr('disabled',true);
                     $('#btn_eksekusi').attr('disabled',true);
+                    $('#btn_print_all').attr('disabled',true);
                 }
             }
-            $('#delete_all').val(value_id);
-        }
+            
+            // $('#delete_all').val(value_id);
+            $("input[name=delete_all]").val(value_id);
 
-        // $('#data_aset').DataTable({
-        //   'drawCallback': function (settings) {
-        //     var api = this.api();
-        //     api.fixedHeader.adjust();
-        //   }
-        // });
+            if (value_id != '' && value_id != null) {
+                count_select = value_id.split(";").length;
+            } else {
+                count_select = 0;
+            }
+            
+            $('.content-header .badge').html(count_select);
+        }
     }
 
     function cekChangePage() {
       var select_id  = $('#delete_all').val();
       var arr = select_id.split(";");
       arr.forEach(function(value, index) {
-        $('.skin-check input:checkbox[value="'+value+'"]').iCheck('check');
+        var cekbox = $('.skin-check input:checkbox[value="'+value+'"]');
+        cekbox.iCheck('check');
+        cekbox.parent().parent().parent().toggleClass('row_cek');
       });
     }
 
+    // Cek Checkbox on ROW
     $(document).ready(function() {
 
       $('#data_aset').on('click', 'tbody tr', function (e) {
@@ -446,6 +465,31 @@
               }
           }
       });
+
+      // $('#data_aset_wrapper').on('click', 'ul li a', function () {
+      //   if ($('textarea[name="sn_barang"]').length > 0) {
+      //     var data_json = $('#modal_form #data_update_barang').val();
+      //     var data_update_barang = [];
+      //     if (data_json != '' && data_json != null && data_json != 'undefined') {
+      //       data_update_barang = JSON.parse(data_json);
+      //     } 
+      //     $('textarea[name="sn_barang"]').each(function(e){
+      //         let ids     = $(this).attr('id');
+      //         let id      = ids.split("_")[1];
+      //         let merk    = $('#merk_'+id).val();
+      //         let sn      = $('#sn_'+id).val();
+              
+      //         data_update_barang.push({
+      //             id_aset: id,
+      //             merk_barang: merk,
+      //             sn_barang: sn,
+      //         });
+      //     });
+
+      //     $('#modal_form #data_update_barang').val(JSON.stringify(data_update_barang));
+      //   }
+      // });
+
     });
 </script>
 
